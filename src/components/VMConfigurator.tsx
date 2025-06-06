@@ -1,3 +1,4 @@
+
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
@@ -21,8 +22,8 @@ import {
   Monitor,
   Server,
   AlertTriangle,
-  Windows,
-  Linux,
+  Computer,
+  Terminal,
   Info
 } from 'lucide-react';
 
@@ -292,7 +293,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 checked={vm.windowsServer}
                 onCheckedChange={(checked) => handleUpdate({ windowsServer: checked })}
               />
-              <Windows className="w-5 h-5 text-blue-600" />
+              <Computer className="w-5 h-5 text-blue-600" />
               <div>
                 <Label htmlFor="windows">Windows Server</Label>
                 <div className="text-xs text-gray-500">
@@ -309,7 +310,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 checked={vm.rhel}
                 onCheckedChange={(checked) => handleUpdate({ rhel: checked })}
               />
-              <Linux className="w-5 h-5 text-red-600" />
+              <Terminal className="w-5 h-5 text-red-600" />
               <div>
                 <Label htmlFor="rhel">Red Hat Enterprise Linux (RHEL)</Label>
                 <div className="text-xs text-gray-500">
@@ -326,7 +327,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 checked={vm.suse}
                 onCheckedChange={(checked) => handleUpdate({ suse: checked })}
               />
-              <Linux className="w-5 h-5 text-green-600" />
+              <Terminal className="w-5 h-5 text-green-600" />
               <div>
                 <Label htmlFor="suse">SUSE Linux Enterprise</Label>
                 <div className="text-xs text-gray-500">
