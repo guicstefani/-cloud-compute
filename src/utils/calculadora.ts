@@ -184,7 +184,5 @@ export const formatNumber = (value: number): string => {
   return new Intl.NumberFormat('pt-BR').format(value);
 };
 
-// Função auxiliar para arredondamento público
-export const arredondar = (valor: number): number => {
-  return Math.round(valor * 100) / 100;
-};
+// Função auxiliar para arredondamento público - exportando a função interna
+export { arredondar };
