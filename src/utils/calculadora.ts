@@ -21,7 +21,13 @@ export class CalculadoraCloud {
     // Licenças
     const licencas = this.calcularLicencas(vm);
 
-    const subtotalInfra = vcpu + ram + storage + backup + monitoramento;
+    // Subtotal infraestrutura ANTES do desconto individual
+    const subtotalInfraOriginal = vcpu + ram + storage + backup + monitoramento;
+    
+    // Aplicar desconto individual APENAS na infraestrutura
+    const descontoIndividual = subtotalInfraOriginal * (vm.descontoIndividual || 0) / 100;
+    const subtotalInfra = subtotalInfraOriginal - descontoIndividual;
+    
     const subtotalLicencas = Object.values(licencas).reduce((a, b) => a + b, 0);
     const total = subtotalInfra + subtotalLicencas;
 
@@ -33,7 +39,9 @@ export class CalculadoraCloud {
       monitoramento,
       licencas,
       subtotalInfra,
+      subtotalInfraOriginal,
       subtotalLicencas,
+      descontoIndividual,
       total
     };
   }
@@ -58,8 +66,10 @@ export class CalculadoraCloud {
   private calcularLicencas(vm: VM): Record<string, number> {
     const licencas: Record<string, number> = {};
     
+    // Windows Server: licenciado a cada 2 vCPUs (assim como SQL Server)
     if (vm.windowsServer) {
-      licencas.windows = this.precos.windowsServer;
+      const licencasWindows = Math.ceil(vm.vcpu / 2);
+      licencas.windows = licencasWindows * this.precos.windowsServer;
       
       // SQL Server só funciona com Windows
       if (vm.sqlServerSTD) {
@@ -87,6 +97,7 @@ export class CalculadoraCloud {
     if (vm.hana) licencas.hana = this.precos.hana;
     if (vm.suse) licencas.suse = this.precos.suse;
     if (vm.redhat) licencas.redhat = this.precos.redhat;
+    if (vm.rhel) licencas.rhel = this.precos.rhel; // Novo: RHEL
     
     if (vm.ipsAdicionais > 0) {
       licencas.ips = vm.ipsAdicionais * this.precos.ipAdicional;

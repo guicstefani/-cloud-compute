@@ -24,7 +24,7 @@ const PRECOS_DEFAULT: Precos = {
   // Licenças
   windowsServer: 55,
   antivirus: 55,
-  sqlServerSTD: 800, // por 2 vCPUs
+  sqlServerSTD: 1450, // Atualizado: R$ 1.450 por 2 vCPUs
   sqlServerWEB: 140,
   
   // TSPlus
@@ -46,6 +46,7 @@ const PRECOS_DEFAULT: Precos = {
   hana: 3240,
   suse: 900,
   redhat: 1200,
+  rhel: 1200, // Novo: RHEL R$ 1.200/mês
   ipAdicional: 70,
   
   // WAF
@@ -79,8 +80,10 @@ function createDefaultVM(): VM {
     hana: false,
     suse: false,
     redhat: false,
+    rhel: false, // Novo: RHEL
     ipsAdicionais: 0,
     waf: 'none',
+    descontoIndividual: 0, // Novo: desconto individual
     status: 'rascunho'
   };
 }

@@ -1,4 +1,3 @@
-
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
@@ -11,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import VMDiscountSection from '@/components/VMDiscountSection';
 import { 
   Cpu, 
   MemoryStick, 
@@ -20,7 +20,10 @@ import {
   Users, 
   Monitor,
   Server,
-  AlertTriangle
+  AlertTriangle,
+  Windows,
+  Linux,
+  Info
 } from 'lucide-react';
 
 interface VMConfiguratorProps {
@@ -33,13 +36,44 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
   const custo = calculadora.calcularVM(vm);
 
   const handleUpdate = (updates: Partial<VM>) => {
-    updateVM(vm.id, updates);
+    // Validações importantes
+    let finalUpdates = { ...updates };
+
+    // Validação: apenas um SO por vez
+    if (updates.windowsServer && (vm.rhel || vm.suse)) {
+      finalUpdates.rhel = false;
+      finalUpdates.suse = false;
+    }
+    if (updates.rhel && (vm.windowsServer || vm.suse)) {
+      finalUpdates.windowsServer = false;
+      finalUpdates.suse = false;
+      finalUpdates.sqlServerSTD = false; // SQL Server requer Windows
+    }
+    if (updates.suse && (vm.windowsServer || vm.rhel)) {
+      finalUpdates.windowsServer = false;
+      finalUpdates.rhel = false;
+      finalUpdates.sqlServerSTD = false; // SQL Server requer Windows
+    }
+
+    // Validação: SQL Server requer Windows
+    if (updates.sqlServerSTD && !vm.windowsServer && !finalUpdates.windowsServer) {
+      alert('SQL Server Standard requer Windows Server');
+      finalUpdates.sqlServerSTD = false;
+    }
+
+    // Limitar desconto individual a 50%
+    if (updates.descontoIndividual !== undefined) {
+      finalUpdates.descontoIndividual = Math.max(0, Math.min(50, updates.descontoIndividual));
+    }
+
+    updateVM(vm.id, finalUpdates);
   };
 
   const getOSIcon = () => {
     if (vm.windowsServer) return '🪟';
     if (vm.suse) return '🦎';
-    if (vm.redhat) return '🎩';
+    if (vm.rhel) return '🎩';
+    if (vm.redhat) return '🔴';
     return '💻';
   };
 
@@ -59,6 +93,11 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             <Badge variant="outline" className="text-xs">
               {vm.status === 'rascunho' ? 'Rascunho' : 'Finalizada'}
             </Badge>
+            {vm.descontoIndividual > 0 && (
+              <Badge className="text-xs bg-green-100 text-green-700">
+                Desconto {vm.descontoIndividual}%
+              </Badge>
+            )}
           </div>
         </div>
         
@@ -67,6 +106,11 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             {formatCurrency(custo.total)}
           </div>
           <div className="text-sm text-optidata-gray-600">por mês</div>
+          {custo.descontoIndividual > 0 && (
+            <div className="text-xs text-green-600">
+              Economia: {formatCurrency(custo.descontoIndividual)}
+            </div>
+          )}
         </div>
       </div>
 
@@ -78,7 +122,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* vCPU */}
+          {/* vCPU com slider + input manual */}
           <div className="space-y-3">
             <Label className="flex items-center justify-between">
               <span>vCPU</span>
@@ -86,24 +130,33 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 {formatCurrency(custo.vcpu)}
               </span>
             </Label>
-            <div className="space-y-2">
-              <Slider
-                value={[vm.vcpu]}
-                onValueChange={([value]) => handleUpdate({ vcpu: value })}
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <Slider
+                  value={[vm.vcpu]}
+                  onValueChange={([value]) => handleUpdate({ vcpu: value })}
+                  min={1}
+                  max={128}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              <Input
+                type="number"
+                value={vm.vcpu}
+                onChange={(e) => handleUpdate({ vcpu: Number(e.target.value) })}
                 min={1}
                 max={128}
-                step={1}
-                className="w-full"
+                className="w-20 text-center"
               />
-              <div className="flex justify-between text-xs text-optidata-gray-500">
-                <span>1</span>
-                <span className="font-medium">{vm.vcpu} vCPU</span>
-                <span>128</span>
-              </div>
+            </div>
+            <div className="flex justify-between text-xs text-optidata-gray-500">
+              <span>{vm.vcpu} × R$ 0,0347 × 730h</span>
+              <span className="font-medium">= {formatCurrency(vm.vcpu * 0.0347 * 730)}</span>
             </div>
           </div>
 
-          {/* RAM */}
+          {/* RAM com slider + input manual */}
           <div className="space-y-3">
             <Label className="flex items-center justify-between">
               <span className="flex items-center space-x-1">
@@ -114,20 +167,29 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 {formatCurrency(custo.ram)}
               </span>
             </Label>
-            <div className="space-y-2">
-              <Slider
-                value={[vm.ram]}
-                onValueChange={([value]) => handleUpdate({ ram: value })}
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <Slider
+                  value={[vm.ram]}
+                  onValueChange={([value]) => handleUpdate({ ram: value })}
+                  min={1}
+                  max={1024}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              <Input
+                type="number"
+                value={vm.ram}
+                onChange={(e) => handleUpdate({ ram: Number(e.target.value) })}
                 min={1}
                 max={1024}
-                step={1}
-                className="w-full"
+                className="w-20 text-center"
               />
-              <div className="flex justify-between text-xs text-optidata-gray-500">
-                <span>1</span>
-                <span className="font-medium">{vm.ram}GB</span>
-                <span>1024</span>
-              </div>
+            </div>
+            <div className="flex justify-between text-xs text-optidata-gray-500">
+              <span>{vm.ram}GB × R$ 0,0278 × 730h</span>
+              <span className="font-medium">= {formatCurrency(vm.ram * 0.0278 * 730)}</span>
             </div>
           </div>
         </div>
@@ -215,7 +277,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </Card>
 
-      {/* Sistema Operacional */}
+      {/* Sistema Operacional - ATUALIZADO */}
       <Card className="p-6">
         <div className="flex items-center space-x-2 mb-4">
           <Server className="w-5 h-5 text-optidata-blue" />
@@ -223,36 +285,66 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="windows">Windows Server</Label>
-            <Switch
-              id="windows"
-              checked={vm.windowsServer}
-              onCheckedChange={(checked) => handleUpdate({ windowsServer: checked })}
-            />
+          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="windows"
+                checked={vm.windowsServer}
+                onCheckedChange={(checked) => handleUpdate({ windowsServer: checked })}
+              />
+              <Windows className="w-5 h-5 text-blue-600" />
+              <div>
+                <Label htmlFor="windows">Windows Server</Label>
+                <div className="text-xs text-gray-500">
+                  {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 55 = R$ {Math.ceil(vm.vcpu / 2) * 55}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label htmlFor="suse">SUSE Linux Enterprise</Label>
-            <Switch
-              id="suse"
-              checked={vm.suse}
-              onCheckedChange={(checked) => handleUpdate({ suse: checked })}
-            />
+          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="rhel"
+                checked={vm.rhel}
+                onCheckedChange={(checked) => handleUpdate({ rhel: checked })}
+              />
+              <Linux className="w-5 h-5 text-red-600" />
+              <div>
+                <Label htmlFor="rhel">Red Hat Enterprise Linux (RHEL)</Label>
+                <div className="text-xs text-gray-500">
+                  R$ 1.200,00/mês por servidor
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label htmlFor="redhat">Red Hat Enterprise</Label>
-            <Switch
-              id="redhat"
-              checked={vm.redhat}
-              onCheckedChange={(checked) => handleUpdate({ redhat: checked })}
-            />
+          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="suse"
+                checked={vm.suse}
+                onCheckedChange={(checked) => handleUpdate({ suse: checked })}
+              />
+              <Linux className="w-5 h-5 text-green-600" />
+              <div>
+                <Label htmlFor="suse">SUSE Linux Enterprise</Label>
+                <div className="text-xs text-gray-500">
+                  R$ 900,00/mês por servidor
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Aviso sobre seleção de SO */}
+          <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-gray-50 rounded">
+            <Info className="w-3 h-3" />
+            Apenas um sistema operacional pode ser selecionado por VM
           </div>
         </div>
       </Card>
 
-      {/* Banco de Dados */}
+      {/* Banco de Dados - ATUALIZADO */}
       <Card className="p-6">
         <div className="flex items-center space-x-2 mb-4">
           <Database className="w-5 h-5 text-optidata-blue" />
@@ -263,6 +355,9 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="sqlstd">SQL Server Standard</Label>
+              <div className="text-xs text-gray-500">
+                {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 1.450 = R$ {Math.ceil(vm.vcpu / 2) * 1450}
+              </div>
               {!vm.windowsServer && (
                 <div className="text-xs text-optidata-warning">
                   Requer Windows Server
@@ -436,9 +531,16 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </Card>
 
+      {/* Nova seção de desconto individual */}
+      <VMDiscountSection
+        vm={vm}
+        totalInfra={custo.subtotalInfraOriginal}
+        onUpdate={handleUpdate}
+      />
+
       <Separator />
 
-      {/* Resumo de Custos */}
+      {/* Resumo de Custos - ATUALIZADO */}
       <Card className="p-6 bg-optidata-gray-50">
         <div className="flex items-center space-x-2 mb-4">
           <Monitor className="w-5 h-5 text-optidata-blue" />
@@ -451,20 +553,35 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             <span>{formatCurrency(custo.vcpu + custo.ram)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Armazenamento</span>
-            <span>{formatCurrency(custo.storage)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Backup</span>
-            <span>{formatCurrency(custo.backup)}</span>
+            <span>Armazenamento + Backup</span>
+            <span>{formatCurrency(custo.storage + custo.backup)}</span>
           </div>
           <div className="flex justify-between">
             <span>Monitoramento</span>
             <span>{formatCurrency(custo.monitoramento)}</span>
           </div>
+          
+          {/* Mostrar desconto individual se aplicado */}
+          {custo.descontoIndividual > 0 && (
+            <>
+              <div className="flex justify-between text-gray-500">
+                <span>Subtotal Infraestrutura</span>
+                <span className="line-through">{formatCurrency(custo.subtotalInfraOriginal)}</span>
+              </div>
+              <div className="flex justify-between text-green-600">
+                <span>Desconto Individual ({vm.descontoIndividual}%)</span>
+                <span>-{formatCurrency(custo.descontoIndividual)}</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                <span>Infraestrutura com Desconto</span>
+                <span>{formatCurrency(custo.subtotalInfra)}</span>
+              </div>
+            </>
+          )}
+          
           {Object.keys(custo.licencas).length > 0 && (
             <div className="flex justify-between">
-              <span>Licenças</span>
+              <span>Licenças (sem desconto)</span>
               <span>{formatCurrency(custo.subtotalLicencas)}</span>
             </div>
           )}

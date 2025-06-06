@@ -23,8 +23,12 @@ export interface VM {
   hana: boolean;
   suse: boolean;
   redhat: boolean;
+  rhel: boolean; // Novo: Red Hat Enterprise Linux
   ipsAdicionais: number;
   waf: 'none' | 'pro' | 'business' | 'enterprise';
+  
+  // Novo: Desconto individual da VM (apenas infraestrutura)
+  descontoIndividual: number; // percentual 0-50
   
   // Status
   status: 'rascunho' | 'finalizado';
@@ -74,6 +78,7 @@ export interface Precos {
   hana: number;
   suse: number;
   redhat: number;
+  rhel: number; // Novo: RHEL
   ipAdicional: number;
   
   // WAF
@@ -92,7 +97,9 @@ export interface DetalhamentoCusto {
   monitoramento: number;
   licencas: Record<string, number>;
   subtotalInfra: number;
+  subtotalInfraOriginal: number; // Novo: valor antes do desconto individual
   subtotalLicencas: number;
+  descontoIndividual: number; // Novo: valor do desconto aplicado
   total: number;
 }
 
