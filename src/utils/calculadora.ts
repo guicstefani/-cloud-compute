@@ -1,13 +1,18 @@
 
 import { VM, Precos, DetalhamentoCusto, Desconto } from '@/types';
 
+// Função de arredondamento para 2 casas decimais
+const arredondar = (valor: number): number => {
+  return Math.round(valor * 100) / 100;
+};
+
 export class CalculadoraCloud {
   constructor(private precos: Precos) {}
 
   calcularVM(vm: VM): DetalhamentoCusto {
-    // Infraestrutura
-    const vcpu = vm.vcpu * this.precos.vcpuHora * this.precos.horasMes;
-    const ram = vm.ram * this.precos.ramHora * this.precos.horasMes;
+    // Infraestrutura com arredondamento correto
+    const vcpu = arredondar(vm.vcpu * this.precos.vcpuHora * this.precos.horasMes);
+    const ram = arredondar(vm.ram * this.precos.ramHora * this.precos.horasMes);
     
     // Storage
     const storage = this.calcularStorage(vm);
@@ -22,14 +27,14 @@ export class CalculadoraCloud {
     const licencas = this.calcularLicencas(vm);
 
     // Subtotal infraestrutura ANTES do desconto individual
-    const subtotalInfraOriginal = vcpu + ram + storage + backup + monitoramento;
+    const subtotalInfraOriginal = arredondar(vcpu + ram + storage + backup + monitoramento);
     
     // Aplicar desconto individual APENAS na infraestrutura
-    const descontoIndividual = subtotalInfraOriginal * (vm.descontoIndividual || 0) / 100;
-    const subtotalInfra = subtotalInfraOriginal - descontoIndividual;
+    const descontoIndividual = arredondar(subtotalInfraOriginal * (vm.descontoIndividual || 0) / 100);
+    const subtotalInfra = arredondar(subtotalInfraOriginal - descontoIndividual);
     
-    const subtotalLicencas = Object.values(licencas).reduce((a, b) => a + b, 0);
-    const total = subtotalInfra + subtotalLicencas;
+    const subtotalLicencas = arredondar(Object.values(licencas).reduce((a, b) => a + b, 0));
+    const total = arredondar(subtotalInfra + subtotalLicencas);
 
     return {
       vcpu,
@@ -47,17 +52,19 @@ export class CalculadoraCloud {
   }
 
   private calcularStorage(vm: VM): number {
-    return (vm.discoFCM * this.precos.fcmGB) + (vm.discoSSD * this.precos.ssdGB);
+    const fcmCusto = arredondar(vm.discoFCM * this.precos.fcmGB);
+    const ssdCusto = arredondar(vm.discoSSD * this.precos.ssdGB);
+    return arredondar(fcmCusto + ssdCusto);
   }
 
   private calcularBackup(vm: VM): number {
     const storageTotal = vm.discoFCM + vm.discoSSD;
-    let custoBackup = storageTotal * this.precos.backupPadrao;
+    let custoBackup = arredondar(storageTotal * this.precos.backupPadrao);
     
     if (vm.backupTipo === 'duplo') {
-      custoBackup += storageTotal * this.precos.backupDuplo;
+      custoBackup = arredondar(custoBackup + (storageTotal * this.precos.backupDuplo));
     } else if (vm.backupTipo === 'triplo') {
-      custoBackup += storageTotal * (this.precos.backupDuplo + this.precos.backupTriplo);
+      custoBackup = arredondar(custoBackup + (storageTotal * (this.precos.backupDuplo + this.precos.backupTriplo)));
     }
     
     return custoBackup;
@@ -69,12 +76,12 @@ export class CalculadoraCloud {
     // Windows Server: licenciado a cada 2 vCPUs (assim como SQL Server)
     if (vm.windowsServer) {
       const licencasWindows = Math.ceil(vm.vcpu / 2);
-      licencas.windows = licencasWindows * this.precos.windowsServer;
+      licencas.windows = arredondar(licencasWindows * this.precos.windowsServer);
       
       // SQL Server só funciona com Windows
       if (vm.sqlServerSTD) {
         const coresSQL = Math.ceil(vm.vcpu / 2);
-        licencas.sqlSTD = coresSQL * this.precos.sqlServerSTD;
+        licencas.sqlSTD = arredondar(coresSQL * this.precos.sqlServerSTD);
       }
     }
     
@@ -97,10 +104,10 @@ export class CalculadoraCloud {
     if (vm.hana) licencas.hana = this.precos.hana;
     if (vm.suse) licencas.suse = this.precos.suse;
     if (vm.redhat) licencas.redhat = this.precos.redhat;
-    if (vm.rhel) licencas.rhel = this.precos.rhel; // Novo: RHEL
+    if (vm.rhel) licencas.rhel = this.precos.rhel;
     
     if (vm.ipsAdicionais > 0) {
-      licencas.ips = vm.ipsAdicionais * this.precos.ipAdicional;
+      licencas.ips = arredondar(vm.ipsAdicionais * this.precos.ipAdicional);
     }
     
     if (vm.waf !== 'none') {
@@ -117,17 +124,17 @@ export class CalculadoraCloud {
     
     for (const desconto of descontosAtivos) {
       if (desconto.tipo === 'global') {
-        const valor = (custo.total * desconto.valor) / 100;
-        custoComDesconto.total -= valor;
+        const valor = arredondar((custo.total * desconto.valor) / 100);
+        custoComDesconto.total = arredondar(custoComDesconto.total - valor);
       } else if (desconto.tipo === 'categoria') {
         if (desconto.categoria === 'infraestrutura') {
-          const valor = (custo.subtotalInfra * desconto.valor) / 100;
-          custoComDesconto.subtotalInfra -= valor;
-          custoComDesconto.total -= valor;
+          const valor = arredondar((custo.subtotalInfra * desconto.valor) / 100);
+          custoComDesconto.subtotalInfra = arredondar(custoComDesconto.subtotalInfra - valor);
+          custoComDesconto.total = arredondar(custoComDesconto.total - valor);
         } else if (desconto.categoria === 'licencas') {
-          const valor = (custo.subtotalLicencas * desconto.valor) / 100;
-          custoComDesconto.subtotalLicencas -= valor;
-          custoComDesconto.total -= valor;
+          const valor = arredondar((custo.subtotalLicencas * desconto.valor) / 100);
+          custoComDesconto.subtotalLicencas = arredondar(custoComDesconto.subtotalLicencas - valor);
+          custoComDesconto.total = arredondar(custoComDesconto.total - valor);
         }
       }
     }
@@ -146,15 +153,15 @@ export class CalculadoraCloud {
       custo: this.aplicarDescontos(this.calcularVM(vm), descontos)
     }));
 
-    const totalSemDesconto = vmsCustos.reduce((total, item) => {
+    const totalSemDesconto = arredondar(vmsCustos.reduce((total, item) => {
       const custoOriginal = this.calcularVM(item.vm);
       return total + custoOriginal.total;
-    }, 0);
+    }, 0));
 
-    const totalComDesconto = vmsCustos.reduce((total, item) => 
-      total + item.custo.total, 0);
+    const totalComDesconto = arredondar(vmsCustos.reduce((total, item) => 
+      total + item.custo.total, 0));
 
-    const economia = totalSemDesconto - totalComDesconto;
+    const economia = arredondar(totalSemDesconto - totalComDesconto);
 
     return {
       vms: vmsCustos,
@@ -175,4 +182,9 @@ export const formatCurrency = (value: number): string => {
 
 export const formatNumber = (value: number): string => {
   return new Intl.NumberFormat('pt-BR').format(value);
+};
+
+// Função auxiliar para arredondamento público
+export const arredondar = (valor: number): number => {
+  return Math.round(valor * 100) / 100;
 };

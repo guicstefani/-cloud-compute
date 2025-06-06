@@ -7,7 +7,7 @@ const PRECOS_DEFAULT: Precos = {
   // Infraestrutura (por hora)
   vcpuHora: 0.0347,
   ramHora: 0.0278,
-  horasMes: 730,
+  horasMes: 720, // Corrigido: 720 horas/mês, não 730
   
   // Storage (por mês)
   fcmGB: 0.75,
