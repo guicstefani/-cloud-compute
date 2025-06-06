@@ -6,6 +6,8 @@ import VMList from '@/components/VMList';
 import VMConfigurator from '@/components/VMConfigurator';
 import PricingSummary from '@/components/PricingSummary';
 import Header from '@/components/Header';
+import HeroSection from '@/components/HeroSection';
+import PremiumFloatingElements from '@/components/PremiumFloatingElements';
 import { Button } from '@/components/ui/button';
 import { Plus, Share } from 'lucide-react';
 import { useIsMobile } from '@/hooks/useMobile';
@@ -24,17 +26,20 @@ const Index = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA]">
-      <Header />
+    <div className="min-h-screen bg-[#F8F9FA] relative">
+      <PremiumFloatingElements />
       
-      <main className="container mx-auto px-4 lg:px-6 py-4 lg:py-6 pb-20 lg:pb-6">
+      <Header />
+      <HeroSection />
+      
+      <main className="container mx-auto px-4 lg:px-6 py-8 lg:py-12 pb-20 lg:pb-6 relative z-10">
         <div className="responsive-grid">
           {/* VM List - Left sidebar on desktop, full width on mobile */}
           <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="optidata-card p-4 lg:p-6">
+            <div className="premium-card p-4 lg:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-optidata-gray-900">
-                  Máquinas Virtuais
+                  Servidores Virtuais
                 </h2>
                 <Button
                   onClick={() => addVM()}
@@ -52,7 +57,7 @@ const Index = () => {
           {/* Main Content - Right side on desktop, full width on mobile */}
           <div className="lg:col-span-2 order-1 lg:order-2 space-y-4 lg:space-y-6">
             {/* Tabs - Desktop only */}
-            <div className="optidata-card mobile-hide">
+            <div className="premium-card mobile-hide">
               <div className="flex border-b border-optidata-gray-200">
                 <button
                   onClick={() => setActiveTab('configurar')}
@@ -113,7 +118,7 @@ const Index = () => {
               {selectedVM ? (
                 <VMConfigurator vm={selectedVM} calculadora={calculadora} />
               ) : (
-                <div className="optidata-card p-6 text-center">
+                <div className="premium-card p-6 text-center">
                   <div className="w-16 h-16 mx-auto mb-4 optidata-gradient-light rounded-full flex items-center justify-center">
                     <Plus className="w-8 h-8 text-optidata-blue" />
                   </div>
@@ -136,7 +141,7 @@ const Index = () => {
 
             {/* Mobile: Summary Card */}
             <div className="mobile-show">
-              <div className="optidata-card overflow-hidden">
+              <div className="premium-card overflow-hidden">
                 <div className="optidata-gradient p-4 text-white">
                   <div className="flex justify-between items-end">
                     <div>
