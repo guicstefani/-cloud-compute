@@ -9,7 +9,7 @@ import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import PremiumFloatingElements from '@/components/PremiumFloatingElements';
 import { Button } from '@/components/ui/button';
-import { Plus, Share } from 'lucide-react';
+import { Plus, Share, Save, Download } from 'lucide-react';
 import { useIsMobile } from '@/hooks/useMobile';
 
 const Index = () => {
@@ -26,82 +26,97 @@ const Index = () => {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] relative">
+    <div className="min-h-screen bg-[#F8FAFC] relative">
       <PremiumFloatingElements />
       
       <Header />
       <HeroSection />
       
       <main className="container mx-auto px-4 lg:px-6 py-8 lg:py-12 pb-20 lg:pb-6 relative z-10">
-        <div className="responsive-grid">
-          {/* VM List - Left sidebar on desktop, full width on mobile */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* VM List - Premium sidebar */}
           <div className="lg:col-span-1 order-2 lg:order-1">
-            <div className="premium-card p-4 lg:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-optidata-gray-900">
-                  Servidores Virtuais
-                </h2>
-                <Button
-                  onClick={() => addVM()}
-                  size="sm"
-                  className="btn-optidata"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  <span className="hidden sm:inline">Adicionar</span>
-                </Button>
+            <div className="premium-card">
+              <div className="p-6 border-b border-[#E5E7EB]">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-[#1F2937]">
+                      Servidores Virtuais
+                    </h2>
+                    <p className="text-sm text-[#6B7280] mt-1">
+                      {vms.length} servidor{vms.length !== 1 ? 'es' : ''} configurado{vms.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => addVM()}
+                    size="sm"
+                    className="btn-optidata"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar
+                  </Button>
+                </div>
               </div>
-              <VMList />
+              <div className="p-6">
+                <VMList />
+              </div>
             </div>
           </div>
 
-          {/* Main Content - Right side on desktop, full width on mobile */}
-          <div className="lg:col-span-2 order-1 lg:order-2 space-y-4 lg:space-y-6">
-            {/* Tabs - Desktop only */}
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 order-1 lg:order-2 space-y-6">
+            {/* Enhanced Tabs - Desktop only */}
             <div className="premium-card mobile-hide">
-              <div className="flex border-b border-optidata-gray-200">
+              <div className="flex border-b border-[#E5E7EB]">
                 <button
                   onClick={() => setActiveTab('configurar')}
-                  className={`px-6 py-4 font-medium text-sm transition-all ${
+                  className={`px-8 py-4 font-medium text-sm transition-all relative ${
                     activeTab === 'configurar'
-                      ? 'border-b-2 border-optidata-blue text-optidata-blue bg-blue-50'
-                      : 'text-optidata-gray-600 hover:text-optidata-gray-900'
+                      ? 'text-[#2563EB] bg-[#EFF6FF]'
+                      : 'text-[#6B7280] hover:text-[#1F2937] hover:bg-[#F8FAFC]'
                   }`}
                 >
                   Configurar VM
+                  {activeTab === 'configurar' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]"></div>
+                  )}
                 </button>
                 <button
                   onClick={() => setActiveTab('resumo')}
-                  className={`px-6 py-4 font-medium text-sm transition-all ${
+                  className={`px-8 py-4 font-medium text-sm transition-all relative ${
                     activeTab === 'resumo'
-                      ? 'border-b-2 border-optidata-blue text-optidata-blue bg-blue-50'
-                      : 'text-optidata-gray-600 hover:text-optidata-gray-900'
+                      ? 'text-[#2563EB] bg-[#EFF6FF]'
+                      : 'text-[#6B7280] hover:text-[#1F2937] hover:bg-[#F8FAFC]'
                   }`}
                 >
                   Resumo e Orçamento
+                  {activeTab === 'resumo' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]"></div>
+                  )}
                 </button>
               </div>
 
-              <div className="p-6">
+              <div className="p-8">
                 {activeTab === 'configurar' ? (
                   <>
                     {selectedVM ? (
                       <VMConfigurator vm={selectedVM} calculadora={calculadora} />
                     ) : (
-                      <div className="text-center py-12">
-                        <div className="w-16 h-16 mx-auto mb-4 optidata-gradient-light rounded-full flex items-center justify-center">
-                          <Plus className="w-8 h-8 text-optidata-blue" />
+                      <div className="text-center py-16">
+                        <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-[#F8FAFC] to-[#E5E7EB] rounded-full flex items-center justify-center">
+                          <Plus className="w-10 h-10 text-[#6B7280]" />
                         </div>
-                        <h3 className="text-lg font-medium text-optidata-gray-900 mb-2">
+                        <h3 className="text-xl font-semibold text-[#1F2937] mb-3">
                           Nenhuma VM selecionada
                         </h3>
-                        <p className="text-optidata-gray-600 mb-4">
-                          Selecione uma VM da lista ou crie uma nova para começar.
+                        <p className="text-[#6B7280] mb-6 max-w-md mx-auto">
+                          Selecione uma VM da lista ou crie uma nova para começar a configurar seus recursos.
                         </p>
                         <Button
                           onClick={() => addVM()}
                           className="btn-optidata"
                         >
-                          <Plus className="w-4 h-4 mr-2" />
+                          <Plus className="w-5 h-5 mr-2" />
                           Criar Nova VM
                         </Button>
                       </div>
@@ -116,16 +131,18 @@ const Index = () => {
             {/* Mobile: VM Configurator */}
             <div className="mobile-show">
               {selectedVM ? (
-                <VMConfigurator vm={selectedVM} calculadora={calculadora} />
+                <div className="premium-card p-6">
+                  <VMConfigurator vm={selectedVM} calculadora={calculadora} />
+                </div>
               ) : (
-                <div className="premium-card p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 optidata-gradient-light rounded-full flex items-center justify-center">
-                    <Plus className="w-8 h-8 text-optidata-blue" />
+                <div className="premium-card p-8 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-[#F8FAFC] to-[#E5E7EB] rounded-full flex items-center justify-center">
+                    <Plus className="w-8 h-8 text-[#6B7280]" />
                   </div>
-                  <h3 className="text-lg font-medium text-optidata-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-[#1F2937] mb-2">
                     Nenhuma VM selecionada
                   </h3>
-                  <p className="text-optidata-gray-600 mb-4">
+                  <p className="text-[#6B7280] mb-4">
                     Selecione uma VM da lista para começar a configurar.
                   </p>
                   <Button
@@ -139,26 +156,28 @@ const Index = () => {
               )}
             </div>
 
-            {/* Mobile: Summary Card */}
+            {/* Mobile: Enhanced Summary Card */}
             <div className="mobile-show">
               <div className="premium-card overflow-hidden">
-                <div className="optidata-gradient p-4 text-white">
+                <div className="bg-gradient-to-r from-[#1B365D] to-[#1E40AF] p-6 text-white">
                   <div className="flex justify-between items-end">
                     <div>
-                      <p className="text-sm opacity-90">Total Mensal</p>
-                      <p className="text-3xl font-bold">{formatCurrency(total)}</p>
-                      <p className="text-xs opacity-75">{vms.length} VM{vms.length !== 1 ? 's' : ''} configurada{vms.length !== 1 ? 's' : ''}</p>
+                      <p className="text-sm opacity-90 mb-1">Total Mensal</p>
+                      <p className="text-4xl font-light mb-2">{formatCurrency(total)}</p>
+                      <p className="text-xs opacity-75">
+                        {vms.length} VM{vms.length !== 1 ? 's' : ''} configurada{vms.length !== 1 ? 's' : ''}
+                      </p>
                     </div>
                     <Button 
                       variant="secondary" 
                       size="icon"
-                      className="bg-white/20 border-white/20 text-white hover:bg-white/30"
+                      className="bg-white/20 border-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
                     >
                       <Share className="w-5 h-5" />
                     </Button>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-6">
                   <PricingSummary calculadora={calculadora} />
                 </div>
               </div>
@@ -167,21 +186,30 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Mobile Bottom Bar */}
+      {/* Enhanced Mobile Bottom Bar */}
       {isMobile && vms.length > 0 && (
-        <div className="mobile-bottom-bar safe-bottom">
+        <div className="mobile-bottom-bar safe-bottom bg-white shadow-2xl">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm text-optidata-gray-600">Total Mensal</p>
-              <p className="text-2xl font-bold text-optidata-blue">
+              <p className="text-sm text-[#6B7280] mb-1">Total Mensal</p>
+              <p className="text-2xl font-semibold text-gradient">
                 {formatCurrency(total)}
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="border-optidata-gray-200">
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-[#E5E7EB] hover:border-[#2563EB] hover:bg-[#EFF6FF]"
+              >
+                <Save className="w-4 h-4 mr-2" />
                 Salvar
               </Button>
-              <Button size="sm" className="btn-optidata">
+              <Button 
+                size="sm" 
+                className="btn-optidata"
+              >
+                <Download className="w-4 h-4 mr-2" />
                 Exportar
               </Button>
             </div>

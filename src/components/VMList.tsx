@@ -2,7 +2,7 @@
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { Button } from '@/components/ui/button';
-import { Copy, Trash2, Monitor, HardDrive } from 'lucide-react';
+import { Copy, Trash2, Monitor, HardDrive, MoreVertical, CheckCircle } from 'lucide-react';
 import { VM_TEMPLATES } from '@/data/templates';
 import PremiumEmptyState from './PremiumEmptyState';
 
@@ -23,27 +23,30 @@ const VMList = () => {
         <PremiumEmptyState onAddVM={() => addVM()} />
         
         <div>
-          <h3 className="text-sm font-medium text-optidata-gray-900 mb-3">
+          <h3 className="text-sm font-semibold text-[#1F2937] mb-4 uppercase tracking-wider">
             Templates Enterprise
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {VM_TEMPLATES.map(template => (
               <button
                 key={template.id}
                 onClick={() => handleAddFromTemplate(template.id)}
-                className="w-full p-3 text-left border border-optidata-gray-200 rounded-lg hover:border-optidata-blue hover:bg-optidata-blue/5 transition-all duration-200 hover:shadow-md"
+                className="w-full p-4 text-left bg-white border border-[#E5E7EB] rounded-xl hover:border-[#2563EB] hover:shadow-lg transition-all duration-300 group"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#0066CC] to-[#00A1E4] rounded-lg flex items-center justify-center text-white shadow-md">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300">
                     <span className="text-lg">{template.icon}</span>
                   </div>
-                  <div>
-                    <div className="font-medium text-sm text-optidata-gray-900">
+                  <div className="flex-1">
+                    <div className="font-semibold text-[#1F2937] mb-1">
                       {template.nome}
                     </div>
-                    <div className="text-xs text-optidata-gray-600">
+                    <div className="text-sm text-[#6B7280]">
                       {template.descricao}
                     </div>
+                  </div>
+                  <div className="text-[#2563EB] opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
                   </div>
                 </div>
               </button>
@@ -55,7 +58,7 @@ const VMList = () => {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {vms.map(vm => {
         const custo = calculadora.calcularVM(vm);
         const isSelected = vm.id === selectedVMId;
@@ -63,90 +66,121 @@ const VMList = () => {
         return (
           <div
             key={vm.id}
-            className={`premium-card cursor-pointer transition-all ${
+            className={`premium-vm-card cursor-pointer transition-all duration-300 ${
               isSelected 
-                ? 'border-2 border-optidata-blue bg-optidata-blue/5 shadow-lg' 
-                : 'border border-optidata-gray-200 hover:border-optidata-blue/50'
+                ? 'border-2 border-[#2563EB] shadow-lg bg-[#EFF6FF]' 
+                : 'border border-[#E5E7EB] hover:border-[#2563EB] hover:shadow-lg bg-white'
             }`}
             onClick={() => selectVM(vm.id)}
           >
-            {/* Gradient no topo */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+            {/* Status bar premium */}
+            <div className={`h-1 ${isSelected 
+              ? 'bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]' 
+              : 'bg-gradient-to-r from-[#E5E7EB] to-[#E5E7EB]'
+            }`}></div>
             
-            <div className="p-4">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="vm-card-icon">
+            <div className="p-6">
+              {/* Header refinado */}
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] rounded-xl flex items-center justify-center text-white shadow-lg">
                     <Monitor className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-optidata-gray-900 truncate">
+                    <h3 className="font-semibold text-lg text-[#1F2937] mb-1">
                       {vm.nome}
                     </h3>
-                    <p className="text-xs text-optidata-gray-500">Enterprise Grade</p>
+                    <p className="text-sm text-[#6B7280]">ID: {vm.id.slice(0, 8)}</p>
                   </div>
                 </div>
-                <div className="flex space-x-1 ml-2">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      duplicateVM(vm.id);
-                    }}
-                    className="h-6 w-6 p-0 hover:bg-blue-50"
-                  >
-                    <Copy className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeVM(vm.id);
-                    }}
-                    className="h-6 w-6 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Specs premium */}
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <div className="flex items-center gap-1 text-gray-600 text-xs mb-1">
-                    <Monitor className="w-3 h-3" />
-                    <span>vCPU</span>
-                  </div>
-                  <div className="text-lg font-bold text-gray-900">{vm.vcpu}</div>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <div className="flex items-center gap-1 text-gray-600 text-xs mb-1">
-                    <HardDrive className="w-3 h-3" />
-                    <span>RAM</span>
-                  </div>
-                  <div className="text-lg font-bold text-gray-900">{vm.ram}GB</div>
-                </div>
-              </div>
-
-              {vm.windowsServer && (
-                <div className="mb-3">
-                  <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
-                    Windows Server
+                
+                <div className="flex items-center gap-2">
+                  {isSelected && (
+                    <div className="flex items-center gap-1 px-3 py-1 bg-[#10B981] text-white text-xs font-medium rounded-full">
+                      <CheckCircle className="w-3 h-3" />
+                      Selecionado
+                    </div>
+                  )}
+                  <span className="px-3 py-1 bg-[#F0FDF4] text-[#10B981] text-xs font-medium rounded-full">
+                    Ativo
                   </span>
+                  <div className="flex space-x-1 ml-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        duplicateVM(vm.id);
+                      }}
+                      className="h-8 w-8 p-0 hover:bg-[#EFF6FF] hover:text-[#2563EB]"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeVM(vm.id);
+                      }}
+                      className="h-8 w-8 p-0 text-[#EF4444] hover:text-[#DC2626] hover:bg-[#FEF2F2]"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specs em grid elegante */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-2xl font-light text-[#1F2937] mb-1">{vm.vcpu}</div>
+                  <div className="text-xs text-[#6B7280] uppercase tracking-wider">vCPUs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-light text-[#1F2937] mb-1">{vm.ram}</div>
+                  <div className="text-xs text-[#6B7280] uppercase tracking-wider">GB RAM</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-light text-[#1F2937] mb-1">{vm.discoFCM + vm.discoSSD}</div>
+                  <div className="text-xs text-[#6B7280] uppercase tracking-wider">GB Storage</div>
+                </div>
+              </div>
+
+              {/* Licenças ativas */}
+              {(vm.windowsServer || vm.rhel || vm.suse) && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {vm.windowsServer && (
+                    <span className="inline-flex items-center px-3 py-1 bg-[#EFF6FF] text-[#2563EB] text-xs font-medium rounded-full">
+                      🪟 Windows Server
+                    </span>
+                  )}
+                  {vm.rhel && (
+                    <span className="inline-flex items-center px-3 py-1 bg-[#FEF2F2] text-[#EF4444] text-xs font-medium rounded-full">
+                      🎩 RHEL
+                    </span>
+                  )}
+                  {vm.suse && (
+                    <span className="inline-flex items-center px-3 py-1 bg-[#F0FDF4] text-[#10B981] text-xs font-medium rounded-full">
+                      🦎 SUSE
+                    </span>
+                  )}
                 </div>
               )}
 
-              <div className="border-t pt-3">
+              {/* Preço destacado */}
+              <div className="pt-6 border-t border-[#E5E7EB]">
                 <div className="flex items-end justify-between">
-                  <span className="text-xs text-gray-500">Investimento mensal</span>
-                  <div className="text-right">
-                    <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">
+                  <div>
+                    <p className="text-xs text-[#6B7280] uppercase tracking-wider mb-1">Investimento mensal</p>
+                    <p className="text-3xl font-light text-[#1F2937]">
                       {formatCurrency(custo.total)}
-                    </div>
-                    <div className="text-xs text-gray-500">+ impostos</div>
+                    </p>
+                    <p className="text-xs text-[#6B7280] mt-1">+ impostos aplicáveis</p>
                   </div>
+                  <button className="text-[#2563EB] hover:text-[#1D4ED8] text-sm font-medium transition-colors">
+                    Detalhes →
+                  </button>
                 </div>
               </div>
             </div>

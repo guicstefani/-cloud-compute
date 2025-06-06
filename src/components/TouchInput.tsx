@@ -42,20 +42,35 @@ const TouchInput = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = Number(e.target.value);
+    const inputValue = e.target.value;
+    if (inputValue === '') {
+      return; // Allow empty input during typing
+    }
+    const newValue = parseInt(inputValue) || 0;
     if (newValue >= min && newValue <= max) {
       onChange(newValue);
     }
   };
 
+  const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (inputValue === '') {
+      onChange(min); // Set to minimum if empty on blur
+      return;
+    }
+    const newValue = parseInt(inputValue) || min;
+    const clampedValue = Math.max(min, Math.min(max, newValue));
+    onChange(clampedValue);
+  };
+
   return (
-    <div className="space-y-3">
-      <Label className="text-sm font-medium flex items-center gap-2 text-optidata-gray-900">
+    <div className="space-y-4">
+      <Label className="text-sm font-medium flex items-center gap-2 text-[#1F2937]">
         {icon}
-        {label} {unit && <span className="text-optidata-gray-500">({unit})</span>}
+        {label} {unit && <span className="text-[#6B7280]">({unit})</span>}
       </Label>
 
-      {/* Slider with larger touch area */}
+      {/* Enhanced Slider */}
       <div className="px-2 lg:px-0">
         <Slider
           value={[value]}
@@ -63,23 +78,24 @@ const TouchInput = ({
           min={min}
           max={max}
           step={step}
-          className="slider-optidata"
+          className="premium-slider"
         />
-        <div className="flex justify-between text-xs text-optidata-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-[#6B7280] mt-2">
           <span>{min}</span>
+          <span className="font-medium text-[#2563EB]">{value}</span>
           <span>{max}</span>
         </div>
       </div>
 
-      {/* Input with increment/decrement buttons */}
-      <div className="flex items-center gap-2">
+      {/* Enhanced Input with buttons */}
+      <div className="flex items-center gap-3">
         <Button
           type="button"
           variant="outline"
           size="icon"
           onClick={handleDecrement}
           disabled={value <= min}
-          className="touch-target rounded-lg border-optidata-gray-200 hover:bg-optidata-gray-50"
+          className="h-11 w-11 rounded-lg border-[#E5E7EB] hover:border-[#2563EB] hover:bg-[#EFF6FF] transition-all duration-200 disabled:opacity-50"
         >
           <Minus className="w-4 h-4" />
         </Button>
@@ -88,9 +104,10 @@ const TouchInput = ({
           type="number"
           value={value}
           onChange={handleInputChange}
+          onBlur={handleInputBlur}
           min={min}
           max={max}
-          className="flex-1 text-center text-lg font-semibold input-optidata"
+          className="flex-1 text-center text-lg font-semibold h-11 border-[#E5E7EB] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all duration-200"
           inputMode="numeric"
         />
 
@@ -100,17 +117,21 @@ const TouchInput = ({
           size="icon"
           onClick={handleIncrement}
           disabled={value >= max}
-          className="touch-target rounded-lg border-optidata-gray-200 hover:bg-optidata-gray-50"
+          className="h-11 w-11 rounded-lg border-[#E5E7EB] hover:border-[#2563EB] hover:bg-[#EFF6FF] transition-all duration-200 disabled:opacity-50"
         >
           <Plus className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Calculation display */}
+      {/* Enhanced calculation display */}
       {(calculation || calculatedValue) && (
-        <div className="text-right text-sm text-optidata-gray-600">
-          {calculation && <div className="text-xs">{calculation}</div>}
-          {calculatedValue && <div className="font-medium">{calculatedValue}</div>}
+        <div className="bg-[#F8FAFC] rounded-lg p-3 border border-[#E5E7EB]">
+          {calculation && (
+            <div className="text-xs text-[#6B7280] mb-1">{calculation}</div>
+          )}
+          {calculatedValue && (
+            <div className="font-semibold text-[#1F2937]">{calculatedValue}</div>
+          )}
         </div>
       )}
     </div>
