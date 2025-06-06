@@ -10,9 +10,13 @@ export class CalculadoraCloud {
   constructor(private precos: Precos) {}
 
   calcularVM(vm: VM): DetalhamentoCusto {
-    // Infraestrutura com arredondamento correto
-    const vcpu = arredondar(vm.vcpu * this.precos.vcpuHora * this.precos.horasMes);
-    const ram = arredondar(vm.ram * this.precos.ramHora * this.precos.horasMes);
+    // Infraestrutura - cálculo preciso sem arredondamento intermediário
+    const vcpuCalculo = vm.vcpu * this.precos.vcpuHora * this.precos.horasMes;
+    const ramCalculo = vm.ram * this.precos.ramHora * this.precos.horasMes;
+    
+    // Arredondar apenas no final de cada cálculo
+    const vcpu = arredondar(vcpuCalculo);
+    const ram = arredondar(ramCalculo);
     
     // Storage
     const storage = this.calcularStorage(vm);
@@ -52,22 +56,22 @@ export class CalculadoraCloud {
   }
 
   private calcularStorage(vm: VM): number {
-    const fcmCusto = arredondar(vm.discoFCM * this.precos.fcmGB);
-    const ssdCusto = arredondar(vm.discoSSD * this.precos.ssdGB);
+    const fcmCusto = vm.discoFCM * this.precos.fcmGB;
+    const ssdCusto = vm.discoSSD * this.precos.ssdGB;
     return arredondar(fcmCusto + ssdCusto);
   }
 
   private calcularBackup(vm: VM): number {
     const storageTotal = vm.discoFCM + vm.discoSSD;
-    let custoBackup = arredondar(storageTotal * this.precos.backupPadrao);
+    let custoBackup = storageTotal * this.precos.backupPadrao;
     
     if (vm.backupTipo === 'duplo') {
-      custoBackup = arredondar(custoBackup + (storageTotal * this.precos.backupDuplo));
+      custoBackup = custoBackup + (storageTotal * this.precos.backupDuplo);
     } else if (vm.backupTipo === 'triplo') {
-      custoBackup = arredondar(custoBackup + (storageTotal * (this.precos.backupDuplo + this.precos.backupTriplo)));
+      custoBackup = custoBackup + (storageTotal * (this.precos.backupDuplo + this.precos.backupTriplo));
     }
     
-    return custoBackup;
+    return arredondar(custoBackup);
   }
 
   private calcularLicencas(vm: VM): Record<string, number> {

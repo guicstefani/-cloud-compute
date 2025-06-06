@@ -1,4 +1,3 @@
-
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
@@ -541,7 +540,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 
       <Separator />
 
-      {/* Resumo de Custos - ATUALIZADO */}
+      {/* Resumo de Custos - ATUALIZADO para mostrar vCPU e RAM separadamente */}
       <Card className="p-6 bg-optidata-gray-50">
         <div className="flex items-center space-x-2 mb-4">
           <Monitor className="w-5 h-5 text-optidata-blue" />
@@ -550,8 +549,12 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <span>Computação (vCPU + RAM)</span>
-            <span>{formatCurrency(custo.vcpu + custo.ram)}</span>
+            <span>vCPU ({vm.vcpu} × R$ 0,0347 × 720h)</span>
+            <span>{formatCurrency(custo.vcpu)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>RAM ({vm.ram}GB × R$ 0,0278 × 720h)</span>
+            <span>{formatCurrency(custo.ram)}</span>
           </div>
           <div className="flex justify-between">
             <span>Armazenamento + Backup</span>
