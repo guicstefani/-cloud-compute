@@ -152,8 +152,8 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
               />
             </div>
             <div className="flex justify-between text-xs text-optidata-gray-500">
-              <span>{vm.vcpu} × R$ 0,0347 × 730h</span>
-              <span className="font-medium">= {formatCurrency(vm.vcpu * 0.0347 * 730)}</span>
+              <span>{vm.vcpu} × R$ 0,0347 × 720h</span>
+              <span className="font-medium">= {formatCurrency(vm.vcpu * 0.0347 * 720)}</span>
             </div>
           </div>
 
@@ -189,8 +189,8 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
               />
             </div>
             <div className="flex justify-between text-xs text-optidata-gray-500">
-              <span>{vm.ram}GB × R$ 0,0278 × 730h</span>
-              <span className="font-medium">= {formatCurrency(vm.ram * 0.0278 * 730)}</span>
+              <span>{vm.ram}GB × R$ 0,0278 × 720h</span>
+              <span className="font-medium">= {formatCurrency(vm.ram * 0.0278 * 720)}</span>
             </div>
           </div>
         </div>
@@ -357,7 +357,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             <div>
               <Label htmlFor="sqlstd">SQL Server Standard</Label>
               <div className="text-xs text-gray-500">
-                {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 1.450 = R$ {Math.ceil(vm.vcpu / 2) * 1450}
+                {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 800 = R$ {Math.ceil(vm.vcpu / 2) * 800}
               </div>
               {!vm.windowsServer && (
                 <div className="text-xs text-optidata-warning">
