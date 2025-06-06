@@ -24,7 +24,7 @@ const PRECOS_DEFAULT: Precos = {
   // Licenças
   windowsServer: 55,
   antivirus: 55,
-  sqlServerSTD: 1450, // Atualizado: R$ 1.450 por 2 vCPUs
+  sqlServerSTD: 800, // Corrigido: R$ 800 por 2 vCPUs
   sqlServerWEB: 140,
   
   // TSPlus
