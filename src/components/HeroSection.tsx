@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Cloud, Shield, Award, Zap } from 'lucide-react';
+import { Shield, Award, Zap } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section className="bg-gradient-to-b from-[#0066CC] to-[#004499] text-white">
+    <section className="bg-gradient-to-b from-[#0066CC] to-[#0052A3] text-white">
       {/* Mobile Hero */}
       <div className="mobile-show">
-        <div className="px-4 py-8">
+        <div className="px-4 py-6">
           <h1 className="text-2xl font-bold mb-2">
             Calculadora de Cloud Privada
           </h1>
@@ -70,7 +70,7 @@ const HeroSection = () => {
           <div className="text-center">
             {/* Badge premium */}
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20">
-              <Cloud className="w-5 h-5 text-white" />
+              <Shield className="w-5 h-5 text-white" />
               <span className="text-sm font-medium text-white">Enterprise Cloud Solutions</span>
             </div>
             

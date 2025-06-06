@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, CheckCircle } from 'lucide-react';

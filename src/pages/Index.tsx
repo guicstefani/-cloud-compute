@@ -9,7 +9,7 @@ import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
 import PremiumFloatingElements from '@/components/PremiumFloatingElements';
 import { Button } from '@/components/ui/button';
-import { Plus, Share, Save, Download } from 'lucide-react';
+import { Plus, Save, Download } from 'lucide-react';
 import { useIsMobile } from '@/hooks/useMobile';
 
 const Index = () => {
@@ -159,7 +159,7 @@ const Index = () => {
             {/* Mobile: Enhanced Summary Card */}
             <div className="mobile-show">
               <div className="premium-card overflow-hidden">
-                <div className="bg-gradient-to-r from-[#0066CC] to-[#004499] p-6 text-white">
+                <div className="bg-gradient-to-r from-[#0066CC] to-[#0052A3] p-6 text-white">
                   <div className="flex justify-between items-end">
                     <div>
                       <p className="text-sm opacity-90 mb-1">Total Mensal</p>
@@ -168,13 +168,6 @@ const Index = () => {
                         {vms.length} VM{vms.length !== 1 ? 's' : ''} configurada{vms.length !== 1 ? 's' : ''}
                       </p>
                     </div>
-                    <Button 
-                      variant="secondary" 
-                      size="icon"
-                      className="bg-white/20 border-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
-                    >
-                      <Share className="w-5 h-5" />
-                    </Button>
                   </div>
                 </div>
                 <div className="p-6">
@@ -189,30 +182,28 @@ const Index = () => {
       {/* Enhanced Mobile Bottom Bar */}
       {isMobile && vms.length > 0 && (
         <div className="mobile-bottom-bar">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Total Mensal</p>
-              <p className="text-2xl font-semibold text-[#0066CC]">
-                {formatCurrency(total)}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-gray-300 hover:border-[#0066CC] hover:bg-blue-50"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Salvar
-              </Button>
-              <Button 
-                size="sm" 
-                className="bg-[#0066CC] hover:bg-[#0052A3] text-white"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </Button>
-            </div>
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm text-gray-600">Total Mensal</span>
+            <span className="text-2xl font-bold text-[#0066CC]">
+              {formatCurrency(total)}
+            </span>
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1 border-gray-300 hover:border-[#0066CC] hover:bg-blue-50"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Salvar
+            </Button>
+            <Button 
+              size="sm" 
+              className="flex-1 bg-[#0066CC] hover:bg-[#0052A3] text-white"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar
+            </Button>
           </div>
         </div>
       )}
