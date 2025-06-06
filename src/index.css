@@ -3,108 +3,207 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System Optidata Premium */
+/* Design System Optidata Cloud - Versão Oficial */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 248 250 252;
-    --foreground: 31 41 55;
+    --background: 236 240 241;
+    --foreground: 44 62 80;
 
     --card: 255 255 255;
-    --card-foreground: 31 41 55;
+    --card-foreground: 44 62 80;
 
     --popover: 255 255 255;
-    --popover-foreground: 31 41 55;
+    --popover-foreground: 44 62 80;
 
-    --primary: 37 99 235;
-    --primary-foreground: 248 250 252;
+    --primary: 0 102 204;
+    --primary-foreground: 255 255 255;
 
-    --secondary: 241 245 249;
-    --secondary-foreground: 31 41 55;
+    --secondary: 236 240 241;
+    --secondary-foreground: 44 62 80;
 
-    --muted: 241 245 249;
-    --muted-foreground: 107 114 128;
+    --muted: 236 240 241;
+    --muted-foreground: 127 140 141;
 
-    --accent: 16 185 129;
-    --accent-foreground: 248 250 252;
+    --accent: 0 166 81;
+    --accent-foreground: 255 255 255;
 
-    --destructive: 239 68 68;
+    --destructive: 231 76 60;
     --destructive-foreground: 255 255 255;
 
-    --border: 229 231 235;
-    --input: 229 231 235;
-    --ring: 37 99 235;
+    --border: 224 224 224;
+    --input: 224 224 224;
+    --ring: 0 102 204;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     /* Optidata Brand Colors */
-    --optidata-primary: 27 54 93;
-    --optidata-secondary: 37 99 235;
-    --optidata-accent: 16 185 129;
-    --optidata-background: 248 250 252;
-    --optidata-card: 255 255 255;
+    --optidata-blue: 0 102 204;
+    --optidata-blue-dark: 0 61 122;
+    --optidata-success: 0 166 81;
+    --optidata-success-dark: 39 174 96;
+    --optidata-gray-dark: 44 62 80;
+    --optidata-gray-medium: 127 140 141;
+    --optidata-gray-light: 236 240 241;
+    --optidata-warning: 243 156 18;
+    --optidata-error: 231 76 60;
+    --optidata-info: 52 152 219;
   }
 
   body {
-    @apply bg-[#F8FAFC] text-[#1F2937] font-['Inter',system-ui,-apple-system,sans-serif];
+    @apply bg-[#ECF0F1] text-[#2C3E50];
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+    line-height: 1.2;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold;
+    line-height: 1.2;
+  }
+
+  h3 {
+    @apply text-xl font-semibold;
+    line-height: 1.2;
+  }
+
+  small {
+    @apply text-sm;
+    line-height: 1.4;
   }
 }
 
 @layer components {
-  /* Premium Card Design */
+  /* Premium Card Design - Optidata Style */
   .premium-card {
-    @apply bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden;
-    border: 1px solid #E5E7EB;
+    @apply bg-white rounded-lg shadow-sm hover:shadow-lg overflow-hidden;
+    border: 1px solid #E0E0E0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .premium-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(27, 54, 93, 0.08);
-    border-color: #2563EB;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 
-  /* Premium VM Card */
+  /* VM Card específico */
   .premium-vm-card {
-    @apply bg-white rounded-xl overflow-hidden;
+    @apply bg-white rounded-lg overflow-hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid #E0E0E0;
   }
 
   .premium-vm-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 
-  /* Enhanced Input Styles */
-  .premium-input {
-    @apply border-[#E5E7EB] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20;
-    @apply transition-all duration-200 rounded-lg;
+  .premium-vm-card.selected {
+    border-color: #00A651;
+    background: linear-gradient(to right, #F0FFF4 0%, #FFFFFF 100%);
+    box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.1);
   }
 
-  /* Premium Button Styles */
+  /* Enhanced Input Styles - Optidata */
+  .premium-input, .input-field {
+    @apply border-2 rounded-md px-4 py-3 text-base transition-all duration-300;
+    border-color: #E0E0E0;
+    background: #FFFFFF;
+  }
+
+  .premium-input:focus, .input-field:focus {
+    outline: none;
+    border-color: #0066CC;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  }
+
+  .premium-input.success, .input-field.success {
+    border-color: #00A651;
+    background: #F0FFF4;
+  }
+
+  /* Premium Button Styles - Optidata */
   .btn-optidata {
-    @apply bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white rounded-lg font-medium;
-    @apply hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300;
-    @apply focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none;
+    @apply px-6 py-3 font-semibold rounded-md transition-all duration-300;
+    background: #0066CC;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
   }
 
   .btn-optidata:hover {
-    background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+    background: #0052A3;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+    transform: translateY(-1px);
   }
 
-  /* Premium Slider */
+  .btn-optidata:active {
+    transform: translateY(1px);
+  }
+
+  .btn-optidata-secondary {
+    @apply px-5 py-2 font-semibold rounded-md transition-all duration-300;
+    background: transparent;
+    color: #0066CC;
+    border: 2px solid #0066CC;
+  }
+
+  .btn-optidata-secondary:hover {
+    background: #0066CC;
+    color: #FFFFFF;
+  }
+
+  /* Option Cards com feedback verde */
+  .option-card {
+    @apply relative p-4 rounded-lg cursor-pointer transition-all duration-300;
+    border: 2px solid #E0E0E0;
+  }
+
+  .option-card:hover {
+    border-color: #0066CC;
+    background: #F8FBFF;
+  }
+
+  .option-card.selected {
+    border-color: #00A651;
+    background: #F0FFF4;
+    box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.1);
+    transform: scale(1.02);
+  }
+
+  .option-card.selected::before {
+    content: '✓';
+    @apply absolute top-2 right-2 w-6 h-6 bg-[#00A651] text-white rounded-full flex items-center justify-center text-sm font-bold;
+  }
+
+  .option-card.selected::after {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-1 bg-[#00A651] rounded-r;
+  }
+
+  /* Premium Slider - Optidata Style */
   .premium-slider .slider-track {
-    @apply bg-[#E5E7EB] h-2 rounded-full;
+    @apply bg-[#E0E0E0] h-2 rounded-full;
   }
 
   .premium-slider .slider-range {
-    @apply bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] h-2 rounded-full;
+    @apply bg-[#0066CC] h-2 rounded-full;
   }
 
   .premium-slider .slider-thumb {
-    @apply w-5 h-5 bg-white border-2 border-[#2563EB] rounded-full shadow-lg;
-    @apply hover:scale-110 transition-transform duration-200;
+    @apply w-5 h-5 bg-white border-2 border-[#0066CC] rounded-full shadow-lg;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .premium-slider .slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
   }
 
   /* Collapsible card styles */
@@ -113,30 +212,37 @@
   }
 
   .collapsible-header {
-    @apply w-full p-6 flex items-center justify-between hover:bg-[#F8FAFC] transition-colors;
+    @apply w-full p-6 flex items-center justify-between hover:bg-[#F8FBFF] transition-colors;
     @apply min-h-[44px] touch-manipulation;
   }
 
   .collapsible-content {
-    @apply border-t border-[#E5E7EB] p-6 space-y-6 animate-slide-down;
+    @apply border-t border-[#E0E0E0] p-6 space-y-6 animate-slide-down;
+  }
+
+  /* Loading States */
+  .loading {
+    @apply opacity-60 pointer-events-none relative;
+  }
+
+  .loading::after {
+    content: '';
+    @apply absolute top-1/2 left-1/2 w-5 h-5 border-2 border-[#0066CC] border-t-transparent rounded-full;
+    margin: -10px 0 0 -10px;
+    animation: spin 1s linear infinite;
   }
 
   /* Mobile optimizations */
   .mobile-bottom-bar {
-    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB] p-4 lg:hidden;
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-[#E0E0E0] p-4 lg:hidden;
     box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
   /* Touch targets */
   .touch-target {
-    @apply min-h-[44px] min-w-[44px];
+    @apply min-h-[48px] min-w-[48px];
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Loading states */
-  .skeleton {
-    @apply bg-[#E5E7EB] animate-pulse rounded;
   }
 
   /* Enhanced animations */
@@ -155,6 +261,23 @@
   .animate-scale-in {
     animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  /* Success feedback */
+  .success-feedback {
+    @apply border-[#00A651] bg-[#F0FFF4] text-[#00A651];
+    box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.1);
+  }
+
+  /* Container responsivo */
+  .container-optidata {
+    @apply max-w-6xl mx-auto px-6;
+  }
+
+  @media (max-width: 768px) {
+    .container-optidata {
+      @apply px-4;
+    }
+  }
 }
 
 @layer utilities {
@@ -172,9 +295,33 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Text utilities */
-  .text-gradient {
-    @apply bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] bg-clip-text text-transparent;
+  /* Text utilities Optidata */
+  .text-gradient-optidata {
+    @apply bg-gradient-to-r from-[#0066CC] to-[#003D7A] bg-clip-text text-transparent;
+  }
+
+  .text-optidata-blue {
+    color: #0066CC;
+  }
+
+  .text-optidata-success {
+    color: #00A651;
+  }
+
+  .bg-optidata-blue {
+    background-color: #0066CC;
+  }
+
+  .bg-optidata-success {
+    background-color: #00A651;
+  }
+
+  .border-optidata-blue {
+    border-color: #0066CC;
+  }
+
+  .border-optidata-success {
+    border-color: #00A651;
   }
 }
 
@@ -223,57 +370,26 @@
   }
 }
 
-@keyframes blob {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
+@keyframes spin {
+  to { 
+    transform: rotate(360deg); 
+  }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+/* Grid System Optidata */
+.grid-optidata {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-@keyframes fly {
-  0% { transform: translateX(-100px) translateY(10px) rotate(-5deg); }
-  50% { transform: translateX(50px) translateY(-10px) rotate(5deg); }
-  100% { transform: translateX(200px) translateY(10px) rotate(-5deg); }
-}
-
-/* Animation classes */
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float 6s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-.animate-float-slow {
-  animation: float 8s ease-in-out infinite;
-  animation-delay: 4s;
-}
-
-.animate-fly {
-  animation: fly 20s linear infinite;
-}
-
-/* Mobile specific styles */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .grid-optidata {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  /* Mobile specific styles */
   .mobile-hide {
     @apply hidden;
   }
@@ -302,7 +418,7 @@
   }
 }
 
-@media (min-width: 641px) {
+@media (min-width: 769px) {
   .mobile-hide {
     @apply block;
   }
@@ -314,10 +430,10 @@
 
 /* Focus states for accessibility */
 *:focus-visible {
-  @apply outline-none ring-2 ring-[#2563EB] ring-offset-2;
+  @apply outline-none ring-2 ring-[#0066CC] ring-offset-2;
 }
 
 /* Selection styles */
 ::selection {
-  @apply bg-[#2563EB]/20 text-[#1F2937];
+  @apply bg-[#0066CC]/20 text-[#2C3E50];
 }
