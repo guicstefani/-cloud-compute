@@ -3,11 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tema Optidata Cloud Calculator */
+/* Design System Optidata */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 248 250 252;
+    --background: 248 249 250;
     --foreground: 15 23 42;
 
     --card: 255 255 255;
@@ -16,98 +17,218 @@
     --popover: 255 255 255;
     --popover-foreground: 15 23 42;
 
-    --primary: 210 100% 40%;
+    --primary: 0 102 204;
     --primary-foreground: 248 250 252;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 241 245 249;
     --secondary-foreground: 15 23 42;
 
     --muted: 241 245 249;
     --muted-foreground: 100 116 139;
 
-    --accent: 199 89% 48%;
+    --accent: 0 161 228;
     --accent-foreground: 248 250 252;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
 
     --border: 226 232 240;
     --input: 226 232 240;
-    --ring: 210 100% 40%;
+    --ring: 0 102 204;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 255 255 255;
-    --sidebar-foreground: 15 23 42;
-    --sidebar-primary: 210 100% 40%;
-    --sidebar-primary-foreground: 248 250 252;
-    --sidebar-accent: 241 245 249;
-    --sidebar-accent-foreground: 15 23 42;
-    --sidebar-border: 226 232 240;
-    --sidebar-ring: 210 100% 40%;
-  }
-
-  .dark {
-    --background: 15 23 42;
-    --foreground: 248 250 252;
-
-    --card: 30 41 59;
-    --card-foreground: 248 250 252;
-
-    --popover: 30 41 59;
-    --popover-foreground: 248 250 252;
-
-    --primary: 199 89% 48%;
-    --primary-foreground: 15 23 42;
-
-    --secondary: 51 65 85;
-    --secondary-foreground: 248 250 252;
-
-    --muted: 51 65 85;
-    --muted-foreground: 148 163 184;
-
-    --accent: 51 65 85;
-    --accent-foreground: 248 250 252;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 248 250 252;
-
-    --border: 51 65 85;
-    --input: 51 65 85;
-    --ring: 199 89% 48%;
-
-    --sidebar-background: 30 41 59;
-    --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 15 23 42;
-    --sidebar-accent: 51 65 85;
-    --sidebar-accent-foreground: 248 250 252;
-    --sidebar-border: 51 65 85;
-    --sidebar-ring: 199 89% 48%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
+    /* Optidata specific */
+    --optidata-blue: 0 102 204;
+    --optidata-blue-light: 0 161 228;
+    --optidata-gray-50: 248 249 250;
+    --optidata-gray-100: 241 245 249;
+    --optidata-gray-200: 226 232 240;
+    --optidata-gray-600: 71 85 105;
+    --optidata-gray-900: 15 23 42;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#F8F9FA] text-foreground font-['Inter',system-ui,-apple-system,sans-serif];
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 @layer components {
-  .gradient-bg {
-    @apply bg-gradient-to-br from-optidata-blue to-optidata-blue-light;
+  /* Touch-friendly components */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
-  
-  .glass-effect {
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
+
+  /* Optidata card design */
+  .optidata-card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100;
   }
-  
-  .hover-lift {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+
+  /* Gradient backgrounds */
+  .optidata-gradient {
+    @apply bg-gradient-to-r from-[#0066CC] to-[#00A1E4];
+  }
+
+  .optidata-gradient-light {
+    @apply bg-gradient-to-br from-blue-50 to-blue-100;
+  }
+
+  /* Button styles */
+  .btn-optidata {
+    @apply bg-gradient-to-r from-[#0066CC] to-[#00A1E4] text-white rounded-lg font-medium touch-target;
+  }
+
+  /* Input styles */
+  .input-optidata {
+    @apply border-gray-200 rounded-lg focus:border-[#0066CC] focus:ring-[#0066CC] touch-target;
+  }
+
+  /* Collapsible card styles */
+  .collapsible-card {
+    @apply optidata-card overflow-hidden transition-all duration-200;
+  }
+
+  .collapsible-header {
+    @apply w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors touch-target;
+  }
+
+  .collapsible-content {
+    @apply border-t border-gray-100 p-4 space-y-4;
+  }
+
+  /* Mobile bottom bar */
+  .mobile-bottom-bar {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 lg:hidden;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive grid */
+  .responsive-grid {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6;
+  }
+
+  /* VM card mobile styles */
+  .vm-card-mobile {
+    @apply flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm border border-gray-100;
+  }
+
+  .vm-card-icon {
+    @apply w-12 h-12 bg-gradient-to-br from-[#0066CC] to-[#00A1E4] rounded-xl flex items-center justify-center text-white;
+  }
+
+  /* Custom slider styles */
+  .slider-optidata {
+    @apply touch-target;
+  }
+
+  .slider-optidata input[type="range"] {
+    @apply h-2 bg-gray-200 rounded-lg appearance-none;
+  }
+
+  .slider-optidata input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none w-6 h-6 bg-[#0066CC] rounded-full cursor-pointer;
+  }
+
+  .slider-optidata input[type="range"]::-moz-range-thumb {
+    @apply w-6 h-6 bg-[#0066CC] rounded-full cursor-pointer border-0;
+  }
+
+  /* Loading states */
+  .skeleton {
+    @apply bg-gray-200 animate-pulse rounded;
+  }
+
+  /* PWA styles */
+  .pwa-banner {
+    @apply bg-gradient-to-r from-[#0066CC] to-[#00A1E4] text-white p-4 rounded-lg m-4;
+  }
+}
+
+@layer utilities {
+  /* Safe area utilities for mobile */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Touch utilities */
+  .no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Animation utilities */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .mobile-hide {
+    @apply hidden;
+  }
+
+  .mobile-show {
+    @apply block;
+  }
+
+  /* Larger touch targets on mobile */
+  button, input, select, textarea {
+    @apply touch-target;
+  }
+
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 641px) {
+  .mobile-hide {
+    @apply block;
+  }
+
+  .mobile-show {
+    @apply hidden;
   }
 }

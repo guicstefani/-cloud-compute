@@ -1,16 +1,14 @@
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import VMDiscountSection from '@/components/VMDiscountSection';
+import TouchInput from '@/components/TouchInput';
+import CollapsibleCard from '@/components/CollapsibleCard';
 import { 
   Cpu, 
   MemoryStick, 
@@ -78,332 +76,252 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header da VM */}
-      <div className="flex items-center justify-between">
-        <div>
+    <div className="space-y-4 lg:space-y-6">
+      {/* VM Header */}
+      <CollapsibleCard
+        title={vm.nome || 'Nova VM'}
+        icon={<span className="text-xl">{getOSIcon()}</span>}
+        subtitle={`${vm.vcpu} vCPU • ${vm.ram}GB RAM`}
+        value={formatCurrency(custo.total)}
+        defaultExpanded
+        className="border-2 border-optidata-blue/20"
+      >
+        <div className="space-y-4">
           <Input
             value={vm.nome}
             onChange={(e) => handleUpdate({ nome: e.target.value })}
-            className="text-lg font-semibold border-none shadow-none p-0 h-auto"
+            className="text-lg font-semibold input-optidata"
             placeholder="Nome da VM"
           />
-          <div className="flex items-center space-x-2 mt-1">
-            <span className="text-2xl">{getOSIcon()}</span>
+          
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="text-xs">
               {vm.status === 'rascunho' ? 'Rascunho' : 'Finalizada'}
             </Badge>
             {vm.descontoIndividual > 0 && (
-              <Badge className="text-xs bg-green-100 text-green-700">
+              <Badge className="text-xs bg-green-100 text-green-700 border-green-200">
                 Desconto {vm.descontoIndividual}%
               </Badge>
             )}
           </div>
-        </div>
-        
-        <div className="text-right">
-          <div className="text-2xl font-bold text-optidata-blue">
-            {formatCurrency(custo.total)}
-          </div>
-          <div className="text-sm text-optidata-gray-600">por mês</div>
+
           {custo.descontoIndividual > 0 && (
-            <div className="text-xs text-green-600">
-              Economia: {formatCurrency(custo.descontoIndividual)}
+            <div className="text-sm text-green-600 optidata-gradient-light p-3 rounded-lg">
+              💰 Economia: {formatCurrency(custo.descontoIndividual)}
             </div>
           )}
         </div>
-      </div>
+      </CollapsibleCard>
 
       {/* Recursos Computacionais */}
-      <Card className="p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <Cpu className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Recursos Computacionais</h3>
-        </div>
+      <CollapsibleCard
+        title="Recursos Computacionais"
+        icon={<Cpu className="w-6 h-6" />}
+        value={formatCurrency(custo.vcpu + custo.ram)}
+        defaultExpanded
+      >
+        <div className="space-y-6">
+          <TouchInput
+            label="vCPU"
+            icon={<Cpu className="w-4 h-4 text-optidata-gray-500" />}
+            value={vm.vcpu}
+            onChange={(value) => handleUpdate({ vcpu: value })}
+            min={1}
+            max={128}
+            calculation={`${vm.vcpu} × R$ 0,0347 × 720h`}
+            calculatedValue={formatCurrency(custo.vcpu)}
+          />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* vCPU com slider + input manual */}
-          <div className="space-y-3">
-            <Label className="flex items-center justify-between">
-              <span>vCPU</span>
-              <span className="text-sm text-optidata-gray-600">
-                {formatCurrency(custo.vcpu)}
-              </span>
-            </Label>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <Slider
-                  value={[vm.vcpu]}
-                  onValueChange={([value]) => handleUpdate({ vcpu: value })}
-                  min={1}
-                  max={128}
-                  step={1}
-                  className="w-full"
-                />
+          <TouchInput
+            label="RAM"
+            icon={<MemoryStick className="w-4 h-4 text-optidata-gray-500" />}
+            value={vm.ram}
+            onChange={(value) => handleUpdate({ ram: value })}
+            min={1}
+            max={1024}
+            unit="GB"
+            calculation={`${vm.ram}GB × R$ 0,0278 × 720h`}
+            calculatedValue={formatCurrency(custo.ram)}
+          />
+
+          {/* Validação vCPU/RAM */}
+          {vm.ram / vm.vcpu < 2 && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-center space-x-2 text-amber-700">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="text-sm">
+                  Proporção vCPU/RAM baixa. Recomendado: 1:2 a 1:8
+                </span>
               </div>
-              <Input
-                type="number"
-                value={vm.vcpu}
-                onChange={(e) => handleUpdate({ vcpu: Number(e.target.value) })}
-                min={1}
-                max={128}
-                className="w-20 text-center"
-              />
             </div>
-            <div className="flex justify-between text-xs text-optidata-gray-500">
-              <span>{vm.vcpu} × R$ 0,0347 × 720h</span>
-              <span className="font-medium">= {formatCurrency(vm.vcpu * 0.0347 * 720)}</span>
-            </div>
-          </div>
-
-          {/* RAM com slider + input manual */}
-          <div className="space-y-3">
-            <Label className="flex items-center justify-between">
-              <span className="flex items-center space-x-1">
-                <MemoryStick className="w-4 h-4" />
-                <span>RAM (GB)</span>
-              </span>
-              <span className="text-sm text-optidata-gray-600">
-                {formatCurrency(custo.ram)}
-              </span>
-            </Label>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <Slider
-                  value={[vm.ram]}
-                  onValueChange={([value]) => handleUpdate({ ram: value })}
-                  min={1}
-                  max={1024}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-              <Input
-                type="number"
-                value={vm.ram}
-                onChange={(e) => handleUpdate({ ram: Number(e.target.value) })}
-                min={1}
-                max={1024}
-                className="w-20 text-center"
-              />
-            </div>
-            <div className="flex justify-between text-xs text-optidata-gray-500">
-              <span>{vm.ram}GB × R$ 0,0278 × 720h</span>
-              <span className="font-medium">= {formatCurrency(vm.ram * 0.0278 * 720)}</span>
-            </div>
-          </div>
+          )}
         </div>
-
-        {/* Validação vCPU/RAM */}
-        {vm.ram / vm.vcpu < 2 && (
-          <div className="mt-4 p-3 bg-optidata-warning/10 border border-optidata-warning/20 rounded-lg">
-            <div className="flex items-center space-x-2 text-optidata-warning">
-              <AlertTriangle className="w-4 h-4" />
-              <span className="text-sm">
-                Proporção vCPU/RAM baixa. Recomendado: 1:2 a 1:8
-              </span>
-            </div>
-          </div>
-        )}
-      </Card>
+      </CollapsibleCard>
 
       {/* Armazenamento */}
-      <Card className="p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <HardDrive className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Armazenamento</h3>
-        </div>
+      <CollapsibleCard
+        title="Armazenamento"
+        icon={<HardDrive className="w-6 h-6" />}
+        value={formatCurrency(custo.storage + custo.backup)}
+      >
+        <div className="space-y-6">
+          <TouchInput
+            label="Disco FCM"
+            icon={<HardDrive className="w-4 h-4 text-optidata-gray-500" />}
+            value={vm.discoFCM}
+            onChange={(value) => handleUpdate({ discoFCM: value })}
+            min={0}
+            max={10000}
+            step={10}
+            unit="GB - Alta capacidade"
+          />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Disco FCM */}
+          <TouchInput
+            label="Disco SSD"
+            icon={<HardDrive className="w-4 h-4 text-orange-500" />}
+            value={vm.discoSSD}
+            onChange={(value) => handleUpdate({ discoSSD: value })}
+            min={0}
+            max={10000}
+            step={10}
+            unit="GB - Alta performance"
+          />
+
+          {/* Tipo de Backup */}
           <div className="space-y-3">
-            <Label>
-              Disco FCM (GB)
-              <span className="text-xs text-optidata-gray-500 ml-1">
-                - Alta capacidade
-              </span>
-            </Label>
-            <Input
-              type="number"
-              value={vm.discoFCM}
-              onChange={(e) => handleUpdate({ discoFCM: Number(e.target.value) })}
-              min={0}
-              step={10}
-            />
-          </div>
-
-          {/* Disco SSD */}
-          <div className="space-y-3">
-            <Label>
-              Disco SSD (GB)
-              <span className="text-xs text-optidata-gray-500 ml-1">
-                - Alta performance
-              </span>
-            </Label>
-            <Input
-              type="number"
-              value={vm.discoSSD}
-              onChange={(e) => handleUpdate({ discoSSD: Number(e.target.value) })}
-              min={0}
-              step={10}
-            />
+            <div className="text-sm font-medium text-optidata-gray-900">Tipo de Backup</div>
+            <RadioGroup
+              value={vm.backupTipo}
+              onValueChange={(value: any) => handleUpdate({ backupTipo: value })}
+              className="flex flex-col space-y-2"
+            >
+              <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                <RadioGroupItem value="padrao" id="padrao" />
+                <label htmlFor="padrao" className="flex-1 text-sm">Padrão</label>
+              </div>
+              <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                <RadioGroupItem value="duplo" id="duplo" />
+                <label htmlFor="duplo" className="flex-1 text-sm">Duplo</label>
+              </div>
+              <div className="flex items-center space-x-2 p-3 border rounded-lg">
+                <RadioGroupItem value="triplo" id="triplo" />
+                <label htmlFor="triplo" className="flex-1 text-sm">Triplo</label>
+              </div>
+            </RadioGroup>
+            <div className="text-sm text-optidata-gray-600 text-right">
+              Custo do backup: {formatCurrency(custo.backup)}
+            </div>
           </div>
         </div>
+      </CollapsibleCard>
 
-        {/* Tipo de Backup */}
-        <div className="mt-6 space-y-3">
-          <Label>Tipo de Backup</Label>
-          <RadioGroup
-            value={vm.backupTipo}
-            onValueChange={(value: any) => handleUpdate({ backupTipo: value })}
-            className="flex space-x-6"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="padrao" id="padrao" />
-              <Label htmlFor="padrao">Padrão</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="duplo" id="duplo" />
-              <Label htmlFor="duplo">Duplo</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="triplo" id="triplo" />
-              <Label htmlFor="triplo">Triplo</Label>
-            </div>
-          </RadioGroup>
-          <div className="text-sm text-optidata-gray-600">
-            Custo do backup: {formatCurrency(custo.backup)}
-          </div>
-        </div>
-      </Card>
-
-      {/* Sistema Operacional - ATUALIZADO */}
-      <Card className="p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <Server className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Sistema Operacional</h3>
-        </div>
-
+      {/* Sistema Operacional */}
+      <CollapsibleCard
+        title="Sistema Operacional"
+        icon={<Server className="w-6 h-6" />}
+      >
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
             <div className="flex items-center space-x-3">
-              <Switch
-                id="windows"
-                checked={vm.windowsServer}
-                onCheckedChange={(checked) => handleUpdate({ windowsServer: checked })}
-              />
               <Computer className="w-5 h-5 text-blue-600" />
-              <div>
-                <Label htmlFor="windows">Windows Server</Label>
+              <div className="flex-1">
+                <div className="font-medium">Windows Server</div>
                 <div className="text-xs text-gray-500">
                   {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 55 = R$ {Math.ceil(vm.vcpu / 2) * 55}
                 </div>
               </div>
             </div>
+            <Switch
+              checked={vm.windowsServer}
+              onCheckedChange={(checked) => handleUpdate({ windowsServer: checked })}
+            />
           </div>
 
-          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
             <div className="flex items-center space-x-3">
-              <Switch
-                id="rhel"
-                checked={vm.rhel}
-                onCheckedChange={(checked) => handleUpdate({ rhel: checked })}
-              />
               <Terminal className="w-5 h-5 text-red-600" />
-              <div>
-                <Label htmlFor="rhel">Red Hat Enterprise Linux (RHEL)</Label>
-                <div className="text-xs text-gray-500">
-                  R$ 1.200,00/mês por servidor
-                </div>
+              <div className="flex-1">
+                <div className="font-medium">Red Hat Enterprise Linux (RHEL)</div>
+                <div className="text-xs text-gray-500">R$ 1.200,00/mês por servidor</div>
               </div>
             </div>
+            <Switch
+              checked={vm.rhel}
+              onCheckedChange={(checked) => handleUpdate({ rhel: checked })}
+            />
           </div>
 
-          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
             <div className="flex items-center space-x-3">
-              <Switch
-                id="suse"
-                checked={vm.suse}
-                onCheckedChange={(checked) => handleUpdate({ suse: checked })}
-              />
               <Terminal className="w-5 h-5 text-green-600" />
-              <div>
-                <Label htmlFor="suse">SUSE Linux Enterprise</Label>
-                <div className="text-xs text-gray-500">
-                  R$ 900,00/mês por servidor
-                </div>
+              <div className="flex-1">
+                <div className="font-medium">SUSE Linux Enterprise</div>
+                <div className="text-xs text-gray-500">R$ 900,00/mês por servidor</div>
               </div>
             </div>
+            <Switch
+              checked={vm.suse}
+              onCheckedChange={(checked) => handleUpdate({ suse: checked })}
+            />
           </div>
 
-          {/* Aviso sobre seleção de SO */}
           <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-gray-50 rounded">
             <Info className="w-3 h-3" />
             Apenas um sistema operacional pode ser selecionado por VM
           </div>
         </div>
-      </Card>
+      </CollapsibleCard>
 
-      {/* Banco de Dados - ATUALIZADO */}
-      <Card className="p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <Database className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Banco de Dados</h3>
-        </div>
-
+      {/* Banco de Dados */}
+      <CollapsibleCard
+        title="Banco de Dados"
+        icon={<Database className="w-6 h-6" />}
+      >
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="sqlstd">SQL Server Standard</Label>
+          <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="flex-1">
+              <div className="font-medium">SQL Server Standard</div>
               <div className="text-xs text-gray-500">
                 {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 800 = R$ {Math.ceil(vm.vcpu / 2) * 800}
               </div>
               {!vm.windowsServer && (
-                <div className="text-xs text-optidata-warning">
-                  Requer Windows Server
-                </div>
+                <div className="text-xs text-amber-600">Requer Windows Server</div>
               )}
             </div>
             <Switch
-              id="sqlstd"
               checked={vm.sqlServerSTD}
               disabled={!vm.windowsServer}
               onCheckedChange={(checked) => handleUpdate({ sqlServerSTD: checked })}
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label htmlFor="sqlweb">SQL Server Web</Label>
+          <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="font-medium">SQL Server Web</div>
             <Switch
-              id="sqlweb"
               checked={vm.sqlServerWEB}
               onCheckedChange={(checked) => handleUpdate({ sqlServerWEB: checked })}
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label htmlFor="hana">SAP HANA</Label>
+          <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="font-medium">SAP HANA</div>
             <Switch
-              id="hana"
               checked={vm.hana}
               onCheckedChange={(checked) => handleUpdate({ hana: checked })}
             />
           </div>
         </div>
-      </Card>
+      </CollapsibleCard>
 
       {/* Terminal Services */}
-      <Card className="p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <Users className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Terminal Services (TSPlus)</h3>
-        </div>
-
+      <CollapsibleCard
+        title="Terminal Services (TSPlus)"
+        icon={<Users className="w-6 h-6" />}
+      >
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="tsplus">Ativar TSPlus</Label>
+          <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="font-medium">Ativar TSPlus</div>
             <Switch
-              id="tsplus"
               checked={vm.tsplus.enabled}
               onCheckedChange={(checked) => 
                 handleUpdate({ 
@@ -416,7 +334,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
           {vm.tsplus.enabled && (
             <div className="space-y-4 pl-4 border-l-2 border-optidata-blue/20">
               <div className="space-y-2">
-                <Label>Número de Usuários</Label>
+                <div className="text-sm font-medium">Número de Usuários</div>
                 <Select
                   value={vm.tsplus.usuarios.toString()}
                   onValueChange={(value) =>
@@ -428,7 +346,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                     })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="input-optidata">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -444,10 +362,9 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between">
-                <Label htmlFor="advsec">Advanced Security</Label>
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="font-medium">Advanced Security</div>
                 <Switch
-                  id="advsec"
                   checked={vm.tsplus.advancedSecurity}
                   onCheckedChange={(checked) =>
                     handleUpdate({
@@ -457,10 +374,9 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <Label htmlFor="2fa">Two-Factor Authentication</Label>
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="font-medium">Two-Factor Authentication</div>
                 <Switch
-                  id="2fa"
                   checked={vm.tsplus.twoFactor}
                   onCheckedChange={(checked) =>
                     handleUpdate({
@@ -472,32 +388,29 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </div>
           )}
         </div>
-      </Card>
+      </CollapsibleCard>
 
       {/* Segurança e Extras */}
-      <Card className="p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <Shield className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Segurança e Extras</h3>
-        </div>
-
+      <CollapsibleCard
+        title="Segurança e Extras"
+        icon={<Shield className="w-6 h-6" />}
+      >
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="antivirus">Antivírus</Label>
+          <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="font-medium">Antivírus</div>
             <Switch
-              id="antivirus"
               checked={vm.antivirus}
               onCheckedChange={(checked) => handleUpdate({ antivirus: checked })}
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Web Application Firewall (WAF)</Label>
+            <div className="text-sm font-medium">Web Application Firewall (WAF)</div>
             <Select
               value={vm.waf}
               onValueChange={(value: any) => handleUpdate({ waf: value })}
             >
-              <SelectTrigger>
+              <SelectTrigger className="input-optidata">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -509,93 +422,88 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </Select>
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label htmlFor="thinprint">ThinPrint</Label>
+          <div className="flex items-center justify-between p-3 border rounded-lg">
+            <div className="font-medium">ThinPrint</div>
             <Switch
-              id="thinprint"
               checked={vm.thinprint}
               onCheckedChange={(checked) => handleUpdate({ thinprint: checked })}
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>IPs Adicionais</Label>
-            <Input
-              type="number"
-              value={vm.ipsAdicionais}
-              onChange={(e) => handleUpdate({ ipsAdicionais: Number(e.target.value) })}
-              min={0}
-              max={10}
-            />
-          </div>
+          <TouchInput
+            label="IPs Adicionais"
+            icon={<Monitor className="w-4 h-4 text-optidata-gray-500" />}
+            value={vm.ipsAdicionais}
+            onChange={(value) => handleUpdate({ ipsAdicionais: value })}
+            min={0}
+            max={10}
+          />
         </div>
-      </Card>
+      </CollapsibleCard>
 
-      {/* Nova seção de desconto individual */}
+      {/* Desconto Individual */}
       <VMDiscountSection
         vm={vm}
         totalInfra={custo.subtotalInfraOriginal}
         onUpdate={handleUpdate}
       />
 
-      <Separator />
-
-      {/* Resumo de Custos - ATUALIZADO para mostrar vCPU e RAM separadamente */}
-      <Card className="p-6 bg-optidata-gray-50">
-        <div className="flex items-center space-x-2 mb-4">
-          <Monitor className="w-5 h-5 text-optidata-blue" />
-          <h3 className="text-lg font-semibold">Resumo de Custos</h3>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <span>vCPU ({vm.vcpu} × R$ 0,0347 × 720h)</span>
-            <span>{formatCurrency(custo.vcpu)}</span>
+      {/* Resumo de Custos */}
+      <CollapsibleCard
+        title="Resumo de Custos"
+        icon={<Monitor className="w-6 h-6" />}
+        value={formatCurrency(custo.total)}
+        defaultExpanded
+        className="optidata-gradient-light"
+      >
+        <div className="space-y-3">
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-sm">vCPU ({vm.vcpu} × R$ 0,0347 × 720h)</span>
+            <span className="font-medium">{formatCurrency(custo.vcpu)}</span>
           </div>
-          <div className="flex justify-between">
-            <span>RAM ({vm.ram}GB × R$ 0,0278 × 720h)</span>
-            <span>{formatCurrency(custo.ram)}</span>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-sm">RAM ({vm.ram}GB × R$ 0,0278 × 720h)</span>
+            <span className="font-medium">{formatCurrency(custo.ram)}</span>
           </div>
-          <div className="flex justify-between">
-            <span>Armazenamento + Backup</span>
-            <span>{formatCurrency(custo.storage + custo.backup)}</span>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-sm">Armazenamento + Backup</span>
+            <span className="font-medium">{formatCurrency(custo.storage + custo.backup)}</span>
           </div>
-          <div className="flex justify-between">
-            <span>Monitoramento</span>
-            <span>{formatCurrency(custo.monitoramento)}</span>
+          <div className="flex justify-between py-2 border-b border-gray-200">
+            <span className="text-sm">Monitoramento</span>
+            <span className="font-medium">{formatCurrency(custo.monitoramento)}</span>
           </div>
           
-          {/* Mostrar desconto individual se aplicado */}
           {custo.descontoIndividual > 0 && (
             <>
-              <div className="flex justify-between text-gray-500">
-                <span>Subtotal Infraestrutura</span>
+              <div className="flex justify-between py-2 text-gray-500 border-b border-gray-200">
+                <span className="text-sm">Subtotal Infraestrutura</span>
                 <span className="line-through">{formatCurrency(custo.subtotalInfraOriginal)}</span>
               </div>
-              <div className="flex justify-between text-green-600">
-                <span>Desconto Individual ({vm.descontoIndividual}%)</span>
+              <div className="flex justify-between py-2 text-green-600 border-b border-gray-200">
+                <span className="text-sm">Desconto Individual ({vm.descontoIndividual}%)</span>
                 <span>-{formatCurrency(custo.descontoIndividual)}</span>
               </div>
-              <div className="flex justify-between font-medium">
-                <span>Infraestrutura com Desconto</span>
+              <div className="flex justify-between py-2 font-medium border-b border-gray-200">
+                <span className="text-sm">Infraestrutura com Desconto</span>
                 <span>{formatCurrency(custo.subtotalInfra)}</span>
               </div>
             </>
           )}
           
           {Object.keys(custo.licencas).length > 0 && (
-            <div className="flex justify-between">
-              <span>Licenças (sem desconto)</span>
-              <span>{formatCurrency(custo.subtotalLicencas)}</span>
+            <div className="flex justify-between py-2 border-b border-gray-200">
+              <span className="text-sm">Licenças (sem desconto)</span>
+              <span className="font-medium">{formatCurrency(custo.subtotalLicencas)}</span>
             </div>
           )}
-          <Separator />
-          <div className="flex justify-between text-lg font-semibold">
+
+          <div className="flex justify-between text-xl font-bold pt-2 border-t-2 border-optidata-blue">
             <span>Total Mensal</span>
             <span className="text-optidata-blue">{formatCurrency(custo.total)}</span>
           </div>
         </div>
-      </Card>
+      </CollapsibleCard>
     </div>
   );
 };
