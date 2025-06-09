@@ -23,7 +23,8 @@ import {
   Info,
   Check,
   Heart,
-  Zap
+  Zap,
+  Tag
 } from 'lucide-react';
 import { 
   sistemasWindows,
@@ -48,6 +49,11 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 
   const handleUpdate = (updates: Partial<VM>) => {
     updateVM(vm.id, updates);
+  };
+
+  // Função para calcular apenas a infraestrutura (sem licenças)
+  const calcularInfraestrutura = () => {
+    return custo.vcpu + custo.ram + custo.storage + custo.backup + custo.monitoramento;
   };
 
   // Função para encontrar o SO selecionado
@@ -134,7 +140,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             calculatedValue={formatCurrency(custo.ram)}
           />
 
-          {/* Validação vCPU/RAM */}
           {vm.ram / vm.vcpu < 2 && (
             <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
               <div className="flex items-center space-x-2 text-amber-700">
@@ -177,7 +182,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             unit="GB - Alta performance"
           />
 
-          {/* Tipo de Backup */}
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-gray-700 mb-2">Tipo de Backup</h4>
             <div className="space-y-2">
@@ -222,7 +226,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         value={formatCurrency(custo.sistemaOperacional)}
       >
         <div className="space-y-6">
-          {/* Windows */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Server className="w-4 h-4 mr-2 text-blue-600" />
@@ -241,7 +244,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </div>
           </div>
 
-          {/* Linux Enterprise */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Server className="w-4 h-4 mr-2 text-red-600" />
@@ -260,7 +262,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </div>
           </div>
 
-          {/* Linux Gratuitos */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Terminal className="w-4 h-4 mr-2 text-green-600" />
@@ -293,7 +294,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         value={formatCurrency(custo.bancoDados)}
       >
         <div className="space-y-6">
-          {/* Microsoft SQL Server */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Database className="w-4 h-4 mr-2 text-blue-600" />
@@ -312,7 +312,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </div>
           </div>
 
-          {/* Oracle Database */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Shield className="w-4 h-4 mr-2 text-red-600" />
@@ -331,7 +330,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </div>
           </div>
 
-          {/* Bancos Open Source */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Heart className="w-4 h-4 mr-2 text-green-600" />
@@ -350,7 +348,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </div>
           </div>
 
-          {/* Enterprise NoSQL/Outros */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
               <Zap className="w-4 h-4 mr-2 text-purple-600" />
@@ -382,7 +379,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         icon={<Users className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          {/* TSPlus Enable Checkbox */}
           <button
             onClick={() => 
               handleUpdate({ 
@@ -449,7 +445,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </Select>
               </div>
 
-              {/* Advanced Security */}
               <button
                 onClick={() =>
                   handleUpdate({
@@ -483,7 +478,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </div>
               </button>
 
-              {/* Two-Factor Authentication */}
               <button
                 onClick={() =>
                   handleUpdate({
@@ -527,7 +521,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         icon={<Shield className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          {/* Antivírus */}
           <button
             onClick={() => handleUpdate({ antivirus: !vm.antivirus })}
             className={`
@@ -575,7 +568,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </Select>
           </div>
 
-          {/* ThinPrint */}
           <button
             onClick={() => handleUpdate({ thinprint: !vm.thinprint })}
             className={`
@@ -617,12 +609,81 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Desconto Individual */}
-      <VMDiscountSection
-        vm={vm}
-        totalInfra={custo.subtotalInfraOriginal}
-        onUpdate={handleUpdate}
-      />
+      {/* Desconto Exclusivo - VERSÃO CORRIGIDA */}
+      <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+        <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+          <Tag className="w-5 h-5 mr-2" />
+          Desconto Exclusivo para esta VM
+        </h4>
+        
+        <div className="space-y-4">
+          {/* Slider de Desconto */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-gray-700">
+                Percentual de Desconto
+              </span>
+              <span className="text-2xl font-bold text-blue-600">
+                {vm.descontoIndividual || 0}%
+              </span>
+            </div>
+            
+            <input
+              type="range"
+              min="0"
+              max="50"
+              value={vm.descontoIndividual || 0}
+              onChange={(e) => handleUpdate({ descontoIndividual: parseInt(e.target.value) })}
+              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              style={{
+                background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB 100%)`
+              }}
+            />
+            
+            {/* Labels do slider */}
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0%</span>
+              <span>25%</span>
+              <span>50%</span>
+            </div>
+          </div>
+
+          {/* Aviso sobre aplicação do desconto */}
+          <div className="bg-blue-100 rounded-lg p-3">
+            <p className="text-sm text-blue-800 flex items-start">
+              <Info className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+              Aplicado apenas em infraestrutura. Licenças não têm desconto.
+            </p>
+          </div>
+
+          {/* Breakdown de valores */}
+          {(vm.descontoIndividual || 0) > 0 && (
+            <div className="space-y-3 bg-white rounded-lg p-4 border">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Infraestrutura original:</span>
+                <span className="font-medium">{formatCurrency(custo.subtotalInfraOriginal)}</span>
+              </div>
+              
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Com desconto ({vm.descontoIndividual}%):</span>
+                <span className="font-medium text-blue-600">
+                  {formatCurrency(custo.subtotalInfra)}
+                </span>
+              </div>
+              
+              <div className="flex justify-between text-sm font-semibold text-green-600 pt-2 border-t">
+                <span>Economia mensal:</span>
+                <span>{formatCurrency(custo.descontoIndividual)}</span>
+              </div>
+              
+              <div className="flex justify-between text-sm text-green-600">
+                <span>Economia anual:</span>
+                <span>{formatCurrency(custo.descontoIndividual * 12)}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Resumo de Custos */}
       <CollapsibleCard
