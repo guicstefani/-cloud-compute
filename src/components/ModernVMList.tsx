@@ -1,13 +1,14 @@
-
 import React from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
+import { CalculadoraCloud } from '@/utils/calculadora';
 import { Button } from '@/components/ui/button';
 import { Plus, Sparkles } from 'lucide-react';
 import { VM_TEMPLATES } from '@/data/templates';
 import ModernVMCard from './ModernVMCard';
 
 const ModernVMList = () => {
-  const { vms, selectedVMId, addVM } = useCalculadoraStore();
+  const { vms, selectedVMId, addVM, precos } = useCalculadoraStore();
+  const calculadora = new CalculadoraCloud(precos);
 
   if (vms.length === 0) {
     return (
@@ -95,6 +96,7 @@ const ModernVMList = () => {
           <ModernVMCard
             key={vm.id}
             vm={vm}
+            calculadora={calculadora}
             isSelected={vm.id === selectedVMId}
           />
         ))}
