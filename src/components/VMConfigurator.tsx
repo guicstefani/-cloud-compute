@@ -20,13 +20,34 @@ import {
   AlertTriangle,
   Computer,
   Terminal,
-  Info
+  Info,
+  Check
 } from 'lucide-react';
 
 interface VMConfiguratorProps {
   vm: VM;
   calculadora: CalculadoraCloud;
 }
+
+// Tabela de preços TSPlus
+const precosTSPlus = {
+  3: 140,
+  5: 180,
+  10: 310,
+  15: 390,
+  25: 550,
+  35: 730,
+  49: 990,
+  ilimitado: 1190
+};
+
+// Preços WAF
+const precosWAF = {
+  'none': 0,
+  'pro': 200,
+  'business': 1600,
+  'enterprise': 15600
+};
 
 const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
   const { updateVM } = useCalculadoraStore();
@@ -64,6 +85,22 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
     }
 
     updateVM(vm.id, finalUpdates);
+  };
+
+  // Função para selecionar banco de dados (apenas um)
+  const selecionarBancoDados = (tipo: 'sqlServerSTD' | 'sqlServerWEB' | 'hana') => {
+    const updates: Partial<VM> = {
+      sqlServerSTD: false,
+      sqlServerWEB: false,
+      hana: false
+    };
+    
+    // Se clicar no mesmo que já está ativo, desmarcar; senão, marcar o novo
+    if (!vm[tipo]) {
+      updates[tipo] = true;
+    }
+    
+    handleUpdate(updates);
   };
 
   const getOSIcon = () => {
@@ -255,9 +292,20 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
               `}
             >
               <div className="flex justify-between items-center">
-                <span className={vm.windowsServer ? 'text-green-900 font-medium' : ''}>
-                  Windows Server
-                </span>
+                <div className="flex items-center">
+                  <div className={`
+                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                    ${vm.windowsServer 
+                      ? 'bg-green-500 border-green-500' 
+                      : 'bg-white border-gray-300'
+                    }
+                  `}>
+                    {vm.windowsServer && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                  <span className={vm.windowsServer ? 'text-green-900 font-medium' : ''}>
+                    Windows Server
+                  </span>
+                </div>
                 <span className="text-sm text-gray-500">
                   {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 55 = R$ {Math.ceil(vm.vcpu / 2) * 55}
                 </span>
@@ -275,9 +323,20 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
               `}
             >
               <div className="flex justify-between items-center">
-                <span className={vm.rhel ? 'text-green-900 font-medium' : ''}>
-                  Red Hat Enterprise Linux (RHEL)
-                </span>
+                <div className="flex items-center">
+                  <div className={`
+                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                    ${vm.rhel 
+                      ? 'bg-green-500 border-green-500' 
+                      : 'bg-white border-gray-300'
+                    }
+                  `}>
+                    {vm.rhel && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                  <span className={vm.rhel ? 'text-green-900 font-medium' : ''}>
+                    Red Hat Enterprise Linux (RHEL)
+                  </span>
+                </div>
                 <span className="text-sm text-gray-500">R$ 1.200,00/mês por servidor</span>
               </div>
             </button>
@@ -293,9 +352,20 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
               `}
             >
               <div className="flex justify-between items-center">
-                <span className={vm.suse ? 'text-green-900 font-medium' : ''}>
-                  SUSE Linux Enterprise
-                </span>
+                <div className="flex items-center">
+                  <div className={`
+                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                    ${vm.suse 
+                      ? 'bg-green-500 border-green-500' 
+                      : 'bg-white border-gray-300'
+                    }
+                  `}>
+                    {vm.suse && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                  <span className={vm.suse ? 'text-green-900 font-medium' : ''}>
+                    SUSE Linux Enterprise
+                  </span>
+                </div>
                 <span className="text-sm text-gray-500">R$ 900,00/mês por servidor</span>
               </div>
             </button>
@@ -308,16 +378,16 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Banco de Dados com Feedback Verde */}
+      {/* Banco de Dados com Lógica de Seleção Única */}
       <CollapsibleCard
         title="Banco de Dados"
         icon={<Database className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Banco de Dados</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-2">Banco de Dados (escolha apenas um)</h4>
           <div className="space-y-2">
             <button
-              onClick={() => handleUpdate({ sqlServerSTD: !vm.sqlServerSTD })}
+              onClick={() => selecionarBancoDados('sqlServerSTD')}
               className={`
                 w-full p-3 rounded-lg border-2 text-left transition-all
                 ${vm.sqlServerSTD 
@@ -330,11 +400,22 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <span className={vm.sqlServerSTD ? 'text-green-900 font-medium' : ''}>
-                    SQL Server Standard
-                  </span>
+                  <div className="flex items-center">
+                    <div className={`
+                      w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                      ${vm.sqlServerSTD 
+                        ? 'bg-green-500 border-green-500' 
+                        : 'bg-white border-gray-300'
+                      }
+                    `}>
+                      {vm.sqlServerSTD && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className={vm.sqlServerSTD ? 'text-green-900 font-medium' : ''}>
+                      SQL Server Standard
+                    </span>
+                  </div>
                   {!vm.windowsServer && (
-                    <div className="text-xs text-amber-600">Requer Windows Server</div>
+                    <div className="text-xs text-amber-600 ml-8">Requer Windows Server</div>
                   )}
                 </div>
                 <span className="text-sm text-gray-500">
@@ -344,7 +425,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </button>
             
             <button
-              onClick={() => handleUpdate({ sqlServerWEB: !vm.sqlServerWEB })}
+              onClick={() => selecionarBancoDados('sqlServerWEB')}
               className={`
                 w-full p-3 rounded-lg border-2 text-left transition-all
                 ${vm.sqlServerWEB 
@@ -353,13 +434,27 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 }
               `}
             >
-              <span className={vm.sqlServerWEB ? 'text-green-900 font-medium' : ''}>
-                SQL Server Web
-              </span>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className={`
+                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                    ${vm.sqlServerWEB 
+                      ? 'bg-green-500 border-green-500' 
+                      : 'bg-white border-gray-300'
+                    }
+                  `}>
+                    {vm.sqlServerWEB && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                  <span className={vm.sqlServerWEB ? 'text-green-900 font-medium' : ''}>
+                    SQL Server Web
+                  </span>
+                </div>
+                <span className="text-sm text-gray-500">R$ 140,00/mês</span>
+              </div>
             </button>
             
             <button
-              onClick={() => handleUpdate({ hana: !vm.hana })}
+              onClick={() => selecionarBancoDados('hana')}
               className={`
                 w-full p-3 rounded-lg border-2 text-left transition-all
                 ${vm.hana 
@@ -368,58 +463,74 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 }
               `}
             >
-              <span className={vm.hana ? 'text-green-900 font-medium' : ''}>
-                SAP HANA
-              </span>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className={`
+                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                    ${vm.hana 
+                      ? 'bg-green-500 border-green-500' 
+                      : 'bg-white border-gray-300'
+                    }
+                  `}>
+                    {vm.hana && <Check className="w-3 h-3 text-white" />}
+                  </div>
+                  <span className={vm.hana ? 'text-green-900 font-medium' : ''}>
+                    SAP HANA
+                  </span>
+                </div>
+                <span className="text-sm text-gray-500">R$ 3.240,00/mês</span>
+              </div>
             </button>
+          </div>
+
+          <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-amber-50 rounded">
+            <Info className="w-3 h-3" />
+            ⚠️ Apenas um banco de dados pode ser selecionado por VM
           </div>
         </div>
       </CollapsibleCard>
 
-      {/* Terminal Services */}
+      {/* Terminal Services com Preços */}
       <CollapsibleCard
         title="Terminal Services (TSPlus)"
         icon={<Users className="w-6 h-6" />}
       >
         <div className="space-y-4">
           {/* TSPlus Enable Checkbox */}
-          <label className={`
-            flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
-            ${vm.tsplus.enabled 
-              ? 'border-green-500 bg-green-50' 
-              : 'border-gray-300 bg-white hover:border-gray-400'
+          <button
+            onClick={() => 
+              handleUpdate({ 
+                tsplus: { ...vm.tsplus, enabled: !vm.tsplus.enabled }
+              })
             }
-          `}>
-            <input
-              type="checkbox"
-              checked={vm.tsplus.enabled}
-              onChange={(e) => 
-                handleUpdate({ 
-                  tsplus: { ...vm.tsplus, enabled: e.target.checked }
-                })
-              }
-              className="sr-only"
-            />
-            
-            {/* Checkbox visual */}
-            <div className={`
-              w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+            className={`
+              w-full p-3 rounded-lg border-2 text-left transition-all
               ${vm.tsplus.enabled 
-                ? 'bg-green-500 border-green-500' 
-                : 'bg-white border-gray-300'
+                ? 'border-green-500 bg-green-50' 
+                : 'border-gray-300 bg-white hover:border-gray-400'
               }
-            `}>
-              {vm.tsplus.enabled && (
-                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                </svg>
-              )}
+            `}
+          >
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <div className={`
+                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                  ${vm.tsplus.enabled 
+                    ? 'bg-green-500 border-green-500' 
+                    : 'bg-white border-gray-300'
+                  }
+                `}>
+                  {vm.tsplus.enabled && <Check className="w-3 h-3 text-white" />}
+                </div>
+                <span className={vm.tsplus.enabled ? 'text-green-900 font-medium' : ''}>
+                  Ativar TSPlus
+                </span>
+              </div>
+              <span className="text-sm text-gray-500">
+                {vm.tsplus.usuarios} usuários = R$ {precosTSPlus[vm.tsplus.usuarios] || 0}
+              </span>
             </div>
-            
-            <span className={vm.tsplus.enabled ? 'text-green-900 font-medium' : ''}>
-              Ativar TSPlus
-            </span>
-          </label>
+          </button>
 
           {vm.tsplus.enabled && (
             <div className="space-y-4 pl-4 border-l-2 border-optidata-blue/20">
@@ -440,137 +551,125 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="3">3 usuários</SelectItem>
-                    <SelectItem value="5">5 usuários</SelectItem>
-                    <SelectItem value="10">10 usuários</SelectItem>
-                    <SelectItem value="15">15 usuários</SelectItem>
-                    <SelectItem value="25">25 usuários</SelectItem>
-                    <SelectItem value="35">35 usuários</SelectItem>
-                    <SelectItem value="49">49 usuários</SelectItem>
-                    <SelectItem value="ilimitado">Ilimitado</SelectItem>
+                    <SelectItem value="3">3 usuários - R$ 140</SelectItem>
+                    <SelectItem value="5">5 usuários - R$ 180</SelectItem>
+                    <SelectItem value="10">10 usuários - R$ 310</SelectItem>
+                    <SelectItem value="15">15 usuários - R$ 390</SelectItem>
+                    <SelectItem value="25">25 usuários - R$ 550</SelectItem>
+                    <SelectItem value="35">35 usuários - R$ 730</SelectItem>
+                    <SelectItem value="49">49 usuários - R$ 990</SelectItem>
+                    <SelectItem value="ilimitado">Ilimitado - R$ 1.190</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Advanced Security Checkbox */}
-              <label className={`
-                flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
-                ${vm.tsplus.advancedSecurity 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
+              {/* Advanced Security com Preço */}
+              <button
+                onClick={() =>
+                  handleUpdate({
+                    tsplus: { ...vm.tsplus, advancedSecurity: !vm.tsplus.advancedSecurity }
+                  })
                 }
-              `}>
-                <input
-                  type="checkbox"
-                  checked={vm.tsplus.advancedSecurity}
-                  onChange={(e) =>
-                    handleUpdate({
-                      tsplus: { ...vm.tsplus, advancedSecurity: e.target.checked }
-                    })
-                  }
-                  className="sr-only"
-                />
-                
-                <div className={`
-                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                className={`
+                  w-full p-3 rounded-lg border-2 text-left transition-all
                   ${vm.tsplus.advancedSecurity 
-                    ? 'bg-green-500 border-green-500' 
-                    : 'bg-white border-gray-300'
+                    ? 'border-green-500 bg-green-50' 
+                    : 'border-gray-300 bg-white hover:border-gray-400'
                   }
-                `}>
-                  {vm.tsplus.advancedSecurity && (
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                    </svg>
-                  )}
+                `}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className={`
+                      w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                      ${vm.tsplus.advancedSecurity 
+                        ? 'bg-green-500 border-green-500' 
+                        : 'bg-white border-gray-300'
+                      }
+                    `}>
+                      {vm.tsplus.advancedSecurity && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className={vm.tsplus.advancedSecurity ? 'text-green-900 font-medium' : ''}>
+                      Advanced Security
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-500">R$ 140,00/mês</span>
                 </div>
-                
-                <span className={vm.tsplus.advancedSecurity ? 'text-green-900 font-medium' : ''}>
-                  Advanced Security
-                </span>
-              </label>
+              </button>
 
-              {/* Two-Factor Authentication Checkbox */}
-              <label className={`
-                flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
-                ${vm.tsplus.twoFactor 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
+              {/* Two-Factor Authentication com Preço */}
+              <button
+                onClick={() =>
+                  handleUpdate({
+                    tsplus: { ...vm.tsplus, twoFactor: !vm.tsplus.twoFactor }
+                  })
                 }
-              `}>
-                <input
-                  type="checkbox"
-                  checked={vm.tsplus.twoFactor}
-                  onChange={(e) =>
-                    handleUpdate({
-                      tsplus: { ...vm.tsplus, twoFactor: e.target.checked }
-                    })
-                  }
-                  className="sr-only"
-                />
-                
-                <div className={`
-                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                className={`
+                  w-full p-3 rounded-lg border-2 text-left transition-all
                   ${vm.tsplus.twoFactor 
-                    ? 'bg-green-500 border-green-500' 
-                    : 'bg-white border-gray-300'
+                    ? 'border-green-500 bg-green-50' 
+                    : 'border-gray-300 bg-white hover:border-gray-400'
                   }
-                `}>
-                  {vm.tsplus.twoFactor && (
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                    </svg>
-                  )}
+                `}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className={`
+                      w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                      ${vm.tsplus.twoFactor 
+                        ? 'bg-green-500 border-green-500' 
+                        : 'bg-white border-gray-300'
+                      }
+                    `}>
+                      {vm.tsplus.twoFactor && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className={vm.tsplus.twoFactor ? 'text-green-900 font-medium' : ''}>
+                      Two-Factor Authentication
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-500">R$ 165,00/mês</span>
                 </div>
-                
-                <span className={vm.tsplus.twoFactor ? 'text-green-900 font-medium' : ''}>
-                  Two-Factor Authentication
-                </span>
-              </label>
+              </button>
             </div>
           )}
         </div>
       </CollapsibleCard>
 
-      {/* Segurança e Extras */}
+      {/* Segurança e Extras com Preços */}
       <CollapsibleCard
         title="Segurança e Extras"
         icon={<Shield className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          {/* Antivírus Checkbox */}
-          <label className={`
-            flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
-            ${vm.antivirus 
-              ? 'border-green-500 bg-green-50' 
-              : 'border-gray-300 bg-white hover:border-gray-400'
-            }
-          `}>
-            <input
-              type="checkbox"
-              checked={vm.antivirus}
-              onChange={(e) => handleUpdate({ antivirus: e.target.checked })}
-              className="sr-only"
-            />
-            
-            <div className={`
-              w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+          {/* Antivírus com Preço */}
+          <button
+            onClick={() => handleUpdate({ antivirus: !vm.antivirus })}
+            className={`
+              w-full p-3 rounded-lg border-2 text-left transition-all
               ${vm.antivirus 
-                ? 'bg-green-500 border-green-500' 
-                : 'bg-white border-gray-300'
+                ? 'border-green-500 bg-green-50' 
+                : 'border-gray-300 bg-white hover:border-gray-400'
               }
-            `}>
-              {vm.antivirus && (
-                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                </svg>
-              )}
+            `}
+          >
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <div className={`
+                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                  ${vm.antivirus 
+                    ? 'bg-green-500 border-green-500' 
+                    : 'bg-white border-gray-300'
+                  }
+                `}>
+                  {vm.antivirus && <Check className="w-3 h-3 text-white" />}
+                </div>
+                <span className={vm.antivirus ? 'text-green-900 font-medium' : ''}>
+                  Antivírus
+                </span>
+              </div>
+              <span className="text-sm text-gray-500">R$ 55,00/mês</span>
             </div>
-            
-            <span className={vm.antivirus ? 'text-green-900 font-medium' : ''}>
-              Antivírus
-            </span>
-          </label>
+          </button>
 
           <div className="space-y-2">
             <div className="text-sm font-medium">Web Application Firewall (WAF)</div>
@@ -582,47 +681,43 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Nenhum</SelectItem>
-                <SelectItem value="pro">WAF PRO</SelectItem>
-                <SelectItem value="business">WAF Business</SelectItem>
-                <SelectItem value="enterprise">WAF Enterprise</SelectItem>
+                <SelectItem value="none">Nenhum - R$ 0</SelectItem>
+                <SelectItem value="pro">WAF PRO - R$ 200/mês</SelectItem>
+                <SelectItem value="business">WAF Business - R$ 1.600/mês</SelectItem>
+                <SelectItem value="enterprise">WAF Enterprise - R$ 15.600/mês</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* ThinPrint Checkbox */}
-          <label className={`
-            flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
-            ${vm.thinprint 
-              ? 'border-green-500 bg-green-50' 
-              : 'border-gray-300 bg-white hover:border-gray-400'
-            }
-          `}>
-            <input
-              type="checkbox"
-              checked={vm.thinprint}
-              onChange={(e) => handleUpdate({ thinprint: e.target.checked })}
-              className="sr-only"
-            />
-            
-            <div className={`
-              w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+          {/* ThinPrint com Preço */}
+          <button
+            onClick={() => handleUpdate({ thinprint: !vm.thinprint })}
+            className={`
+              w-full p-3 rounded-lg border-2 text-left transition-all
               ${vm.thinprint 
-                ? 'bg-green-500 border-green-500' 
-                : 'bg-white border-gray-300'
+                ? 'border-green-500 bg-green-50' 
+                : 'border-gray-300 bg-white hover:border-gray-400'
               }
-            `}>
-              {vm.thinprint && (
-                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
-                </svg>
-              )}
+            `}
+          >
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <div className={`
+                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                  ${vm.thinprint 
+                    ? 'bg-green-500 border-green-500' 
+                    : 'bg-white border-gray-300'
+                  }
+                `}>
+                  {vm.thinprint && <Check className="w-3 h-3 text-white" />}
+                </div>
+                <span className={vm.thinprint ? 'text-green-900 font-medium' : ''}>
+                  ThinPrint
+                </span>
+              </div>
+              <span className="text-sm text-gray-500">R$ 850,00/mês</span>
             </div>
-            
-            <span className={vm.thinprint ? 'text-green-900 font-medium' : ''}>
-              ThinPrint
-            </span>
-          </label>
+          </button>
 
           <TouchInput
             label="IPs Adicionais"
@@ -631,6 +726,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             onChange={(value) => handleUpdate({ ipsAdicionais: value })}
             min={0}
             max={10}
+            calculatedValue={vm.ipsAdicionais > 0 ? `R$ ${vm.ipsAdicionais * 70}/mês` : undefined}
           />
         </div>
       </CollapsibleCard>
