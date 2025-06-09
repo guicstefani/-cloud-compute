@@ -1,59 +1,54 @@
 
 import React from 'react';
-import Header from '@/components/Header';
+import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
+import VMConfigurator from '@/components/VMConfigurator';
 import { useCalculadoraStore } from '@/store/calculadora';
+import { CalculadoraCloud } from '@/utils/calculadora';
 
 const Index = () => {
-  const { vms } = useCalculadoraStore();
+  const { vms, selectedVMId, precos } = useCalculadoraStore();
+  const calculadora = new CalculadoraCloud(precos);
+  const selectedVM = vms.find(vm => vm.id === selectedVMId);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header />
+    <div className="min-h-screen bg-[#F5F5F5]">
+      {/* Hero Section */}
+      <ModernHero />
       
-      {/* Hero Section - Clean and Professional */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Calculadora Cloud Enterprise
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Configure sua infraestrutura em nuvem com precisão. 
-              Calcule custos, otimize recursos e gere propostas profissionais.
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      {/* Main Content Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* VM Configuration Area - 2/3 */}
-          <div className="lg:col-span-2">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                  Configuração de Servidores
-                </h2>
-                <p className="text-gray-600">
-                  {vms.length === 0 
-                    ? 'Comece criando sua primeira máquina virtual'
-                    : `${vms.length} servidor${vms.length !== 1 ? 'es' : ''} configurado${vms.length !== 1 ? 's' : ''}`
-                  }
-                </p>
-              </div>
-              <ModernVMList />
-            </div>
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid lg:grid-cols-12 gap-8">
+          {/* VM List - Left Column */}
+          <div className="lg:col-span-4">
+            <ModernVMList />
           </div>
           
-          {/* Pricing Summary - 1/3 */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8">
-              <ModernSummaryCard />
-            </div>
+          {/* VM Configurator - Center Column */}
+          <div className="lg:col-span-5">
+            {selectedVM ? (
+              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
+                <VMConfigurator vm={selectedVM} calculadora={calculadora} />
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-12 text-center">
+                <div className="w-16 h-16 bg-[#C7D82B] rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">⚙️</span>
+                </div>
+                <h3 className="text-xl font-semibold text-black mb-2">
+                  Selecione uma VM
+                </h3>
+                <p className="text-gray-600">
+                  Escolha uma VM da lista para configurar seus recursos
+                </p>
+              </div>
+            )}
+          </div>
+          
+          {/* Summary - Right Column */}
+          <div className="lg:col-span-3">
+            <ModernSummaryCard />
           </div>
         </div>
       </div>

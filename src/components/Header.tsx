@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Calculator, Menu, X, Download, Settings, FileText } from 'lucide-react';
+import { Calculator, Menu, X, Download, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/useMobile';
 
@@ -11,41 +11,31 @@ const Header = () => {
   return (
     <>
       {/* Desktop Header */}
-      <header className="w-full mobile-hide bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo and Brand */}
-            <div className="flex items-center">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Calculator className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">Optidata Cloud</h1>
-                  <p className="text-xs text-gray-500">Calculadora Enterprise</p>
-                </div>
+      <header className="bg-white border-b border-gray-200 shadow-sm mobile-hide">
+        <div className="container mx-auto px-4 lg:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#0066CC] to-[#0052A3] rounded-xl flex items-center justify-center">
+                <Calculator className="w-6 h-6 text-white" />
               </div>
-              <span className="ml-4 px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full">
-                Professional
-              </span>
-            </div>
-
-            {/* Tagline */}
-            <div className="hidden xl:block">
-              <p className="text-sm text-gray-600">
-                Infraestrutura em nuvem de alta performance • SLA 99.99% • Suporte 24/7
-              </p>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Calculadora Cloud Privada
+                </h1>
+                <p className="text-sm text-gray-600">
+                  Optidata - Soluções em Nuvem
+                </p>
+              </div>
             </div>
             
-            {/* Actions */}
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm" className="hidden md:flex">
+              <Button variant="outline" size="sm" className="border-gray-300">
                 <Settings className="w-4 h-4 mr-2" />
                 Configurações
               </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                <FileText className="w-4 h-4 mr-2" />
-                Gerar Proposta
+              <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
+                <Download className="w-4 h-4 mr-2" />
+                Exportar
               </Button>
             </div>
           </div>
@@ -53,17 +43,17 @@ const Header = () => {
       </header>
 
       {/* Mobile Header */}
-      <header className="sticky top-0 z-50 mobile-show safe-top bg-white shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 bg-white shadow-sm mobile-show safe-top">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#0066CC] to-[#0052A3] rounded-lg flex items-center justify-center">
               <Calculator className="w-5 h-5 text-white" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-900">
-                Optidata Cloud
+                Calculadora Cloud
               </h1>
-              <p className="text-xs text-gray-500">Calculadora Pro</p>
+              <p className="text-xs text-gray-600">Optidata</p>
             </div>
           </div>
           
@@ -71,7 +61,7 @@ const Header = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="touch-target text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            className="touch-target"
           >
             {isMobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -83,22 +73,22 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="bg-white border-t border-gray-200 animate-slide-down">
+          <div className="border-t border-gray-200 bg-white animate-slide-down">
             <div className="p-4 space-y-3">
               <Button 
                 variant="outline" 
-                className="w-full justify-start text-gray-700 border-gray-300 hover:bg-gray-50"
+                className="w-full justify-start border-gray-300"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Configurações
               </Button>
               <Button 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <FileText className="w-4 h-4 mr-2" />
-                Gerar Proposta
+                <Download className="w-4 h-4 mr-2" />
+                Exportar PDF
               </Button>
             </div>
           </div>
