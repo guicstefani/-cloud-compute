@@ -223,7 +223,7 @@ const gerarSecaoPool = (pdf: jsPDF, pool: any, margin: number, startY: number) =
 
   breakdown.forEach(item => {
     pdf.setFontSize(11);
-    pdf.setTextColor(item.valor < 0 ? 0 : 150 : 0, 0, 0);
+    pdf.setTextColor(item.valor < 0 ? 0 : 0, item.valor < 0 ? 150 : 0, 0);
     pdf.text(`${item.item}: ${formatCurrency(Math.abs(item.valor))}${item.valor < 0 ? ' (desconto)' : ''}`, margin + 10, yPos);
     yPos += 8;
   });
