@@ -1,27 +1,10 @@
-
 import { SistemaOperacional, BancoDados } from '@/types';
 
 export const sistemasWindows: SistemaOperacional[] = [
   {
-    id: 'windows-2019-standard',
-    nome: 'Windows Server 2019 Standard',
-    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 55,
-    descricao: 'Licença a cada 2 vCPUs',
-    categoria: 'windows',
-    icon: '🪟'
-  },
-  {
     id: 'windows-2019-datacenter',
     nome: 'Windows Server 2019 Datacenter',
-    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 110,
-    descricao: 'Licença a cada 2 vCPUs',
-    categoria: 'windows',
-    icon: '🪟'
-  },
-  {
-    id: 'windows-2022-standard',
-    nome: 'Windows Server 2022 Standard',
-    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 60,
+    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 55,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'windows',
     icon: '🪟'
@@ -29,7 +12,7 @@ export const sistemasWindows: SistemaOperacional[] = [
   {
     id: 'windows-2022-datacenter',
     nome: 'Windows Server 2022 Datacenter',
-    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 120,
+    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 55,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'windows',
     icon: '🪟'
@@ -44,30 +27,6 @@ export const linuxEnterprise: SistemaOperacional[] = [
     descricao: 'Por servidor/mês',
     categoria: 'linux-enterprise',
     icon: '🎩'
-  },
-  {
-    id: 'rhel-9',
-    nome: 'Red Hat Enterprise Linux 9',
-    preco: 1300,
-    descricao: 'Por servidor/mês',
-    categoria: 'linux-enterprise',
-    icon: '🎩'
-  },
-  {
-    id: 'suse-15',
-    nome: 'SUSE Linux Enterprise Server 15',
-    preco: 900,
-    descricao: 'Por servidor/mês',
-    categoria: 'linux-enterprise',
-    icon: '🦎'
-  },
-  {
-    id: 'oracle-linux',
-    nome: 'Oracle Linux (com suporte)',
-    preco: 800,
-    descricao: 'Por servidor/mês',
-    categoria: 'linux-enterprise',
-    icon: '🔴'
   }
 ];
 
