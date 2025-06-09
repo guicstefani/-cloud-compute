@@ -10,6 +10,7 @@ const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   if (vms.length === 0) {
     return (
@@ -35,11 +36,14 @@ const ModernSummaryCard = () => {
   const { totalComDesconto, economia } = resultado;
 
   const handleGeneratePDF = async (proposalData: ProposalData) => {
+    setIsGenerating(true);
     try {
       await generatePDF(vms, calculadora, proposalData, totalComDesconto, economia);
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
       alert('Erro ao gerar PDF. Tente novamente.');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -104,10 +108,20 @@ const ModernSummaryCard = () => {
         <div className="space-y-3">
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="w-full bg-[#C7D82B] hover:bg-[#B5C525] text-black font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+            disabled={isGenerating}
+            className="w-full bg-[#C7D82B] hover:bg-[#B5C525] text-black font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Download className="w-5 h-5 inline mr-2" />
-            Gerar Proposta
+            {isGenerating ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-2" />
+                Gerando PDF Premium...
+              </>
+            ) : (
+              <>
+                <Download className="w-5 h-5 inline mr-2" />
+                Gerar Proposta Premium
+              </>
+            )}
           </button>
           <button className="w-full bg-white border-2 border-gray-200 hover:border-gray-300 text-black font-semibold py-4 px-6 rounded-lg transition-all duration-200 hover:shadow-md">
             <Save className="w-5 h-5 inline mr-2" />
