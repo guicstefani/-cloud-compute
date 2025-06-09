@@ -2,12 +2,22 @@
 import React from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
-import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones } from 'lucide-react';
+import { gerarPDFProposta } from '@/utils/pdfGenerator';
+import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, FileText } from 'lucide-react';
 
 const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   
+  const handleGerarPDF = () => {
+    gerarPDFProposta({
+      tipo: 'vm',
+      vms,
+      calculadora,
+      descontos
+    });
+  };
+
   if (vms.length === 0) {
     return (
       <div className="sticky top-6">
@@ -70,9 +80,16 @@ const ModernSummaryCard = () => {
 
       {/* Action Buttons */}
       <div className="space-y-3">
+        <button 
+          onClick={handleGerarPDF}
+          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+        >
+          <FileText className="w-5 h-5 inline mr-2" />
+          Gerar PDF da Proposta
+        </button>
         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl">
           <Download className="w-5 h-5 inline mr-2" />
-          Gerar Proposta
+          Exportar Excel
         </button>
         <button className="w-full bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md">
           <Save className="w-5 h-5 inline mr-2" />

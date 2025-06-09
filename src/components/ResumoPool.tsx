@@ -1,5 +1,6 @@
-
 import React from 'react';
+import { gerarPDFProposta } from '@/utils/pdfGenerator';
+import { FileText } from 'lucide-react';
 
 interface PoolData {
   vcpu: number;
@@ -22,6 +23,14 @@ interface ResumoPoolProps {
 }
 
 const ResumoPool: React.FC<ResumoPoolProps> = ({ pool }) => {
+  const handleGerarPDF = () => {
+    gerarPDFProposta({
+      tipo: 'pool',
+      pool,
+      calculadora: null as any // Not needed for pool
+    });
+  };
+
   // Cálculos
   const calcularCustos = () => {
     let infraestrutura = 0;
@@ -164,6 +173,13 @@ const ResumoPool: React.FC<ResumoPoolProps> = ({ pool }) => {
 
         {/* Ações */}
         <div className="space-y-3 mt-6">
+          <button 
+            onClick={handleGerarPDF}
+            className="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
+          >
+            <FileText className="w-4 h-4 inline mr-2" />
+            Gerar PDF do Pool
+          </button>
           <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
             Gerar Proposta do Pool
           </button>
