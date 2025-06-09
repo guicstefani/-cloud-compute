@@ -8,107 +8,63 @@ import { Badge } from '@/components/ui/badge';
 import VMDiscountSection from '@/components/VMDiscountSection';
 import TouchInput from '@/components/TouchInput';
 import CollapsibleCard from '@/components/CollapsibleCard';
+import SistemaOperacionalButton from '@/components/SistemaOperacionalButton';
+import BancoDadosButton from '@/components/BancoDadosButton';
 import { 
   Cpu, 
   MemoryStick, 
   HardDrive, 
   Shield, 
   Database, 
-  Users, 
+  Users,
   Monitor,
   Server,
   AlertTriangle,
-  Computer,
   Terminal,
   Info,
-  Check
+  Check,
+  Windows,
+  Heart,
+  Zap
 } from 'lucide-react';
+import { 
+  sistemasWindows,
+  linuxEnterprise,
+  linuxGratuitos,
+  sqlServer,
+  oracle,
+  bancosGratuitos,
+  bancosEnterprise,
+  todosSistemasOperacionais,
+  todosBancosDados
+} from '@/data/sistemasOperacionais';
 
 interface VMConfiguratorProps {
   vm: VM;
   calculadora: CalculadoraCloud;
 }
 
-// Tabela de preços TSPlus
-const precosTSPlus = {
-  3: 140,
-  5: 180,
-  10: 310,
-  15: 390,
-  25: 550,
-  35: 730,
-  49: 990,
-  ilimitado: 1190
-};
-
-// Preços WAF
-const precosWAF = {
-  'none': 0,
-  'pro': 200,
-  'business': 1600,
-  'enterprise': 15600
-};
-
 const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
   const { updateVM } = useCalculadoraStore();
   const custo = calculadora.calcularVM(vm);
 
   const handleUpdate = (updates: Partial<VM>) => {
-    // Validações importantes
-    let finalUpdates = { ...updates };
-
-    // Validação: apenas um SO por vez
-    if (updates.windowsServer && (vm.rhel || vm.suse)) {
-      finalUpdates.rhel = false;
-      finalUpdates.suse = false;
-    }
-    if (updates.rhel && (vm.windowsServer || vm.suse)) {
-      finalUpdates.windowsServer = false;
-      finalUpdates.suse = false;
-      finalUpdates.sqlServerSTD = false; // SQL Server requer Windows
-    }
-    if (updates.suse && (vm.windowsServer || vm.rhel)) {
-      finalUpdates.windowsServer = false;
-      finalUpdates.rhel = false;
-      finalUpdates.sqlServerSTD = false; // SQL Server requer Windows
-    }
-
-    // Validação: SQL Server requer Windows
-    if (updates.sqlServerSTD && !vm.windowsServer && !finalUpdates.windowsServer) {
-      alert('SQL Server Standard requer Windows Server');
-      finalUpdates.sqlServerSTD = false;
-    }
-
-    // Limitar desconto individual a 50%
-    if (updates.descontoIndividual !== undefined) {
-      finalUpdates.descontoIndividual = Math.max(0, Math.min(50, updates.descontoIndividual));
-    }
-
-    updateVM(vm.id, finalUpdates);
+    updateVM(vm.id, updates);
   };
 
-  // Função para selecionar banco de dados (apenas um)
-  const selecionarBancoDados = (tipo: 'sqlServerSTD' | 'sqlServerWEB' | 'hana') => {
-    const updates: Partial<VM> = {
-      sqlServerSTD: false,
-      sqlServerWEB: false,
-      hana: false
-    };
-    
-    // Se clicar no mesmo que já está ativo, desmarcar; senão, marcar o novo
-    if (!vm[tipo]) {
-      updates[tipo] = true;
-    }
-    
-    handleUpdate(updates);
+  // Função para encontrar o SO selecionado
+  const getSistemaOperacionalSelecionado = () => {
+    return todosSistemasOperacionais.find(so => so.id === vm.sistemaOperacional);
+  };
+
+  // Função para encontrar o BD selecionado
+  const getBancoDadosSelecionado = () => {
+    return todosBancosDados.find(bd => bd.id === vm.bancoDados);
   };
 
   const getOSIcon = () => {
-    if (vm.windowsServer) return '🪟';
-    if (vm.suse) return '🦎';
-    if (vm.rhel) return '🎩';
-    if (vm.redhat) return '🔴';
-    return '💻';
+    const so = getSistemaOperacionalSelecionado();
+    return so?.icon || '💻';
   };
 
   return (
@@ -223,48 +179,36 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             unit="GB - Alta performance"
           />
 
-          {/* Tipo de Backup com Feedback Verde */}
+          {/* Tipo de Backup */}
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-gray-700 mb-2">Tipo de Backup</h4>
             <div className="space-y-2">
-              <button
-                onClick={() => handleUpdate({ backupTipo: 'padrao' })}
-                className={`
-                  w-full p-3 rounded-lg border-2 text-left transition-all
-                  ${vm.backupTipo === 'padrao' 
-                    ? 'border-green-500 bg-green-50 text-green-900' 
-                    : 'border-gray-300 bg-white hover:border-gray-400'
-                  }
-                `}
-              >
-                Padrão
-              </button>
-              
-              <button
-                onClick={() => handleUpdate({ backupTipo: 'duplo' })}
-                className={`
-                  w-full p-3 rounded-lg border-2 text-left transition-all
-                  ${vm.backupTipo === 'duplo' 
-                    ? 'border-green-500 bg-green-50 text-green-900' 
-                    : 'border-gray-300 bg-white hover:border-gray-400'
-                  }
-                `}
-              >
-                Duplo
-              </button>
-              
-              <button
-                onClick={() => handleUpdate({ backupTipo: 'triplo' })}
-                className={`
-                  w-full p-3 rounded-lg border-2 text-left transition-all
-                  ${vm.backupTipo === 'triplo' 
-                    ? 'border-green-500 bg-green-50 text-green-900' 
-                    : 'border-gray-300 bg-white hover:border-gray-400'
-                  }
-                `}
-              >
-                Triplo
-              </button>
+              {['padrao', 'duplo', 'triplo'].map((tipo) => (
+                <button
+                  key={tipo}
+                  onClick={() => handleUpdate({ backupTipo: tipo as any })}
+                  className={`
+                    w-full p-3 rounded-lg border-2 text-left transition-all
+                    ${vm.backupTipo === tipo 
+                      ? 'border-green-500 bg-green-50 text-green-900' 
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                    }
+                  `}
+                >
+                  <div className="flex items-center">
+                    <div className={`
+                      w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                      ${vm.backupTipo === tipo 
+                        ? 'bg-green-500 border-green-500' 
+                        : 'bg-white border-gray-300'
+                      }
+                    `}>
+                      {vm.backupTipo === tipo && <Check className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className="capitalize">{tipo}</span>
+                  </div>
+                </button>
+              ))}
             </div>
             <div className="text-sm text-optidata-gray-600 text-right">
               Custo do backup: {formatCurrency(custo.backup)}
@@ -273,102 +217,68 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Sistema Operacional com Feedback Verde */}
+      {/* Sistema Operacional */}
       <CollapsibleCard
         title="Sistema Operacional"
         icon={<Server className="w-6 h-6" />}
+        value={formatCurrency(custo.sistemaOperacional)}
       >
-        <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Sistema Operacional</h4>
-          <div className="space-y-2">
-            <button
-              onClick={() => handleUpdate({ windowsServer: !vm.windowsServer })}
-              className={`
-                w-full p-3 rounded-lg border-2 text-left transition-all
-                ${vm.windowsServer 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-                }
-              `}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className={`
-                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                    ${vm.windowsServer 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'bg-white border-gray-300'
-                    }
-                  `}>
-                    {vm.windowsServer && <Check className="w-3 h-3 text-white" />}
-                  </div>
-                  <span className={vm.windowsServer ? 'text-green-900 font-medium' : ''}>
-                    Windows Server
-                  </span>
-                </div>
-                <span className="text-sm text-gray-500">
-                  {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 55 = R$ {Math.ceil(vm.vcpu / 2) * 55}
-                </span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => handleUpdate({ rhel: !vm.rhel })}
-              className={`
-                w-full p-3 rounded-lg border-2 text-left transition-all
-                ${vm.rhel 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-                }
-              `}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className={`
-                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                    ${vm.rhel 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'bg-white border-gray-300'
-                    }
-                  `}>
-                    {vm.rhel && <Check className="w-3 h-3 text-white" />}
-                  </div>
-                  <span className={vm.rhel ? 'text-green-900 font-medium' : ''}>
-                    Red Hat Enterprise Linux (RHEL)
-                  </span>
-                </div>
-                <span className="text-sm text-gray-500">R$ 1.200,00/mês por servidor</span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => handleUpdate({ suse: !vm.suse })}
-              className={`
-                w-full p-3 rounded-lg border-2 text-left transition-all
-                ${vm.suse 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-                }
-              `}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className={`
-                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                    ${vm.suse 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'bg-white border-gray-300'
-                    }
-                  `}>
-                    {vm.suse && <Check className="w-3 h-3 text-white" />}
-                  </div>
-                  <span className={vm.suse ? 'text-green-900 font-medium' : ''}>
-                    SUSE Linux Enterprise
-                  </span>
-                </div>
-                <span className="text-sm text-gray-500">R$ 900,00/mês por servidor</span>
-              </div>
-            </button>
+        <div className="space-y-6">
+          {/* Windows */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Windows className="w-4 h-4 mr-2 text-blue-600" />
+              Microsoft Windows Server
+            </h5>
+            <div className="space-y-2">
+              {sistemasWindows.map(so => (
+                <SistemaOperacionalButton 
+                  key={so.id}
+                  sistema={so}
+                  selecionado={vm.sistemaOperacional === so.id}
+                  onSelect={() => handleUpdate({ sistemaOperacional: so.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Linux Enterprise */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Server className="w-4 h-4 mr-2 text-red-600" />
+              Linux Enterprise (com suporte)
+            </h5>
+            <div className="space-y-2">
+              {linuxEnterprise.map(so => (
+                <SistemaOperacionalButton 
+                  key={so.id}
+                  sistema={so}
+                  selecionado={vm.sistemaOperacional === so.id}
+                  onSelect={() => handleUpdate({ sistemaOperacional: so.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Linux Gratuitos */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Terminal className="w-4 h-4 mr-2 text-green-600" />
+              Linux Gratuito (sem suporte)
+            </h5>
+            <div className="space-y-2">
+              {linuxGratuitos.map(so => (
+                <SistemaOperacionalButton 
+                  key={so.id}
+                  sistema={so}
+                  selecionado={vm.sistemaOperacional === so.id}
+                  onSelect={() => handleUpdate({ sistemaOperacional: so.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-gray-50 rounded">
@@ -378,109 +288,87 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Banco de Dados com Lógica de Seleção Única */}
+      {/* Banco de Dados */}
       <CollapsibleCard
         title="Banco de Dados"
         icon={<Database className="w-6 h-6" />}
+        value={formatCurrency(custo.bancoDados)}
       >
-        <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Banco de Dados (escolha apenas um)</h4>
-          <div className="space-y-2">
-            <button
-              onClick={() => selecionarBancoDados('sqlServerSTD')}
-              className={`
-                w-full p-3 rounded-lg border-2 text-left transition-all
-                ${vm.sqlServerSTD 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-                }
-                ${!vm.windowsServer ? 'opacity-50 cursor-not-allowed' : ''}
-              `}
-              disabled={!vm.windowsServer}
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="flex items-center">
-                    <div className={`
-                      w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                      ${vm.sqlServerSTD 
-                        ? 'bg-green-500 border-green-500' 
-                        : 'bg-white border-gray-300'
-                      }
-                    `}>
-                      {vm.sqlServerSTD && <Check className="w-3 h-3 text-white" />}
-                    </div>
-                    <span className={vm.sqlServerSTD ? 'text-green-900 font-medium' : ''}>
-                      SQL Server Standard
-                    </span>
-                  </div>
-                  {!vm.windowsServer && (
-                    <div className="text-xs text-amber-600 ml-8">Requer Windows Server</div>
-                  )}
-                </div>
-                <span className="text-sm text-gray-500">
-                  {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 800 = R$ {Math.ceil(vm.vcpu / 2) * 800}
-                </span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => selecionarBancoDados('sqlServerWEB')}
-              className={`
-                w-full p-3 rounded-lg border-2 text-left transition-all
-                ${vm.sqlServerWEB 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-                }
-              `}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className={`
-                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                    ${vm.sqlServerWEB 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'bg-white border-gray-300'
-                    }
-                  `}>
-                    {vm.sqlServerWEB && <Check className="w-3 h-3 text-white" />}
-                  </div>
-                  <span className={vm.sqlServerWEB ? 'text-green-900 font-medium' : ''}>
-                    SQL Server Web
-                  </span>
-                </div>
-                <span className="text-sm text-gray-500">R$ 140,00/mês</span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => selecionarBancoDados('hana')}
-              className={`
-                w-full p-3 rounded-lg border-2 text-left transition-all
-                ${vm.hana 
-                  ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-                }
-              `}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className={`
-                    w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
-                    ${vm.hana 
-                      ? 'bg-green-500 border-green-500' 
-                      : 'bg-white border-gray-300'
-                    }
-                  `}>
-                    {vm.hana && <Check className="w-3 h-3 text-white" />}
-                  </div>
-                  <span className={vm.hana ? 'text-green-900 font-medium' : ''}>
-                    SAP HANA
-                  </span>
-                </div>
-                <span className="text-sm text-gray-500">R$ 3.240,00/mês</span>
-              </div>
-            </button>
+        <div className="space-y-6">
+          {/* Microsoft SQL Server */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Database className="w-4 h-4 mr-2 text-blue-600" />
+              Microsoft SQL Server
+            </h5>
+            <div className="space-y-2">
+              {sqlServer.map(bd => (
+                <BancoDadosButton 
+                  key={bd.id}
+                  banco={bd}
+                  selecionado={vm.bancoDados === bd.id}
+                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Oracle Database */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Shield className="w-4 h-4 mr-2 text-red-600" />
+              Oracle Database
+            </h5>
+            <div className="space-y-2">
+              {oracle.map(bd => (
+                <BancoDadosButton 
+                  key={bd.id}
+                  banco={bd}
+                  selecionado={vm.bancoDados === bd.id}
+                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Bancos Open Source */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Heart className="w-4 h-4 mr-2 text-green-600" />
+              Open Source (Gratuitos)
+            </h5>
+            <div className="space-y-2">
+              {bancosGratuitos.map(bd => (
+                <BancoDadosButton 
+                  key={bd.id}
+                  banco={bd}
+                  selecionado={vm.bancoDados === bd.id}
+                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Enterprise NoSQL/Outros */}
+          <div>
+            <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
+              <Zap className="w-4 h-4 mr-2 text-purple-600" />
+              Enterprise & NoSQL
+            </h5>
+            <div className="space-y-2">
+              {bancosEnterprise.map(bd => (
+                <BancoDadosButton 
+                  key={bd.id}
+                  banco={bd}
+                  selecionado={vm.bancoDados === bd.id}
+                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  vcpu={vm.vcpu}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-amber-50 rounded">
@@ -490,7 +378,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Terminal Services com Preços */}
+      {/* Terminal Services (TSPlus) */}
       <CollapsibleCard
         title="Terminal Services (TSPlus)"
         icon={<Users className="w-6 h-6" />}
@@ -527,7 +415,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </span>
               </div>
               <span className="text-sm text-gray-500">
-                {vm.tsplus.usuarios} usuários = R$ {precosTSPlus[vm.tsplus.usuarios] || 0}
+                {vm.tsplus.usuarios} usuários = R$ {vm.tsplus.enabled ? (calculadora['precos'].tsplus[vm.tsplus.usuarios] || 0) : 0}
               </span>
             </div>
           </button>
@@ -563,7 +451,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </Select>
               </div>
 
-              {/* Advanced Security com Preço */}
+              {/* Advanced Security */}
               <button
                 onClick={() =>
                   handleUpdate({
@@ -597,7 +485,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </div>
               </button>
 
-              {/* Two-Factor Authentication com Preço */}
+              {/* Two-Factor Authentication */}
               <button
                 onClick={() =>
                   handleUpdate({
@@ -635,13 +523,13 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Segurança e Extras com Preços */}
+      {/* Segurança e Extras */}
       <CollapsibleCard
         title="Segurança e Extras"
         icon={<Shield className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          {/* Antivírus com Preço */}
+          {/* Antivírus */}
           <button
             onClick={() => handleUpdate({ antivirus: !vm.antivirus })}
             className={`
@@ -689,7 +577,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </Select>
           </div>
 
-          {/* ThinPrint com Preço */}
+          {/* ThinPrint */}
           <button
             onClick={() => handleUpdate({ thinprint: !vm.thinprint })}
             className={`
@@ -764,6 +652,20 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             <span className="font-medium">{formatCurrency(custo.monitoramento)}</span>
           </div>
           
+          {custo.sistemaOperacional > 0 && (
+            <div className="flex justify-between py-2 border-b border-gray-200">
+              <span className="text-sm">Sistema Operacional</span>
+              <span className="font-medium">{formatCurrency(custo.sistemaOperacional)}</span>
+            </div>
+          )}
+          
+          {custo.bancoDados > 0 && (
+            <div className="flex justify-between py-2 border-b border-gray-200">
+              <span className="text-sm">Banco de Dados</span>
+              <span className="font-medium">{formatCurrency(custo.bancoDados)}</span>
+            </div>
+          )}
+
           {custo.descontoIndividual > 0 && (
             <>
               <div className="flex justify-between py-2 text-gray-500 border-b border-gray-200">
@@ -781,10 +683,10 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </>
           )}
           
-          {Object.keys(custo.licencas).length > 0 && (
+          {Object.keys(custo.licencasAdicionais).length > 0 && (
             <div className="flex justify-between py-2 border-b border-gray-200">
-              <span className="text-sm">Licenças (sem desconto)</span>
-              <span className="font-medium">{formatCurrency(custo.subtotalLicencas)}</span>
+              <span className="text-sm">Licenças Adicionais</span>
+              <span className="font-medium">{formatCurrency(Object.values(custo.licencasAdicionais).reduce((a, b) => a + b, 0))}</span>
             </div>
           )}
 

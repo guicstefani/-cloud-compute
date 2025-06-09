@@ -7,7 +7,7 @@ const PRECOS_DEFAULT: Precos = {
   // Infraestrutura (por hora)
   vcpuHora: 0.0347,
   ramHora: 0.0278,
-  horasMes: 720, // Corrigido: 720 horas/mês, não 730
+  horasMes: 720,
   
   // Storage (por mês)
   fcmGB: 0.75,
@@ -21,11 +21,8 @@ const PRECOS_DEFAULT: Precos = {
   // Monitoramento (automático)
   monitoramento: 100,
   
-  // Licenças
-  windowsServer: 55,
+  // Licenças adicionais
   antivirus: 55,
-  sqlServerSTD: 800, // Corrigido: R$ 800 por 2 vCPUs
-  sqlServerWEB: 140,
   
   // TSPlus
   tsplus: {
@@ -43,10 +40,6 @@ const PRECOS_DEFAULT: Precos = {
   
   // Outras
   thinprint: 850,
-  hana: 3240,
-  suse: 900,
-  redhat: 1200,
-  rhel: 1200, // Novo: RHEL R$ 1.200/mês
   ipAdicional: 70,
   
   // WAF
@@ -66,10 +59,9 @@ function createDefaultVM(): VM {
     discoFCM: 0,
     discoSSD: 50,
     backupTipo: 'padrao',
-    windowsServer: false,
+    sistemaOperacional: '', // Nenhum SO selecionado inicialmente
+    bancoDados: '', // Nenhum BD selecionado inicialmente
     antivirus: false,
-    sqlServerSTD: false,
-    sqlServerWEB: false,
     tsplus: {
       enabled: false,
       usuarios: 5,
@@ -77,13 +69,9 @@ function createDefaultVM(): VM {
       twoFactor: false
     },
     thinprint: false,
-    hana: false,
-    suse: false,
-    redhat: false,
-    rhel: false, // Novo: RHEL
     ipsAdicionais: 0,
     waf: 'none',
-    descontoIndividual: 0, // Novo: desconto individual
+    descontoIndividual: 0,
     status: 'rascunho'
   };
 }
@@ -165,7 +153,7 @@ export const useCalculadoraStore = create<CalculadoraState>()(
     }),
     {
       name: 'optidata-calculadora',
-      version: 1
+      version: 2
     }
   )
 );

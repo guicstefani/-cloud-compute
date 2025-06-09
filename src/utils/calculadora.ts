@@ -1,5 +1,6 @@
 
 import { VM, Precos, DetalhamentoCusto, Desconto } from '@/types';
+import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
 
 // Função de arredondamento para 2 casas decimais
 const arredondar = (valor: number): number => {
@@ -27,8 +28,14 @@ export class CalculadoraCloud {
     // Monitoramento (sempre incluído)
     const monitoramento = this.precos.monitoramento;
     
-    // Licenças
-    const licencas = this.calcularLicencas(vm);
+    // Sistema Operacional
+    const sistemaOperacional = this.calcularSistemaOperacional(vm);
+    
+    // Banco de Dados
+    const bancoDados = this.calcularBancoDados(vm);
+    
+    // Licenças adicionais
+    const licencasAdicionais = this.calcularLicencasAdicionais(vm);
 
     // Subtotal infraestrutura ANTES do desconto individual
     const subtotalInfraOriginal = arredondar(vcpu + ram + storage + backup + monitoramento);
@@ -37,7 +44,7 @@ export class CalculadoraCloud {
     const descontoIndividual = arredondar(subtotalInfraOriginal * (vm.descontoIndividual || 0) / 100);
     const subtotalInfra = arredondar(subtotalInfraOriginal - descontoIndividual);
     
-    const subtotalLicencas = arredondar(Object.values(licencas).reduce((a, b) => a + b, 0));
+    const subtotalLicencas = arredondar(sistemaOperacional + bancoDados + Object.values(licencasAdicionais).reduce((a, b) => a + b, 0));
     const total = arredondar(subtotalInfra + subtotalLicencas);
 
     return {
@@ -46,7 +53,9 @@ export class CalculadoraCloud {
       storage,
       backup,
       monitoramento,
-      licencas,
+      sistemaOperacional,
+      bancoDados,
+      licencasAdicionais,
       subtotalInfra,
       subtotalInfraOriginal,
       subtotalLicencas,
@@ -74,23 +83,30 @@ export class CalculadoraCloud {
     return arredondar(custoBackup);
   }
 
-  private calcularLicencas(vm: VM): Record<string, number> {
+  private calcularSistemaOperacional(vm: VM): number {
+    if (!vm.sistemaOperacional) return 0;
+    
+    const so = todosSistemasOperacionais.find(s => s.id === vm.sistemaOperacional);
+    if (!so) return 0;
+    
+    const preco = typeof so.preco === 'function' ? so.preco(vm.vcpu) : so.preco;
+    return arredondar(preco);
+  }
+
+  private calcularBancoDados(vm: VM): number {
+    if (!vm.bancoDados) return 0;
+    
+    const bd = todosBancosDados.find(b => b.id === vm.bancoDados);
+    if (!bd) return 0;
+    
+    const preco = typeof bd.preco === 'function' ? bd.preco(vm.vcpu) : bd.preco;
+    return arredondar(preco);
+  }
+
+  private calcularLicencasAdicionais(vm: VM): Record<string, number> {
     const licencas: Record<string, number> = {};
     
-    // Windows Server: licenciado a cada 2 vCPUs (assim como SQL Server)
-    if (vm.windowsServer) {
-      const licencasWindows = Math.ceil(vm.vcpu / 2);
-      licencas.windows = arredondar(licencasWindows * this.precos.windowsServer);
-      
-      // SQL Server só funciona com Windows
-      if (vm.sqlServerSTD) {
-        const coresSQL = Math.ceil(vm.vcpu / 2);
-        licencas.sqlSTD = arredondar(coresSQL * this.precos.sqlServerSTD);
-      }
-    }
-    
     if (vm.antivirus) licencas.antivirus = this.precos.antivirus;
-    if (vm.sqlServerWEB) licencas.sqlWEB = this.precos.sqlServerWEB;
     
     // TSPlus
     if (vm.tsplus.enabled) {
@@ -103,12 +119,7 @@ export class CalculadoraCloud {
       }
     }
     
-    // Outras licenças
     if (vm.thinprint) licencas.thinprint = this.precos.thinprint;
-    if (vm.hana) licencas.hana = this.precos.hana;
-    if (vm.suse) licencas.suse = this.precos.suse;
-    if (vm.redhat) licencas.redhat = this.precos.redhat;
-    if (vm.rhel) licencas.rhel = this.precos.rhel;
     
     if (vm.ipsAdicionais > 0) {
       licencas.ips = arredondar(vm.ipsAdicionais * this.precos.ipAdicional);
@@ -188,5 +199,5 @@ export const formatNumber = (value: number): string => {
   return new Intl.NumberFormat('pt-BR').format(value);
 };
 
-// Função auxiliar para arredondamento público - exportando a função interna
+// Função auxiliar para arredondamento público
 export { arredondar };

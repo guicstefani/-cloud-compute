@@ -8,11 +8,14 @@ export interface VM {
   discoSSD: number;
   backupTipo: 'padrao' | 'duplo' | 'triplo';
   
-  // Licenças (todas opcionais)
-  windowsServer: boolean;
+  // Sistema Operacional (apenas um)
+  sistemaOperacional: string; // ID do sistema selecionado
+  
+  // Banco de Dados (apenas um)
+  bancoDados: string; // ID do banco selecionado
+  
+  // Licenças adicionais (todas opcionais)
   antivirus: boolean;
-  sqlServerSTD: boolean;
-  sqlServerWEB: boolean;
   tsplus: {
     enabled: boolean;
     usuarios: 3 | 5 | 10 | 15 | 25 | 35 | 49 | 'ilimitado';
@@ -20,19 +23,35 @@ export interface VM {
     twoFactor: boolean;
   };
   thinprint: boolean;
-  hana: boolean;
-  suse: boolean;
-  redhat: boolean;
-  rhel: boolean; // Novo: Red Hat Enterprise Linux
   ipsAdicionais: number;
   waf: 'none' | 'pro' | 'business' | 'enterprise';
   
-  // Novo: Desconto individual da VM (apenas infraestrutura)
+  // Desconto individual da VM (apenas infraestrutura)
   descontoIndividual: number; // percentual 0-50
   
   // Status
   status: 'rascunho' | 'finalizado';
   grupo?: string;
+}
+
+export interface SistemaOperacional {
+  id: string;
+  nome: string;
+  preco: number | ((vcpu: number) => number);
+  descricao: string;
+  categoria: 'windows' | 'linux-enterprise' | 'linux-gratuito';
+  limitacao?: string;
+  icon?: string;
+}
+
+export interface BancoDados {
+  id: string;
+  nome: string;
+  preco: number | ((vcpu: number) => number);
+  descricao: string;
+  categoria: 'sql-server' | 'oracle' | 'open-source' | 'enterprise-nosql';
+  limitacao?: string;
+  icon?: string;
 }
 
 export interface Precos {
@@ -53,11 +72,8 @@ export interface Precos {
   // Monitoramento (automático)
   monitoramento: number;
   
-  // Licenças
-  windowsServer: number;
+  // Licenças adicionais
   antivirus: number;
-  sqlServerSTD: number; // por 2 vCPUs
-  sqlServerWEB: number;
   
   // TSPlus
   tsplus: {
@@ -75,10 +91,6 @@ export interface Precos {
   
   // Outras
   thinprint: number;
-  hana: number;
-  suse: number;
-  redhat: number;
-  rhel: number; // Novo: RHEL
   ipAdicional: number;
   
   // WAF
@@ -95,11 +107,13 @@ export interface DetalhamentoCusto {
   storage: number;
   backup: number;
   monitoramento: number;
-  licencas: Record<string, number>;
+  sistemaOperacional: number;
+  bancoDados: number;
+  licencasAdicionais: Record<string, number>;
   subtotalInfra: number;
-  subtotalInfraOriginal: number; // Novo: valor antes do desconto individual
+  subtotalInfraOriginal: number;
   subtotalLicencas: number;
-  descontoIndividual: number; // Novo: valor do desconto aplicado
+  descontoIndividual: number;
   total: number;
 }
 
