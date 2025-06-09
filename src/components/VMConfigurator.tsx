@@ -1,10 +1,9 @@
+
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
 import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
 import VMDiscountSection from '@/components/VMDiscountSection';
 import TouchInput from '@/components/TouchInput';
@@ -187,27 +186,49 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             unit="GB - Alta performance"
           />
 
-          {/* Tipo de Backup */}
+          {/* Tipo de Backup com Feedback Verde */}
           <div className="space-y-3">
-            <div className="text-sm font-medium text-optidata-gray-900">Tipo de Backup</div>
-            <RadioGroup
-              value={vm.backupTipo}
-              onValueChange={(value: any) => handleUpdate({ backupTipo: value })}
-              className="flex flex-col space-y-2"
-            >
-              <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                <RadioGroupItem value="padrao" id="padrao" />
-                <label htmlFor="padrao" className="flex-1 text-sm">Padrão</label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                <RadioGroupItem value="duplo" id="duplo" />
-                <label htmlFor="duplo" className="flex-1 text-sm">Duplo</label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 border rounded-lg">
-                <RadioGroupItem value="triplo" id="triplo" />
-                <label htmlFor="triplo" className="flex-1 text-sm">Triplo</label>
-              </div>
-            </RadioGroup>
+            <h4 className="text-sm font-medium text-gray-700 mb-2">Tipo de Backup</h4>
+            <div className="space-y-2">
+              <button
+                onClick={() => handleUpdate({ backupTipo: 'padrao' })}
+                className={`
+                  w-full p-3 rounded-lg border-2 text-left transition-all
+                  ${vm.backupTipo === 'padrao' 
+                    ? 'border-green-500 bg-green-50 text-green-900' 
+                    : 'border-gray-300 bg-white hover:border-gray-400'
+                  }
+                `}
+              >
+                Padrão
+              </button>
+              
+              <button
+                onClick={() => handleUpdate({ backupTipo: 'duplo' })}
+                className={`
+                  w-full p-3 rounded-lg border-2 text-left transition-all
+                  ${vm.backupTipo === 'duplo' 
+                    ? 'border-green-500 bg-green-50 text-green-900' 
+                    : 'border-gray-300 bg-white hover:border-gray-400'
+                  }
+                `}
+              >
+                Duplo
+              </button>
+              
+              <button
+                onClick={() => handleUpdate({ backupTipo: 'triplo' })}
+                className={`
+                  w-full p-3 rounded-lg border-2 text-left transition-all
+                  ${vm.backupTipo === 'triplo' 
+                    ? 'border-green-500 bg-green-50 text-green-900' 
+                    : 'border-gray-300 bg-white hover:border-gray-400'
+                  }
+                `}
+              >
+                Triplo
+              </button>
+            </div>
             <div className="text-sm text-optidata-gray-600 text-right">
               Custo do backup: {formatCurrency(custo.backup)}
             </div>
@@ -215,54 +236,69 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Sistema Operacional */}
+      {/* Sistema Operacional com Feedback Verde */}
       <CollapsibleCard
         title="Sistema Operacional"
         icon={<Server className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-            <div className="flex items-center space-x-3">
-              <Computer className="w-5 h-5 text-blue-600" />
-              <div className="flex-1">
-                <div className="font-medium">Windows Server</div>
-                <div className="text-xs text-gray-500">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">Sistema Operacional</h4>
+          <div className="space-y-2">
+            <button
+              onClick={() => handleUpdate({ windowsServer: !vm.windowsServer })}
+              className={`
+                w-full p-3 rounded-lg border-2 text-left transition-all
+                ${vm.windowsServer 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}
+            >
+              <div className="flex justify-between items-center">
+                <span className={vm.windowsServer ? 'text-green-900 font-medium' : ''}>
+                  Windows Server
+                </span>
+                <span className="text-sm text-gray-500">
                   {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 55 = R$ {Math.ceil(vm.vcpu / 2) * 55}
-                </div>
+                </span>
               </div>
-            </div>
-            <Switch
-              checked={vm.windowsServer}
-              onCheckedChange={(checked) => handleUpdate({ windowsServer: checked })}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-            <div className="flex items-center space-x-3">
-              <Terminal className="w-5 h-5 text-red-600" />
-              <div className="flex-1">
-                <div className="font-medium">Red Hat Enterprise Linux (RHEL)</div>
-                <div className="text-xs text-gray-500">R$ 1.200,00/mês por servidor</div>
+            </button>
+            
+            <button
+              onClick={() => handleUpdate({ rhel: !vm.rhel })}
+              className={`
+                w-full p-3 rounded-lg border-2 text-left transition-all
+                ${vm.rhel 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}
+            >
+              <div className="flex justify-between items-center">
+                <span className={vm.rhel ? 'text-green-900 font-medium' : ''}>
+                  Red Hat Enterprise Linux (RHEL)
+                </span>
+                <span className="text-sm text-gray-500">R$ 1.200,00/mês por servidor</span>
               </div>
-            </div>
-            <Switch
-              checked={vm.rhel}
-              onCheckedChange={(checked) => handleUpdate({ rhel: checked })}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-            <div className="flex items-center space-x-3">
-              <Terminal className="w-5 h-5 text-green-600" />
-              <div className="flex-1">
-                <div className="font-medium">SUSE Linux Enterprise</div>
-                <div className="text-xs text-gray-500">R$ 900,00/mês por servidor</div>
+            </button>
+            
+            <button
+              onClick={() => handleUpdate({ suse: !vm.suse })}
+              className={`
+                w-full p-3 rounded-lg border-2 text-left transition-all
+                ${vm.suse 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}
+            >
+              <div className="flex justify-between items-center">
+                <span className={vm.suse ? 'text-green-900 font-medium' : ''}>
+                  SUSE Linux Enterprise
+                </span>
+                <span className="text-sm text-gray-500">R$ 900,00/mês por servidor</span>
               </div>
-            </div>
-            <Switch
-              checked={vm.suse}
-              onCheckedChange={(checked) => handleUpdate({ suse: checked })}
-            />
+            </button>
           </div>
 
           <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-gray-50 rounded">
@@ -272,43 +308,70 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Banco de Dados */}
+      {/* Banco de Dados com Feedback Verde */}
       <CollapsibleCard
         title="Banco de Dados"
         icon={<Database className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="flex-1">
-              <div className="font-medium">SQL Server Standard</div>
-              <div className="text-xs text-gray-500">
-                {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 800 = R$ {Math.ceil(vm.vcpu / 2) * 800}
-              </div>
-              {!vm.windowsServer && (
-                <div className="text-xs text-amber-600">Requer Windows Server</div>
-              )}
-            </div>
-            <Switch
-              checked={vm.sqlServerSTD}
+          <h4 className="text-sm font-medium text-gray-700 mb-2">Banco de Dados</h4>
+          <div className="space-y-2">
+            <button
+              onClick={() => handleUpdate({ sqlServerSTD: !vm.sqlServerSTD })}
+              className={`
+                w-full p-3 rounded-lg border-2 text-left transition-all
+                ${vm.sqlServerSTD 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+                ${!vm.windowsServer ? 'opacity-50 cursor-not-allowed' : ''}
+              `}
               disabled={!vm.windowsServer}
-              onCheckedChange={(checked) => handleUpdate({ sqlServerSTD: checked })}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="font-medium">SQL Server Web</div>
-            <Switch
-              checked={vm.sqlServerWEB}
-              onCheckedChange={(checked) => handleUpdate({ sqlServerWEB: checked })}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="font-medium">SAP HANA</div>
-            <Switch
-              checked={vm.hana}
-              onCheckedChange={(checked) => handleUpdate({ hana: checked })}
-            />
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className={vm.sqlServerSTD ? 'text-green-900 font-medium' : ''}>
+                    SQL Server Standard
+                  </span>
+                  {!vm.windowsServer && (
+                    <div className="text-xs text-amber-600">Requer Windows Server</div>
+                  )}
+                </div>
+                <span className="text-sm text-gray-500">
+                  {Math.ceil(vm.vcpu / 2)} licença(s) × R$ 800 = R$ {Math.ceil(vm.vcpu / 2) * 800}
+                </span>
+              </div>
+            </button>
+            
+            <button
+              onClick={() => handleUpdate({ sqlServerWEB: !vm.sqlServerWEB })}
+              className={`
+                w-full p-3 rounded-lg border-2 text-left transition-all
+                ${vm.sqlServerWEB 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}
+            >
+              <span className={vm.sqlServerWEB ? 'text-green-900 font-medium' : ''}>
+                SQL Server Web
+              </span>
+            </button>
+            
+            <button
+              onClick={() => handleUpdate({ hana: !vm.hana })}
+              className={`
+                w-full p-3 rounded-lg border-2 text-left transition-all
+                ${vm.hana 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}
+            >
+              <span className={vm.hana ? 'text-green-900 font-medium' : ''}>
+                SAP HANA
+              </span>
+            </button>
           </div>
         </div>
       </CollapsibleCard>
@@ -319,17 +382,44 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         icon={<Users className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="font-medium">Ativar TSPlus</div>
-            <Switch
+          {/* TSPlus Enable Checkbox */}
+          <label className={`
+            flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
+            ${vm.tsplus.enabled 
+              ? 'border-green-500 bg-green-50' 
+              : 'border-gray-300 bg-white hover:border-gray-400'
+            }
+          `}>
+            <input
+              type="checkbox"
               checked={vm.tsplus.enabled}
-              onCheckedChange={(checked) => 
+              onChange={(e) => 
                 handleUpdate({ 
-                  tsplus: { ...vm.tsplus, enabled: checked }
+                  tsplus: { ...vm.tsplus, enabled: e.target.checked }
                 })
               }
+              className="sr-only"
             />
-          </div>
+            
+            {/* Checkbox visual */}
+            <div className={`
+              w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+              ${vm.tsplus.enabled 
+                ? 'bg-green-500 border-green-500' 
+                : 'bg-white border-gray-300'
+              }
+            `}>
+              {vm.tsplus.enabled && (
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                </svg>
+              )}
+            </div>
+            
+            <span className={vm.tsplus.enabled ? 'text-green-900 font-medium' : ''}>
+              Ativar TSPlus
+            </span>
+          </label>
 
           {vm.tsplus.enabled && (
             <div className="space-y-4 pl-4 border-l-2 border-optidata-blue/20">
@@ -362,29 +452,81 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="font-medium">Advanced Security</div>
-                <Switch
+              {/* Advanced Security Checkbox */}
+              <label className={`
+                flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
+                ${vm.tsplus.advancedSecurity 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}>
+                <input
+                  type="checkbox"
                   checked={vm.tsplus.advancedSecurity}
-                  onCheckedChange={(checked) =>
+                  onChange={(e) =>
                     handleUpdate({
-                      tsplus: { ...vm.tsplus, advancedSecurity: checked }
+                      tsplus: { ...vm.tsplus, advancedSecurity: e.target.checked }
                     })
                   }
+                  className="sr-only"
                 />
-              </div>
+                
+                <div className={`
+                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                  ${vm.tsplus.advancedSecurity 
+                    ? 'bg-green-500 border-green-500' 
+                    : 'bg-white border-gray-300'
+                  }
+                `}>
+                  {vm.tsplus.advancedSecurity && (
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                  )}
+                </div>
+                
+                <span className={vm.tsplus.advancedSecurity ? 'text-green-900 font-medium' : ''}>
+                  Advanced Security
+                </span>
+              </label>
 
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="font-medium">Two-Factor Authentication</div>
-                <Switch
+              {/* Two-Factor Authentication Checkbox */}
+              <label className={`
+                flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
+                ${vm.tsplus.twoFactor 
+                  ? 'border-green-500 bg-green-50' 
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+                }
+              `}>
+                <input
+                  type="checkbox"
                   checked={vm.tsplus.twoFactor}
-                  onCheckedChange={(checked) =>
+                  onChange={(e) =>
                     handleUpdate({
-                      tsplus: { ...vm.tsplus, twoFactor: checked }
+                      tsplus: { ...vm.tsplus, twoFactor: e.target.checked }
                     })
                   }
+                  className="sr-only"
                 />
-              </div>
+                
+                <div className={`
+                  w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+                  ${vm.tsplus.twoFactor 
+                    ? 'bg-green-500 border-green-500' 
+                    : 'bg-white border-gray-300'
+                  }
+                `}>
+                  {vm.tsplus.twoFactor && (
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                  )}
+                </div>
+                
+                <span className={vm.tsplus.twoFactor ? 'text-green-900 font-medium' : ''}>
+                  Two-Factor Authentication
+                </span>
+              </label>
             </div>
           )}
         </div>
@@ -396,13 +538,39 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         icon={<Shield className="w-6 h-6" />}
       >
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="font-medium">Antivírus</div>
-            <Switch
+          {/* Antivírus Checkbox */}
+          <label className={`
+            flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
+            ${vm.antivirus 
+              ? 'border-green-500 bg-green-50' 
+              : 'border-gray-300 bg-white hover:border-gray-400'
+            }
+          `}>
+            <input
+              type="checkbox"
               checked={vm.antivirus}
-              onCheckedChange={(checked) => handleUpdate({ antivirus: checked })}
+              onChange={(e) => handleUpdate({ antivirus: e.target.checked })}
+              className="sr-only"
             />
-          </div>
+            
+            <div className={`
+              w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+              ${vm.antivirus 
+                ? 'bg-green-500 border-green-500' 
+                : 'bg-white border-gray-300'
+              }
+            `}>
+              {vm.antivirus && (
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                </svg>
+              )}
+            </div>
+            
+            <span className={vm.antivirus ? 'text-green-900 font-medium' : ''}>
+              Antivírus
+            </span>
+          </label>
 
           <div className="space-y-2">
             <div className="text-sm font-medium">Web Application Firewall (WAF)</div>
@@ -422,13 +590,39 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             </Select>
           </div>
 
-          <div className="flex items-center justify-between p-3 border rounded-lg">
-            <div className="font-medium">ThinPrint</div>
-            <Switch
+          {/* ThinPrint Checkbox */}
+          <label className={`
+            flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all
+            ${vm.thinprint 
+              ? 'border-green-500 bg-green-50' 
+              : 'border-gray-300 bg-white hover:border-gray-400'
+            }
+          `}>
+            <input
+              type="checkbox"
               checked={vm.thinprint}
-              onCheckedChange={(checked) => handleUpdate({ thinprint: checked })}
+              onChange={(e) => handleUpdate({ thinprint: e.target.checked })}
+              className="sr-only"
             />
-          </div>
+            
+            <div className={`
+              w-5 h-5 rounded border-2 mr-3 flex items-center justify-center
+              ${vm.thinprint 
+                ? 'bg-green-500 border-green-500' 
+                : 'bg-white border-gray-300'
+              }
+            `}>
+              {vm.thinprint && (
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                </svg>
+              )}
+            </div>
+            
+            <span className={vm.thinprint ? 'text-green-900 font-medium' : ''}>
+              ThinPrint
+            </span>
+          </label>
 
           <TouchInput
             label="IPs Adicionais"
