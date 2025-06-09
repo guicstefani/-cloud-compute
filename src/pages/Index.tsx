@@ -28,11 +28,11 @@ const Index = () => {
           {/* VM Configurator - Center Column */}
           <div className="lg:col-span-5">
             {selectedVM ? (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
                 <VMConfigurator vm={selectedVM} calculadora={calculadora} />
               </div>
             ) : (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">⚙️</span>
                 </div>

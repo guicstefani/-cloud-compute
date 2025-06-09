@@ -25,15 +25,15 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
   return (
     <div
       onClick={() => selectVM(vm.id)}
-      className={`group relative bg-white rounded-2xl border transition-all duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1 ${
+      className={`group relative bg-white rounded-xl border transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1 ${
         isSelected 
-          ? 'border-blue-500 shadow-lg ring-4 ring-blue-100' 
+          ? 'border-blue-500 shadow-lg ring-4 ring-blue-50' 
           : 'border-gray-200 hover:border-gray-300'
       }`}
     >
       {/* Status Indicator */}
-      <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${
-        isSelected ? 'bg-gradient-to-r from-blue-500 to-blue-600' : 'bg-gray-100'
+      <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-xl ${
+        isSelected ? 'bg-blue-500' : 'bg-gray-100'
       }`}></div>
       
       <div className="p-6">
@@ -42,7 +42,7 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
           <div className="flex items-center gap-3">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all ${
               isSelected 
-                ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg' 
+                ? 'bg-blue-500 text-white shadow-lg' 
                 : 'bg-gray-100 text-gray-600'
             }`}>
               {getOSIcon()}
@@ -55,7 +55,7 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
           
           <div className="flex items-center gap-2">
             {isSelected && (
-              <div className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+              <div className="flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
                 <CheckCircle className="w-3 h-3" />
                 Ativo
               </div>
