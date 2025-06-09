@@ -1,4 +1,3 @@
-
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
@@ -23,7 +22,6 @@ import {
   Terminal,
   Info,
   Check,
-  Windows,
   Heart,
   Zap
 } from 'lucide-react';
@@ -227,7 +225,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
           {/* Windows */}
           <div>
             <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
-              <Windows className="w-4 h-4 mr-2 text-blue-600" />
+              <Server className="w-4 h-4 mr-2 text-blue-600" />
               Microsoft Windows Server
             </h5>
             <div className="space-y-2">

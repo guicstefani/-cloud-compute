@@ -4,6 +4,7 @@ import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { Button } from '@/components/ui/button';
 import { Copy, Trash2, Monitor, HardDrive, MoreVertical, CheckCircle } from 'lucide-react';
 import { VM_TEMPLATES } from '@/data/templates';
+import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
 import PremiumEmptyState from './PremiumEmptyState';
 
 const VMList = () => {
@@ -15,6 +16,16 @@ const VMList = () => {
     if (template) {
       addVM(template.vm);
     }
+  };
+
+  const getSistemaOperacionalNome = (vm: any) => {
+    const so = todosSistemasOperacionais.find(s => s.id === vm.sistemaOperacional);
+    return so?.nome || '';
+  };
+
+  const getBancoDadosNome = (vm: any) => {
+    const bd = todosBancosDados.find(b => b.id === vm.bancoDados);
+    return bd?.nome || '';
   };
 
   if (vms.length === 0) {
@@ -148,21 +159,16 @@ const VMList = () => {
               </div>
 
               {/* Licenças ativas */}
-              {(vm.windowsServer || vm.rhel || vm.suse) && (
+              {(vm.sistemaOperacional || vm.bancoDados) && (
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {vm.windowsServer && (
+                  {vm.sistemaOperacional && (
                     <span className="inline-flex items-center px-3 py-1 bg-[#EFF6FF] text-[#2563EB] text-xs font-medium rounded-full">
-                      🪟 Windows Server
+                      💻 {getSistemaOperacionalNome(vm)}
                     </span>
                   )}
-                  {vm.rhel && (
+                  {vm.bancoDados && (
                     <span className="inline-flex items-center px-3 py-1 bg-[#FEF2F2] text-[#EF4444] text-xs font-medium rounded-full">
-                      🎩 RHEL
-                    </span>
-                  )}
-                  {vm.suse && (
-                    <span className="inline-flex items-center px-3 py-1 bg-[#F0FDF4] text-[#10B981] text-xs font-medium rounded-full">
-                      🦎 SUSE
+                      🗄️ {getBancoDadosNome(vm)}
                     </span>
                   )}
                 </div>

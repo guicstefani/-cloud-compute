@@ -14,9 +14,9 @@ export const VM_TEMPLATES: Template[] = [
       discoFCM: 0,
       discoSSD: 50,
       backupTipo: 'padrao',
-      windowsServer: true,
+      sistemaOperacional: 'windows-2022-standard',
+      bancoDados: '',
       antivirus: true,
-      sqlServerWEB: false,
       waf: 'pro'
     }
   },
@@ -32,9 +32,9 @@ export const VM_TEMPLATES: Template[] = [
       discoFCM: 200,
       discoSSD: 100,
       backupTipo: 'duplo',
-      windowsServer: true,
-      antivirus: true,
-      sqlServerSTD: true
+      sistemaOperacional: 'windows-2022-standard',
+      bancoDados: 'sql-standard',
+      antivirus: true
     }
   },
   {
@@ -49,7 +49,8 @@ export const VM_TEMPLATES: Template[] = [
       discoFCM: 100,
       discoSSD: 50,
       backupTipo: 'padrao',
-      windowsServer: true,
+      sistemaOperacional: 'windows-2022-standard',
+      bancoDados: '',
       antivirus: true,
       tsplus: {
         enabled: true,
@@ -71,8 +72,8 @@ export const VM_TEMPLATES: Template[] = [
       discoFCM: 500,
       discoSSD: 200,
       backupTipo: 'triplo',
-      suse: true,
-      hana: true
+      sistemaOperacional: 'suse-15',
+      bancoDados: 'sap-hana'
     }
   }
 ];

@@ -4,6 +4,7 @@ import { VM } from '@/types';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { Server, Cpu, MemoryStick, HardDrive, Trash2, Copy, CheckCircle } from 'lucide-react';
+import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
 
 interface ModernVMCardProps {
   vm: VM;
@@ -16,10 +17,18 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
   const custo = calculadora.calcularVM(vm);
 
   const getOSIcon = () => {
-    if (vm.windowsServer) return '🪟';
-    if (vm.rhel) return '🎩';
-    if (vm.suse) return '🦎';
-    return '💻';
+    const so = todosSistemasOperacionais.find(s => s.id === vm.sistemaOperacional);
+    return so?.icon || '💻';
+  };
+
+  const getSistemaOperacionalNome = () => {
+    const so = todosSistemasOperacionais.find(s => s.id === vm.sistemaOperacional);
+    return so?.nome || '';
+  };
+
+  const getBancoDadosNome = () => {
+    const bd = todosBancosDados.find(b => b.id === vm.bancoDados);
+    return bd?.nome || '';
   };
 
   return (
@@ -109,26 +118,16 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
         </div>
 
         {/* Active Licenses */}
-        {(vm.windowsServer || vm.rhel || vm.suse || vm.sqlServerSTD) && (
+        {(vm.sistemaOperacional || vm.bancoDados) && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {vm.windowsServer && (
+            {vm.sistemaOperacional && (
               <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
-                Windows Server
+                {getSistemaOperacionalNome()}
               </span>
             )}
-            {vm.rhel && (
-              <span className="px-3 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full">
-                RHEL
-              </span>
-            )}
-            {vm.suse && (
-              <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
-                SUSE
-              </span>
-            )}
-            {vm.sqlServerSTD && (
+            {vm.bancoDados && (
               <span className="px-3 py-1 bg-orange-50 text-orange-700 text-xs font-medium rounded-full">
-                SQL Server
+                {getBancoDadosNome()}
               </span>
             )}
           </div>
