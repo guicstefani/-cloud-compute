@@ -218,11 +218,11 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
                 </div>
               </div>
 
-              {Object.keys(custo.licencas).length > 0 && (
+              {Object.keys(custo.licencasAdicionais).length > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <div className="text-sm text-gray-600 mb-1">Licenças ativas:</div>
                   <div className="flex flex-wrap gap-1">
-                    {Object.keys(custo.licencas).map(licenca => (
+                    {Object.keys(custo.licencasAdicionais).map(licenca => (
                       <Badge key={licenca} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
                         {licenca}
                       </Badge>
