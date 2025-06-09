@@ -1,392 +1,166 @@
 
-import React, { useState } from 'react';
-import { Document, Page, Text, View, StyleSheet, pdf, Font } from '@react-pdf/renderer';
+import React from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { VM } from '@/types';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { ProposalData } from './ProposalModal';
 
-// Register Inter font family
-Font.register({
-  family: 'Inter',
-  fonts: [
-    { 
-      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
-      fontWeight: 'normal'
-    },
-    { 
-      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2', 
-      fontWeight: 600 
-    },
-    { 
-      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.woff2', 
-      fontWeight: 700 
-    },
-  ]
-});
-
-const styles = StyleSheet.create({
-  page: {
-    fontFamily: 'Inter',
-    backgroundColor: '#FFFFFF',
-  },
-  
-  // PÁGINA 1 - CAPA
-  coverPage: {
-    position: 'relative',
-    height: '100%',
-  },
-  coverBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '60%',
-    backgroundColor: '#1a1a1a',
-  },
-  coverPattern: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '50%',
-    height: '100%',
-    backgroundColor: '#C7D82B',
-    opacity: 0.1,
-  },
-  coverContent: {
-    position: 'absolute',
-    top: '25%',
-    left: 60,
-    right: 60,
-  },
-  projectTitle: {
-    fontSize: 14,
-    color: '#C7D82B',
-    marginBottom: 10,
-    fontWeight: 600,
-  },
-  clientName: {
-    fontSize: 48,
-    fontWeight: 700,
-    color: '#FFFFFF',
-    marginBottom: 30,
-  },
-  optidataLogo: {
-    position: 'absolute',
-    bottom: 100,
-    left: 60,
-    right: 60,
-    alignItems: 'center',
-  },
-  logoText: {
-    fontSize: 36,
-    fontWeight: 700,
-    color: '#FFFFFF',
-  },
-  
-  // PÁGINA 2 - YOUR NEXT LEVEL
-  nextLevelPage: {
-    padding: 60,
-  },
-  nextLevelTitle: {
-    fontSize: 36,
-    fontWeight: 700,
-    color: '#000000',
-  },
-  yellowHighlight: {
-    color: '#C7D82B',
-  },
-  nextLevelSubtitle: {
-    fontSize: 18,
-    color: '#333333',
-    lineHeight: 1.6,
-    marginTop: 40,
-  },
-  
-  // PÁGINA 3 - NÚMEROS
-  numbersGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginTop: 40,
-  },
-  numberCard: {
-    width: '30%',
-    marginBottom: 30,
-    alignItems: 'center',
-  },
-  numberIcon: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 25,
-    marginBottom: 15,
-  },
-  numberValue: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: '#000000',
-    marginBottom: 5,
-  },
-  numberLabel: {
-    fontSize: 12,
-    color: '#666666',
-    textAlign: 'center',
-  },
-  
-  // CERTIFICAÇÕES
-  certificationsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 40,
-    paddingTop: 40,
-    borderTopWidth: 1,
-    borderTopColor: '#E5E5E5',
-  },
-  certBadge: {
-    alignItems: 'center',
-  },
-  certIcon: {
-    width: 60,
-    height: 60,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  
-  // TABELAS DE SERVIÇOS
-  servicesTable: {
-    marginTop: 30,
-  },
-  tableHeader: {
-    backgroundColor: '#C7D82B',
-    padding: 15,
-  },
-  tableHeaderText: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#000000',
-  },
-  tableRow: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
-    padding: 15,
-  },
-  vmTitle: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#000000',
-    marginBottom: 5,
-  },
-  vmSpecs: {
-    fontSize: 12,
-    color: '#666666',
-    lineHeight: 1.4,
-  },
-  
-  // RESUMO DE CUSTOS
-  costSummary: {
-    marginTop: 40,
-    padding: 30,
-    backgroundColor: '#F8F9FA',
-    borderRadius: 8,
-  },
-  costRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-  costLabel: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  costValue: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#000000',
-  },
-  totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 20,
-    borderTopWidth: 2,
-    borderTopColor: '#C7D82B',
-  },
-  totalLabel: {
-    fontSize: 18,
-    fontWeight: 700,
-    color: '#000000',
-  },
-  totalValue: {
-    fontSize: 24,
-    fontWeight: 700,
-    color: '#000000',
-  },
-  
-  // FOOTER
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 60,
-    right: 60,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  pageNumber: {
-    fontSize: 10,
-    color: '#999999',
-  },
-});
-
-interface PDFDocumentProps {
+interface PropostaPDFContentProps {
+  dadosCliente: ProposalData;
   vms: VM[];
   calculadora: CalculadoraCloud;
-  proposalData: ProposalData;
   totalValue: number;
   economia: number;
 }
 
-const PropostaPDF: React.FC<PDFDocumentProps> = ({ 
+const PropostaPDFContent: React.FC<PropostaPDFContentProps> = ({ 
+  dadosCliente, 
   vms, 
   calculadora, 
-  proposalData, 
   totalValue, 
   economia 
 }) => {
   const currentDate = new Date().toLocaleDateString('pt-BR');
   
   return (
-    <Document>
+    <div id="pdf-content" className="hidden">
       {/* PÁGINA 1 - CAPA */}
-      <Page size="A4" style={styles.page}>
-        <View style={styles.coverPage}>
-          <View style={styles.coverBackground} />
-          <View style={styles.coverPattern} />
-          
-          <View style={styles.coverContent}>
-            <Text style={styles.projectTitle}>PROJETO</Text>
-            <Text style={styles.clientName}>{proposalData.clientName.toUpperCase()}</Text>
-          </View>
-          
-          <View style={styles.optidataLogo}>
-            <Text style={styles.logoText}>Optidata</Text>
-          </View>
-          
-          {/* Elementos gráficos decorativos */}
-          <View style={{
-            position: 'absolute',
-            top: 100,
-            right: 60,
-            width: 300,
-            height: 300,
-          }}>
-            {[...Array(5)].map((_, i) => (
-              <View key={i} style={{
-                position: 'absolute',
-                top: i * 60,
-                right: i * 30,
-                width: 50,
-                height: 50,
-                backgroundColor: i % 2 === 0 ? '#C7D82B' : '#8B5CF6',
-                opacity: 0.8,
-              }} />
-            ))}
-          </View>
-        </View>
-      </Page>
+      <div className="w-[210mm] h-[297mm] bg-black text-white p-16 relative overflow-hidden">
+        {/* Padrão decorativo */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#C7D82B] opacity-10"></div>
+        
+        {/* Elementos gráficos decorativos */}
+        <div className="absolute top-20 right-16 w-80 h-80">
+          {[...Array(5)].map((_, i) => (
+            <div 
+              key={i} 
+              className={`absolute w-12 h-12 ${i % 2 === 0 ? 'bg-[#C7D82B]' : 'bg-purple-500'} opacity-80`}
+              style={{
+                top: `${i * 60}px`,
+                right: `${i * 30}px`
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Conteúdo da capa */}
+        <div className="relative z-10 mt-32">
+          <p className="text-[#C7D82B] text-sm font-medium mb-2">PROJETO</p>
+          <h1 className="text-5xl font-bold mb-8">{dadosCliente.clientName.toUpperCase()}</h1>
+        </div>
+        
+        {/* Logo Optidata */}
+        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2">
+          <div className="flex items-center gap-1">
+            <h2 className="text-4xl font-bold">Optidata</h2>
+            <div className="flex gap-1">
+              <div className="w-2 h-2 bg-[#C7D82B] rounded-full"></div>
+              <div className="w-2 h-2 bg-[#C7D82B] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* PÁGINA 2 - YOUR NEXT LEVEL */}
-      <Page size="A4" style={[styles.page, styles.nextLevelPage]}>
-        <Text style={styles.nextLevelTitle}>
-          YOUR <Text style={styles.yellowHighlight}>→</Text> NEXT
-        </Text>
-        <Text style={[styles.nextLevelTitle, { marginBottom: 40 }]}>
+      <div className="w-[210mm] h-[297mm] bg-white p-16" style={{ pageBreakBefore: 'always' }}>
+        <h1 className="text-4xl font-bold mb-8">
+          YOUR <span className="text-[#C7D82B]">→</span> NEXT<br/>
           LEVEL
-        </Text>
+        </h1>
         
-        <Text style={styles.nextLevelSubtitle}>
-          Organizar, armazenar e processar,{'\n'}
-          permitindo que você foque no seu{'\n'}
+        <p className="text-lg text-gray-700 mb-12">
+          Organizar, armazenar e processar,<br/>
+          permitindo que você foque no seu<br/>
           negócio para gerar mais resultados.
-        </Text>
+        </p>
         
         {/* Imagens ilustrativas */}
-        <View style={{ flexDirection: 'row', marginTop: 60, gap: 10 }}>
+        <div className="flex gap-4 mt-16 mb-16">
           {[1, 2, 3].map(i => (
-            <View key={i} style={{
-              width: 150,
-              height: 100,
-              backgroundColor: '#F5F5F5',
-              borderRadius: 8,
-            }} />
+            <div key={i} className="w-40 h-24 bg-gray-200 rounded-lg"></div>
           ))}
-        </View>
-      </Page>
+        </div>
+        
+        {/* Cards de métricas */}
+        <div className="grid grid-cols-3 gap-6">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-[#C7D82B] rounded-lg mx-auto mb-4 flex items-center justify-center">
+              <span className="text-black font-bold">💰</span>
+            </div>
+            <p className="text-3xl font-bold">80%</p>
+            <p className="text-sm text-gray-600">Redução de custos</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-[#C7D82B] rounded-lg mx-auto mb-4 flex items-center justify-center">
+              <span className="text-black font-bold">🛡️</span>
+            </div>
+            <p className="text-3xl font-bold">99.99%</p>
+            <p className="text-sm text-gray-600">SLA Garantido</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-[#C7D82B] rounded-lg mx-auto mb-4 flex items-center justify-center">
+              <span className="text-black font-bold">⚡</span>
+            </div>
+            <p className="text-3xl font-bold">5min</p>
+            <p className="text-sm text-gray-600">Deploy</p>
+          </div>
+        </div>
+      </div>
       
       {/* PÁGINA 3 - NÚMEROS DA OPTIDATA */}
-      <Page size="A4" style={[styles.page, { padding: 60 }]}>
-        <Text style={[styles.nextLevelTitle, { marginBottom: 40 }]}>
-          Optidata em números.
-        </Text>
+      <div className="w-[210mm] h-[297mm] bg-white p-16" style={{ pageBreakBefore: 'always' }}>
+        <h2 className="text-3xl font-bold mb-8">Optidata em números.</h2>
         
-        <View style={styles.numbersGrid}>
-          <View style={styles.numberCard}>
-            <View style={styles.numberIcon} />
-            <Text style={styles.numberValue}>4</Text>
-            <Text style={styles.numberLabel}>Data Centers{'\n'}Certificados</Text>
-          </View>
-          
-          <View style={styles.numberCard}>
-            <View style={styles.numberIcon} />
-            <Text style={styles.numberValue}>+15PB</Text>
-            <Text style={styles.numberLabel}>Dados{'\n'}Processados</Text>
-          </View>
-          
-          <View style={styles.numberCard}>
-            <View style={styles.numberIcon} />
-            <Text style={styles.numberValue}>+5MM</Text>
-            <Text style={styles.numberLabel}>Acessos{'\n'}Simultâneos</Text>
-          </View>
-          
-          <View style={styles.numberCard}>
-            <View style={styles.numberIcon} />
-            <Text style={styles.numberValue}>+7.000</Text>
-            <Text style={styles.numberLabel}>Clientes{'\n'}Corporativos</Text>
-          </View>
-          
-          <View style={styles.numberCard}>
-            <View style={styles.numberIcon} />
-            <Text style={styles.numberValue}>+25.000</Text>
-            <Text style={styles.numberLabel}>Servidores{'\n'}Gerenciados</Text>
-          </View>
-        </View>
+        <div className="grid grid-cols-3 gap-8 mb-16">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+            <p className="text-3xl font-bold">4</p>
+            <p className="text-sm text-gray-600">Data Centers<br/>Certificados</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+            <p className="text-3xl font-bold">+15PB</p>
+            <p className="text-sm text-gray-600">Dados<br/>Processados</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+            <p className="text-3xl font-bold">+5MM</p>
+            <p className="text-sm text-gray-600">Acessos<br/>Simultâneos</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+            <p className="text-3xl font-bold">+7.000</p>
+            <p className="text-sm text-gray-600">Clientes<br/>Corporativos</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+            <p className="text-3xl font-bold">+25.000</p>
+            <p className="text-sm text-gray-600">Servidores<br/>Gerenciados</p>
+          </div>
+        </div>
         
-        <Text style={[styles.nextLevelTitle, { fontSize: 24, marginTop: 60, marginBottom: 30 }]}>
-          Certificações internacionais.
-        </Text>
+        <h3 className="text-2xl font-bold mb-8">Certificações internacionais.</h3>
         
-        <View style={styles.certificationsRow}>
+        <div className="flex justify-center gap-8">
           {['TIER III\nDESIGN', 'TIER III\nFACILITY', 'PCI DSS', 'ISO 27001', 'ISO 27701'].map((cert, i) => (
-            <View key={i} style={styles.certBadge}>
-              <View style={styles.certIcon} />
-              <Text style={{ fontSize: 10, textAlign: 'center' }}>{cert}</Text>
-            </View>
+            <div key={i} className="text-center">
+              <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-2"></div>
+              <p className="text-xs whitespace-pre-line">{cert}</p>
+            </div>
           ))}
-        </View>
-      </Page>
+        </div>
+      </div>
       
-      {/* PÁGINA 4 - DETALHAMENTO DOS SERVIÇOS */}
-      <Page size="A4" style={[styles.page, { padding: 60 }]}>
-        <Text style={[styles.nextLevelTitle, { fontSize: 28, marginBottom: 40 }]}>
-          Configuração dos Servidores
-        </Text>
+      {/* PÁGINA 4 - DETALHAMENTO */}
+      <div className="w-[210mm] h-[297mm] bg-white p-16" style={{ pageBreakBefore: 'always' }}>
+        <h2 className="text-3xl font-bold mb-8">Configuração dos Servidores</h2>
         
-        <View style={styles.servicesTable}>
-          <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderText}>
-              ESTRUTURA PARA COMPUTAÇÃO OPTICLOUD
-            </Text>
-          </View>
+        {/* Tabela de VMs */}
+        <div className="bg-gray-50 rounded-lg p-6 mb-8">
+          <div className="bg-purple-600 text-white p-4 rounded-t-lg">
+            <h3 className="text-lg font-semibold">ESTRUTURA PARA COMPUTAÇÃO OPTICLOUD</h3>
+          </div>
           
           {vms.map((vm, index) => {
             const custo = calculadora.calcularVM(vm);
@@ -397,211 +171,174 @@ const PropostaPDF: React.FC<PDFDocumentProps> = ({
             if (vm.sqlServerSTD) licencas.push('SQL Server');
             
             return (
-              <View key={vm.id} style={styles.tableRow}>
-                <Text style={styles.vmTitle}>Servidor {index + 1} - {vm.nome}</Text>
-                <Text style={styles.vmSpecs}>
+              <div key={vm.id} className="border-b border-gray-200 p-4">
+                <h4 className="text-lg font-semibold mb-2">Servidor {index + 1} - {vm.nome}</h4>
+                <p className="text-sm text-gray-600">
                   {vm.vcpu} vCPUs • {vm.ram}GB RAM • {vm.discoFCM + vm.discoSSD}GB Storage
                   {licencas.length > 0 && ` • ${licencas.join(', ')}`}
-                </Text>
-              </View>
+                </p>
+              </div>
             );
           })}
-        </View>
+        </div>
         
-        {/* RESUMO DE CUSTOS DETALHADO */}
-        <View style={styles.costSummary}>
-          <Text style={[styles.nextLevelTitle, { fontSize: 20, marginBottom: 20 }]}>
-            Resumo de Custos
-          </Text>
+        {/* Resumo de Custos Detalhado */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="text-xl font-bold mb-6">Resumo de Custos</h3>
           
           {vms.map((vm, index) => {
             const custo = calculadora.calcularVM(vm);
             return (
-              <View key={vm.id} style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 14, fontWeight: 600, marginBottom: 10 }}>
-                  Servidor {index + 1} - {vm.nome}
-                </Text>
+              <div key={vm.id} className="mb-6">
+                <h4 className="text-base font-semibold mb-3">Servidor {index + 1} - {vm.nome}</h4>
                 
-                <View style={styles.costRow}>
-                  <Text style={styles.costLabel}>Infraestrutura (vCPU + RAM)</Text>
-                  <Text style={styles.costValue}>{formatCurrency(custo.vcpu + custo.ram)}</Text>
-                </View>
-                
-                <View style={styles.costRow}>
-                  <Text style={styles.costLabel}>Armazenamento + Backup</Text>
-                  <Text style={styles.costValue}>{formatCurrency(custo.storage + custo.backup)}</Text>
-                </View>
-                
-                <View style={styles.costRow}>
-                  <Text style={styles.costLabel}>Monitoramento</Text>
-                  <Text style={styles.costValue}>{formatCurrency(custo.monitoramento)}</Text>
-                </View>
-                
-                {custo.subtotalLicencas > 0 && (
-                  <View style={styles.costRow}>
-                    <Text style={styles.costLabel}>Licenças</Text>
-                    <Text style={styles.costValue}>{formatCurrency(custo.subtotalLicencas)}</Text>
-                  </View>
-                )}
-                
-                <View style={[styles.costRow, { borderTopWidth: 1, borderTopColor: '#E5E5E5', paddingTop: 10, marginTop: 10 }]}>
-                  <Text style={[styles.costLabel, { fontWeight: 600 }]}>Subtotal</Text>
-                  <Text style={[styles.costValue, { fontWeight: 700 }]}>{formatCurrency(custo.total)}</Text>
-                </View>
-              </View>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Infraestrutura (vCPU + RAM)</span>
+                    <span className="font-medium">{formatCurrency(custo.vcpu + custo.ram)}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Armazenamento + Backup</span>
+                    <span className="font-medium">{formatCurrency(custo.storage + custo.backup)}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Monitoramento</span>
+                    <span className="font-medium">{formatCurrency(custo.monitoramento)}</span>
+                  </div>
+                  
+                  {custo.subtotalLicencas > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Licenças</span>
+                      <span className="font-medium">{formatCurrency(custo.subtotalLicencas)}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between border-t pt-2 font-semibold">
+                    <span>Subtotal</span>
+                    <span>{formatCurrency(custo.total)}</span>
+                  </div>
+                </div>
+              </div>
             );
           })}
           
           {economia > 0 && (
-            <View style={styles.costRow}>
-              <Text style={[styles.costLabel, { color: '#10B981' }]}>Desconto Aplicado</Text>
-              <Text style={[styles.costValue, { color: '#10B981' }]}>-{formatCurrency(economia)}</Text>
-            </View>
+            <div className="flex justify-between text-green-600 mb-4">
+              <span>Desconto Aplicado</span>
+              <span className="font-medium">-{formatCurrency(economia)}</span>
+            </div>
           )}
           
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total Mensal</Text>
-            <Text style={styles.totalValue}>{formatCurrency(totalValue)}</Text>
-          </View>
-        </View>
-      </Page>
+          <div className="border-t-2 border-[#C7D82B] pt-4">
+            <div className="flex justify-between text-xl font-bold">
+              <span>Total Mensal</span>
+              <span>{formatCurrency(totalValue)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* PÁGINA 5 - CONDIÇÕES COMERCIAIS */}
-      <Page size="A4" style={[styles.page, { padding: 60 }]}>
-        <Text style={[styles.nextLevelTitle, { fontSize: 28, marginBottom: 40 }]}>
-          Condições Comerciais
-        </Text>
+      <div className="w-[210mm] h-[297mm] bg-white p-16" style={{ pageBreakBefore: 'always' }}>
+        <h2 className="text-3xl font-bold mb-8">Condições Comerciais</h2>
         
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 10 }}>
-            Prazo de Ativação
-          </Text>
-          <Text style={{ fontSize: 14, color: '#666666', lineHeight: 1.6 }}>
-            Até 10 (dez) dias úteis após assinatura do contrato
-          </Text>
-        </View>
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Prazo de Ativação</h3>
+            <p className="text-gray-700">Até 10 (dez) dias úteis após assinatura do contrato</p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Validade da Proposta</h3>
+            <p className="text-gray-700">{dadosCliente.validity} dias</p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Condições de Pagamento</h3>
+            <p className="text-gray-700 leading-relaxed">
+              • Contrato de 12 meses com renovação automática<br/>
+              • Pagamento mensal via boleto ou transferência<br/>
+              • Reajuste anual pelo IPCA<br/>
+              • SLA de 99.99% de disponibilidade garantido
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Suporte Incluído</h3>
+            <p className="text-gray-700 leading-relaxed">
+              • Suporte técnico 24x7x365<br/>
+              • Monitoramento proativo da infraestrutura<br/>
+              • Backup automático diário incluído<br/>
+              • Atualizações de segurança automáticas
+            </p>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Informações do Cliente</h3>
+            <div className="text-gray-700">
+              <p className="font-medium">{dadosCliente.clientName}</p>
+              {dadosCliente.email && <p>{dadosCliente.email}</p>}
+              {dadosCliente.phone && <p>{dadosCliente.phone}</p>}
+            </div>
+          </div>
+          
+          {dadosCliente.observations && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Observações</h3>
+              <p className="text-gray-700">{dadosCliente.observations}</p>
+            </div>
+          )}
+        </div>
         
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 10 }}>
-            Validade da Proposta
-          </Text>
-          <Text style={{ fontSize: 14, color: '#666666' }}>
-            {proposalData.validity} dias
-          </Text>
-        </View>
-        
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 10 }}>
-            Condições de Pagamento
-          </Text>
-          <Text style={{ fontSize: 14, color: '#666666', lineHeight: 1.6 }}>
-            • Contrato de 12 meses com renovação automática{'\n'}
-            • Pagamento mensal via boleto ou transferência{'\n'}
-            • Reajuste anual pelo IPCA{'\n'}
-            • SLA de 99.99% de disponibilidade garantido
-          </Text>
-        </View>
-        
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 10 }}>
-            Suporte Incluído
-          </Text>
-          <Text style={{ fontSize: 14, color: '#666666', lineHeight: 1.6 }}>
-            • Suporte técnico 24x7x365{'\n'}
-            • Monitoramento proativo da infraestrutura{'\n'}
-            • Backup automático diário incluído{'\n'}
-            • Atualizações de segurança automáticas
-          </Text>
-        </View>
-        
-        {proposalData.observations && (
-          <View style={{ marginTop: 40 }}>
-            <Text style={{ fontSize: 16, fontWeight: 600, marginBottom: 10 }}>
-              Observações
-            </Text>
-            <Text style={{ fontSize: 14, color: '#666666', lineHeight: 1.6 }}>
-              {proposalData.observations}
-            </Text>
-          </View>
-        )}
-        
-        <View style={{ marginTop: 60 }}>
-          <View style={{ borderTopWidth: 1, borderTopColor: '#E5E5E5', paddingTop: 30 }}>
-            <Text style={{ fontSize: 12, color: '#999999' }}>
+        {/* Footer */}
+        <div className="absolute bottom-16 left-16 right-16">
+          <div className="border-t border-gray-300 pt-8">
+            <p className="text-sm text-gray-600">
               Proposta gerada em: {currentDate}
-            </Text>
-            {proposalData.email && (
-              <Text style={{ fontSize: 12, color: '#999999', marginTop: 5 }}>
-                Email: {proposalData.email}
-              </Text>
-            )}
-            {proposalData.phone && (
-              <Text style={{ fontSize: 12, color: '#999999', marginTop: 5 }}>
-                Telefone: {proposalData.phone}
-              </Text>
-            )}
-          </View>
-        </View>
-      </Page>
+            </p>
+          </div>
+        </div>
+      </div>
       
       {/* PÁGINA FINAL - CONTATO */}
-      <Page size="A4" style={styles.page}>
-        <View style={{
-          flex: 1,
-          backgroundColor: '#1a1a1a',
-          padding: 60,
-          justifyContent: 'center',
-        }}>
-          <Text style={[styles.nextLevelTitle, { color: '#FFFFFF', marginBottom: 10 }]}>
-            Vamos escalar
-          </Text>
-          <Text style={[styles.nextLevelTitle, { color: '#FFFFFF', marginBottom: 10 }]}>
-            seu negócio por meio
-          </Text>
-          <Text style={[styles.nextLevelTitle, { color: '#FFFFFF', marginBottom: 10 }]}>
-            da tecnologia<Text style={{ color: '#C7D82B' }}>?</Text>
-          </Text>
+      <div className="w-[210mm] h-[297mm] bg-black text-white p-16 flex flex-col justify-center" style={{ pageBreakBefore: 'always' }}>
+        <div>
+          <h1 className="text-4xl font-bold mb-2">Vamos escalar</h1>
+          <h1 className="text-4xl font-bold mb-2">seu negócio por meio</h1>
+          <h1 className="text-4xl font-bold mb-12">da tecnologia<span className="text-[#C7D82B]">?</span></h1>
           
-          <View style={{ marginTop: 60 }}>
-            <Text style={{ fontSize: 24, fontWeight: 600, color: '#FFFFFF', marginBottom: 40 }}>
-              optidata.cloud
-            </Text>
+          <p className="text-2xl font-semibold mb-12 text-white">optidata.cloud</p>
+          
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-lg font-semibold text-[#C7D82B] mb-2">Optidata BR - Chapecó</h3>
+              <p className="text-sm text-gray-300">
+                Av. Nereu Ramos, 1866 E - 4º andar<br/>
+                Passo dos Fortes - Chapecó/SC
+              </p>
+            </div>
             
-            <View style={{ gap: 30 }}>
-              <View>
-                <Text style={{ fontSize: 14, fontWeight: 600, color: '#C7D82B', marginBottom: 5 }}>
-                  Optidata BR - Chapecó
-                </Text>
-                <Text style={{ fontSize: 12, color: '#CCCCCC' }}>
-                  Av. Nereu Ramos, 1866 E - 4º andar{'\n'}
-                  Passo dos Fortes - Chapecó/SC
-                </Text>
-              </View>
-              
-              <View>
-                <Text style={{ fontSize: 14, fontWeight: 600, color: '#C7D82B', marginBottom: 5 }}>
-                  Optidata BR - São Paulo
-                </Text>
-                <Text style={{ fontSize: 12, color: '#CCCCCC' }}>
-                  Av. Dr. Chucri Zaidan, 1550{'\n'}
-                  Conjunto 507 - São Paulo/SP
-                </Text>
-              </View>
-              
-              <View style={{ marginTop: 40 }}>
-                <Text style={{ fontSize: 14, fontWeight: 600, color: '#C7D82B', marginBottom: 5 }}>
-                  Contato Comercial
-                </Text>
-                <Text style={{ fontSize: 12, color: '#CCCCCC' }}>
-                  Email: comercial@optidata.com.br{'\n'}
-                  Telefone: (11) 3333-4444
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Page>
-    </Document>
+            <div>
+              <h3 className="text-lg font-semibold text-[#C7D82B] mb-2">Optidata BR - São Paulo</h3>
+              <p className="text-sm text-gray-300">
+                Av. Dr. Chucri Zaidan, 1550<br/>
+                Conjunto 507 - São Paulo/SP
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-[#C7D82B] mb-2">Contato Comercial</h3>
+              <p className="text-sm text-gray-300">
+                Email: comercial@optidata.com.br<br/>
+                Telefone: (11) 3333-4444
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -613,29 +350,49 @@ export const generatePDF = async (
   economia: number
 ) => {
   try {
-    const doc = (
-      <PropostaPDF
-        vms={vms}
-        calculadora={calculadora}
-        proposalData={proposalData}
-        totalValue={totalValue}
-        economia={economia}
-      />
-    );
+    // Tornar o conteúdo visível temporariamente
+    const element = document.getElementById('pdf-content');
+    if (!element) {
+      throw new Error('Elemento PDF não encontrado');
+    }
     
-    const blob = await pdf(doc).toBlob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Proposta_Premium_${proposalData.clientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    element.classList.remove('hidden');
+    element.classList.add('fixed', 'top-0', 'left-0', 'z-[-1]');
+    
+    // Aguardar renderização
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Capturar cada página
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pages = element.children;
+    
+    for (let i = 0; i < pages.length; i++) {
+      const canvas = await html2canvas(pages[i] as HTMLElement, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 794, // A4 width in pixels at 96 DPI
+        height: 1123 // A4 height in pixels at 96 DPI
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+    }
+    
+    // Ocultar novamente
+    element.classList.add('hidden');
+    element.classList.remove('fixed', 'top-0', 'left-0', 'z-[-1]');
+    
+    // Salvar PDF
+    pdf.save(`Proposta_Premium_${proposalData.clientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    
   } catch (error) {
     console.error('Erro ao gerar PDF:', error);
     throw error;
   }
 };
 
-export default PropostaPDF;
+export default PropostaPDFContent;

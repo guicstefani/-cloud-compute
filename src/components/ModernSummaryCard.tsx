@@ -4,13 +4,14 @@ import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, DollarSign } from 'lucide-react';
 import ProposalModal, { ProposalData } from './ProposalModal';
-import { generatePDF } from './PDFGenerator';
+import PropostaPDFContent, { generatePDF } from './PDFGenerator';
 
 const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [currentProposalData, setCurrentProposalData] = useState<ProposalData | null>(null);
   
   if (vms.length === 0) {
     return (
@@ -37,13 +38,18 @@ const ModernSummaryCard = () => {
 
   const handleGeneratePDF = async (proposalData: ProposalData) => {
     setIsGenerating(true);
+    setCurrentProposalData(proposalData);
+    
     try {
+      // Aguardar um frame para garantir que o componente PDF seja renderizado
+      await new Promise(resolve => setTimeout(resolve, 100));
       await generatePDF(vms, calculadora, proposalData, totalComDesconto, economia);
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
       alert('Erro ao gerar PDF. Tente novamente.');
     } finally {
       setIsGenerating(false);
+      setCurrentProposalData(null);
     }
   };
 
@@ -183,6 +189,17 @@ const ModernSummaryCard = () => {
         onGenerate={handleGeneratePDF}
         totalValue={totalComDesconto}
       />
+
+      {/* Componente PDF oculto */}
+      {currentProposalData && (
+        <PropostaPDFContent
+          dadosCliente={currentProposalData}
+          vms={vms}
+          calculadora={calculadora}
+          totalValue={totalComDesconto}
+          economia={economia}
+        />
+      )}
     </>
   );
 };
