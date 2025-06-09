@@ -1,5 +1,6 @@
 
 import React from 'react';
+import Header from '@/components/Header';
 import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
@@ -13,7 +14,10 @@ const Index = () => {
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5]">
+    <div className="min-h-screen bg-gray-950">
+      {/* Header */}
+      <Header />
+      
       {/* Hero Section */}
       <ModernHero />
       
@@ -28,18 +32,18 @@ const Index = () => {
           {/* VM Configurator - Center Column */}
           <div className="lg:col-span-5">
             {selectedVM ? (
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
+              <div className="bg-gray-900 rounded-lg border border-gray-800 p-8">
                 <VMConfigurator vm={selectedVM} calculadora={calculadora} />
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-12 text-center">
-                <div className="w-16 h-16 bg-[#C7D82B] rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="bg-gray-900 rounded-lg border border-gray-800 p-12 text-center">
+                <div className="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">⚙️</span>
                 </div>
-                <h3 className="text-xl font-semibold text-black mb-2">
+                <h3 className="text-xl font-semibold text-white mb-2">
                   Selecione uma VM
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                   Escolha uma VM da lista para configurar seus recursos
                 </p>
               </div>
