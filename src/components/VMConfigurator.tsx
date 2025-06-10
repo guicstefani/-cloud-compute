@@ -787,5 +787,3 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 };
 
 export default VMConfigurator;
-
-</edits_to_apply>
