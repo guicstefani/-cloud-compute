@@ -37,6 +37,7 @@ import {
   todosSistemasOperacionais,
   todosBancosDados
 } from '@/data/sistemasOperacionais';
+import React from 'react';
 
 interface VMConfiguratorProps {
   vm: VM;
@@ -49,6 +50,25 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 
   const handleUpdate = (updates: Partial<VM>) => {
     updateVM(vm.id, updates);
+  };
+
+  // Auto-seleção do antivírus quando Windows é selecionado
+  React.useEffect(() => {
+    const so = getSistemaOperacionalSelecionado();
+    if (so && so.categoria === 'windows' && !vm.antivirus) {
+      handleUpdate({ antivirus: true });
+    }
+  }, [vm.sistemaOperacional]);
+
+  // Função para toggle de banco de dados
+  const handleBancoDadosToggle = (bancoDadosId: string) => {
+    if (vm.bancoDados === bancoDadosId) {
+      // Se já está selecionado, deseleciona
+      handleUpdate({ bancoDados: '' });
+    } else {
+      // Se não está selecionado ou é diferente, seleciona
+      handleUpdate({ bancoDados: bancoDadosId });
+    }
   };
 
   // Função para calcular apenas a infraestrutura (sem licenças)
@@ -305,7 +325,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                   key={bd.id}
                   banco={bd}
                   selecionado={vm.bancoDados === bd.id}
-                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  onSelect={() => handleBancoDadosToggle(bd.id)}
                   vcpu={vm.vcpu}
                 />
               ))}
@@ -323,7 +343,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                   key={bd.id}
                   banco={bd}
                   selecionado={vm.bancoDados === bd.id}
-                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  onSelect={() => handleBancoDadosToggle(bd.id)}
                   vcpu={vm.vcpu}
                 />
               ))}
@@ -341,7 +361,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                   key={bd.id}
                   banco={bd}
                   selecionado={vm.bancoDados === bd.id}
-                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  onSelect={() => handleBancoDadosToggle(bd.id)}
                   vcpu={vm.vcpu}
                 />
               ))}
@@ -359,7 +379,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                   key={bd.id}
                   banco={bd}
                   selecionado={vm.bancoDados === bd.id}
-                  onSelect={() => handleUpdate({ bancoDados: bd.id })}
+                  onSelect={() => handleBancoDadosToggle(bd.id)}
                   vcpu={vm.vcpu}
                 />
               ))}
@@ -368,7 +388,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 
           <div className="text-xs text-gray-600 flex items-center gap-1 p-2 bg-amber-50 rounded">
             <Info className="w-3 h-3" />
-            ⚠️ Apenas um banco de dados pode ser selecionado por VM
+            ⚠️ Clique novamente no banco selecionado para desselecionar
           </div>
         </div>
       </CollapsibleCard>
@@ -542,9 +562,16 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 `}>
                   {vm.antivirus && <Check className="w-3 h-3 text-white" />}
                 </div>
-                <span className={vm.antivirus ? 'text-green-900 font-medium' : ''}>
-                  Antivírus
-                </span>
+                <div>
+                  <span className={vm.antivirus ? 'text-green-900 font-medium' : ''}>
+                    Antivírus
+                  </span>
+                  {getSistemaOperacionalSelecionado()?.categoria === 'windows' && vm.antivirus && (
+                    <p className="text-xs text-blue-600 mt-1">
+                      ✨ Auto-selecionado para Windows (recomendado)
+                    </p>
+                  )}
+                </div>
               </div>
               <span className="text-sm text-gray-500">R$ 55,00/mês</span>
             </div>
@@ -760,3 +787,5 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 };
 
 export default VMConfigurator;
+
+</edits_to_apply>

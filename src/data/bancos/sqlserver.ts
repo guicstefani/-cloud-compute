@@ -14,15 +14,15 @@ export const sqlServer: BancoDados[] = [
   {
     id: 'sql-web',
     nome: 'SQL Server Web Edition',
-    preco: 250,
-    descricao: 'Para aplicações web',
+    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 140,
+    descricao: 'Licença a cada 2 vCPUs',
     categoria: 'sql-server',
     icon: '🔵'
   },
   {
     id: 'sql-standard',
     nome: 'SQL Server Standard',
-    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 1450,
+    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 800,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'sql-server',
     icon: '🔵'
@@ -30,7 +30,7 @@ export const sqlServer: BancoDados[] = [
   {
     id: 'sql-enterprise',
     nome: 'SQL Server Enterprise',
-    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 3500,
+    preco: (vcpu: number) => Math.ceil(vcpu / 2) * 5200,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'sql-server',
     icon: '🔵'
