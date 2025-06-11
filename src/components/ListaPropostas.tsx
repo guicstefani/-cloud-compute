@@ -5,17 +5,21 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Proposta } from '@/types/proposta';
 import { formatCurrency } from '@/utils/calculadora';
-import { FileText, Calendar, User, Building } from 'lucide-react';
+import { FileText, Calendar, User, Building, Archive, Edit } from 'lucide-react';
 import VisualizarPropostaModal from '@/components/VisualizarPropostaModal';
 
 const ListaPropostas = () => {
   const [propostas, setPropostas] = useState<Proposta[]>([]);
+  const [propostasArquivadas, setPropostasArquivadas] = useState<Proposta[]>([]);
   const [propostaSelecionada, setPropostaSelecionada] = useState<Proposta | null>(null);
   const [modalVisualizarAberto, setModalVisualizarAberto] = useState(false);
+  const [modoVisualizacao, setModoVisualizacao] = useState<'ativas' | 'arquivadas'>('ativas');
 
   useEffect(() => {
     const proposalsSalvas = JSON.parse(localStorage.getItem('propostas') || '[]');
+    const proposalsArquivadas = JSON.parse(localStorage.getItem('propostasArquivadas') || '[]');
     setPropostas(proposalsSalvas);
+    setPropostasArquivadas(proposalsArquivadas);
   }, []);
 
   const formatarData = (dataISO: string) => {
@@ -27,15 +31,57 @@ const ListaPropostas = () => {
     setModalVisualizarAberto(true);
   };
 
-  if (propostas.length === 0) {
+  const handleArquivarProposta = (proposta: Proposta) => {
+    if (confirm(`Tem certeza que deseja arquivar a proposta "${proposta.nomeEmpresa} - ${proposta.nomeProjeto}"?`)) {
+      // Remove das propostas ativas
+      const novasPropostas = propostas.filter(p => p.id !== proposta.id);
+      setPropostas(novasPropostas);
+      localStorage.setItem('propostas', JSON.stringify(novasPropostas));
+
+      // Adiciona às arquivadas
+      const novasArquivadas = [...propostasArquivadas, { ...proposta, dataArquivamento: new Date().toISOString() }];
+      setPropostasArquivadas(novasArquivadas);
+      localStorage.setItem('propostasArquivadas', JSON.stringify(novasArquivadas));
+    }
+  };
+
+  const handleDesarquivarProposta = (proposta: Proposta) => {
+    if (confirm(`Tem certeza que deseja reativar a proposta "${proposta.nomeEmpresa} - ${proposta.nomeProjeto}"?`)) {
+      // Remove das arquivadas
+      const novasArquivadas = propostasArquivadas.filter(p => p.id !== proposta.id);
+      setPropostasArquivadas(novasArquivadas);
+      localStorage.setItem('propostasArquivadas', JSON.stringify(novasArquivadas));
+
+      // Adiciona às ativas (remove a data de arquivamento)
+      const { dataArquivamento, ...propostaSemArquivamento } = proposta as any;
+      const novasPropostas = [...propostas, propostaSemArquivamento];
+      setPropostas(novasPropostas);
+      localStorage.setItem('propostas', JSON.stringify(novasPropostas));
+    }
+  };
+
+  const handleExcluirDefinitivamente = (proposta: Proposta) => {
+    if (confirm(`⚠️ ATENÇÃO: Esta ação é IRREVERSÍVEL!\n\nTem certeza que deseja EXCLUIR PERMANENTEMENTE a proposta "${proposta.nomeEmpresa} - ${proposta.nomeProjeto}"?\n\nTodos os dados serão perdidos para sempre.`)) {
+      const novasArquivadas = propostasArquivadas.filter(p => p.id !== proposta.id);
+      setPropostasArquivadas(novasArquivadas);
+      localStorage.setItem('propostasArquivadas', JSON.stringify(novasArquivadas));
+    }
+  };
+
+  const listaAtual = modoVisualizacao === 'ativas' ? propostas : propostasArquivadas;
+
+  if (listaAtual.length === 0) {
     return (
       <div className="text-center py-12">
         <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Nenhuma proposta salva
+          {modoVisualizacao === 'ativas' ? 'Nenhuma proposta ativa' : 'Nenhuma proposta arquivada'}
         </h3>
         <p className="text-gray-600">
-          Crie sua primeira proposta usando as outras abas da calculadora.
+          {modoVisualizacao === 'ativas' 
+            ? 'Crie sua primeira proposta usando as outras abas da calculadora.'
+            : 'As propostas arquivadas aparecerão aqui.'
+          }
         </p>
       </div>
     );
@@ -44,19 +90,45 @@ const ListaPropostas = () => {
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <FileText className="w-6 h-6 mr-2 text-[#0066CC]" />
-          Propostas Salvas ({propostas.length})
-        </h2>
+        {/* Toggle entre Ativas e Arquivadas */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold flex items-center">
+            <FileText className="w-6 h-6 mr-2 text-[#0066CC]" />
+            Propostas ({listaAtual.length})
+          </h2>
+          
+          <div className="flex gap-2">
+            <Button
+              variant={modoVisualizacao === 'ativas' ? 'default' : 'outline'}
+              onClick={() => setModoVisualizacao('ativas')}
+              size="sm"
+            >
+              Ativas ({propostas.length})
+            </Button>
+            <Button
+              variant={modoVisualizacao === 'arquivadas' ? 'default' : 'outline'}
+              onClick={() => setModoVisualizacao('arquivadas')}
+              size="sm"
+            >
+              <Archive className="w-4 h-4 mr-1" />
+              Arquivadas ({propostasArquivadas.length})
+            </Button>
+          </div>
+        </div>
         
         <div className="space-y-4">
-          {propostas.map((proposta) => (
+          {listaAtual.map((proposta: any) => (
             <Card key={proposta.id} className="p-6 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                     <Building className="w-5 h-5 mr-2 text-[#0066CC]" />
                     {proposta.nomeEmpresa}
+                    {modoVisualizacao === 'arquivadas' && (
+                      <Badge variant="outline" className="ml-2 text-xs">
+                        Arquivada
+                      </Badge>
+                    )}
                   </h3>
                   <p className="text-gray-600">{proposta.nomeProjeto}</p>
                 </div>
@@ -76,7 +148,12 @@ const ListaPropostas = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Calendar className="w-4 h-4 mr-2" />
-                  <span>Criada em: {formatarData(proposta.dataCriacao)}</span>
+                  <span>
+                    {modoVisualizacao === 'ativas' 
+                      ? `Criada em: ${formatarData(proposta.dataCriacao)}`
+                      : `Arquivada em: ${formatarData(proposta.dataArquivamento)}`
+                    }
+                  </span>
                 </div>
               </div>
               
@@ -92,12 +169,43 @@ const ListaPropostas = () => {
                 >
                   Visualizar
                 </Button>
-                <Button variant="outline" size="sm">
-                  Editar
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-600 border-red-300 hover:bg-red-50">
-                  Excluir
-                </Button>
+                
+                {modoVisualizacao === 'ativas' ? (
+                  <>
+                    <Button variant="outline" size="sm">
+                      <Edit className="w-4 h-4 mr-1" />
+                      Editar
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                      onClick={() => handleArquivarProposta(proposta)}
+                    >
+                      <Archive className="w-4 h-4 mr-1" />
+                      Arquivar
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleDesarquivarProposta(proposta)}
+                      className="text-blue-600 border-blue-300 hover:bg-blue-50"
+                    >
+                      Reativar
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-600 border-red-300 hover:bg-red-50"
+                      onClick={() => handleExcluirDefinitivamente(proposta)}
+                    >
+                      Excluir Definitivamente
+                    </Button>
+                  </>
+                )}
               </div>
             </Card>
           ))}
