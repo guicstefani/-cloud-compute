@@ -1,4 +1,3 @@
-
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency, formatNumber } from '@/utils/calculadora';
 import { Card } from '@/components/ui/card';
@@ -15,6 +14,8 @@ import {
   HardDrive,
   Shield
 } from 'lucide-react';
+import { useState } from 'react';
+import CriarPropostaModal from '@/components/CriarPropostaModal';
 
 interface PricingSummaryProps {
   calculadora: CalculadoraCloud;

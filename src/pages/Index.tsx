@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
@@ -6,15 +5,16 @@ import ModernSummaryCard from '@/components/ModernSummaryCard';
 import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
+import ListaPropostas from '@/components/ListaPropostas';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
-import { Server, Database, TrendingUp } from 'lucide-react';
+import { Server, Database, TrendingUp, FileText } from 'lucide-react';
 
 const Index = () => {
   const { vms, selectedVMId, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
-  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades'>('vm');
+  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -66,6 +66,20 @@ const Index = () => {
               <TrendingUp className="w-5 h-5 mr-2" />
               Upgrades
             </button>
+
+            <button
+              onClick={() => setModoCalculo('propostas')}
+              className={`
+                flex items-center px-6 py-3 rounded-lg font-medium transition-all
+                ${modoCalculo === 'propostas' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }
+              `}
+            >
+              <FileText className="w-5 h-5 mr-2" />
+              Propostas
+            </button>
           </div>
           
           <p className="text-center text-sm text-gray-600 mt-3">
@@ -73,7 +87,9 @@ const Index = () => {
               ? 'Configure cada máquina virtual individualmente'
               : modoCalculo === 'pool'
               ? 'Cote recursos totais para múltiplas VMs de uma vez'
-              : 'Calcule itens e serviços avulsos'
+              : modoCalculo === 'upgrades'
+              ? 'Calcule itens e serviços avulsos'
+              : 'Gerencie suas propostas salvas'
             }
           </p>
         </div>
@@ -118,9 +134,12 @@ const Index = () => {
         ) : modoCalculo === 'pool' ? (
           // Modo Pool (existente)
           <PoolDeRecursos />
-        ) : (
-          // Novo modo Upgrades
+        ) : modoCalculo === 'upgrades' ? (
+          // Modo Upgrades (existente)
           <UpgradeModule />
+        ) : (
+          // Nova aba Propostas
+          <ListaPropostas />
         )}
       </div>
     </div>
