@@ -24,7 +24,8 @@ import {
   Save,
   Zap,
   Headphones,
-  Percent
+  Percent,
+  X
 } from 'lucide-react';
 
 interface ItemUpgrade {
@@ -150,12 +151,12 @@ const UpgradeModule = () => {
   const adicionarItem = (catalogoItem: any, categoria: string) => {
     setItensUpgrade(prev => {
       // Verificar se o item já existe (sistema de carrinho)
-      const itemExistente = prev.find(item => item.id.startsWith(catalogoItem.id));
+      const itemExistente = prev.find(item => item.nome === catalogoItem.nome);
       
       if (itemExistente) {
         // Se existe, incrementar quantidade
         return prev.map(item => 
-          item.id === itemExistente.id 
+          item.nome === catalogoItem.nome 
             ? { ...item, quantidade: item.quantidade + 1 }
             : item
         );
@@ -176,13 +177,13 @@ const UpgradeModule = () => {
     });
   };
 
-  const atualizarQuantidade = (id: string, quantidade: number) => {
-    if (quantidade <= 0) {
+  const atualizarQuantidade = (id: string, novaQuantidade: number) => {
+    if (novaQuantidade <= 0) {
       setItensUpgrade(prev => prev.filter(item => item.id !== id));
     } else {
       setItensUpgrade(prev => 
         prev.map(item => 
-          item.id === id ? { ...item, quantidade } : item
+          item.id === id ? { ...item, quantidade: novaQuantidade } : item
         )
       );
     }
@@ -386,7 +387,7 @@ const UpgradeModule = () => {
             </div>
           </div>
 
-          {/* Lista de Itens Selecionados */}
+          {/* Lista de Itens Selecionados - REDESENHADA */}
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <Calculator className="w-5 h-5 text-blue-600" />
@@ -400,54 +401,95 @@ const UpgradeModule = () => {
                 <p className="text-sm">Escolha itens do catálogo</p>
               </div>
             ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
+              <div className="space-y-4 max-h-96 overflow-y-auto">
                 {itensUpgrade.map(item => {
                   const precoComDesconto = item.categoria === 'recursos' 
                     ? item.preco * (1 - descontoRecursos / 100)
                     : item.preco;
                   
                   return (
-                    <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-2 flex-1">
-                        {item.icon}
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm truncate">{item.nome}</div>
-                          <div className="text-xs text-gray-600">
-                            {item.categoria === 'recursos' && descontoRecursos > 0 ? (
-                              <>
-                                <span className="line-through text-gray-400">{formatCurrency(item.preco)}</span>
-                                <span className="ml-1 text-green-600">{formatCurrency(precoComDesconto)}</span>
-                              </>
-                            ) : (
-                              formatCurrency(item.preco)
-                            )}
+                    <div key={item.id} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
+                      {/* Header do item com nome e botão remover */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center space-x-3 flex-1">
+                          <div className="p-2 bg-gray-50 rounded-lg">
+                            {item.icon}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-900 text-sm">{item.nome}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {item.categoria === 'recursos' && descontoRecursos > 0 ? (
+                                <div className="space-y-1">
+                                  <div className="line-through text-gray-400">
+                                    {formatCurrency(item.preco)} por {item.unidade}
+                                  </div>
+                                  <div className="text-green-600 font-medium">
+                                    {formatCurrency(precoComDesconto)} por {item.unidade}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>{formatCurrency(item.preco)} por {item.unidade}</div>
+                              )}
+                            </div>
                           </div>
                         </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => removerItem(item.id)}
+                          className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Minus className="w-3 h-3" />
-                        </Button>
-                        <Input
-                          type="number"
-                          value={item.quantidade}
-                          onChange={(e) => atualizarQuantidade(item.id, parseInt(e.target.value) || 0)}
-                          className="w-12 h-8 text-center text-sm"
-                          min="0"
-                        />
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Plus className="w-3 h-3" />
-                        </Button>
+
+                      {/* Controles de quantidade redesenhados */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}
+                            className="h-10 w-10 p-0 border-2"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </Button>
+                          
+                          <Input
+                            type="number"
+                            value={item.quantidade}
+                            onChange={(e) => {
+                              const novaQuantidade = parseInt(e.target.value) || 0;
+                              if (novaQuantidade >= 1 && novaQuantidade <= 9999) {
+                                atualizarQuantidade(item.id, novaQuantidade);
+                              }
+                            }}
+                            className="w-20 h-10 text-center text-base font-medium border-2 focus:border-blue-500"
+                            min="1"
+                            max="9999"
+                          />
+                          
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}
+                            className="h-10 w-10 p-0 border-2"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        {/* Subtotal do item */}
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-gray-900">
+                            {formatCurrency(precoComDesconto * item.quantidade)}
+                          </div>
+                          {item.categoria === 'recursos' && descontoRecursos > 0 && (
+                            <div className="text-xs text-gray-400 line-through">
+                              {formatCurrency(item.preco * item.quantidade)}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
