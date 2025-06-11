@@ -791,7 +791,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 <span className="line-through">{formatCurrency(custo.subtotalInfraOriginal)}</span>
               </div>
               <div className="flex justify-between py-2 text-green-600 border-b border-gray-200">
-                <span className="text-sm">Desconto Individual ({vm.descontoIndividual}%)</span>
+                <span className="text-sm">Desconto ({desconto.modo === 'global' ? 'Global' : 'Individual'} {desconto.modo === 'global' ? desconto.percentualGlobal : vm.descontoIndividual}%)</span>
                 <span>-{formatCurrency(custo.descontoIndividual)}</span>
               </div>
               <div className="flex justify-between py-2 font-medium border-b border-gray-200">
@@ -819,5 +819,3 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 };
 
 export default VMConfigurator;
-
-</edits_to_apply>
