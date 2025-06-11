@@ -2,6 +2,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { BancoDados } from '@/types';
+import ProfessionalIcon from './ProfessionalIcon';
 
 interface BancoDadosButtonProps {
   banco: BancoDados;
@@ -24,50 +25,74 @@ const BancoDadosButton = ({
     <button
       onClick={onSelect}
       className={`
-        w-full p-3 rounded-lg border-2 text-left transition-all
+        w-full p-4 rounded-xl border-2 text-left transition-all duration-200 group
         ${selecionado 
-          ? 'border-green-500 bg-green-50' 
-          : 'border-gray-300 bg-white hover:border-gray-400'
+          ? 'border-blue-500 bg-blue-50 shadow-md' 
+          : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
         }
       `}
     >
-      <div className="flex justify-between items-start">
+      <div className="flex items-start justify-between">
         <div className="flex items-start flex-1">
+          {/* Checkbox com melhor design */}
           <div className={`
-            w-5 h-5 rounded border-2 mr-3 flex items-center justify-center mt-0.5
+            w-5 h-5 rounded border-2 mr-4 flex items-center justify-center mt-1 transition-all
             ${selecionado 
-              ? 'bg-green-500 border-green-500' 
-              : 'bg-white border-gray-300'
+              ? 'bg-blue-500 border-blue-500' 
+              : 'bg-white border-gray-300 group-hover:border-gray-400'
             }
           `}>
             {selecionado && <Check className="w-3 h-3 text-white" />}
           </div>
+          
           <div className="flex-1">
-            <div className="flex items-center mb-1">
-              <span className="text-lg mr-2">{banco.icon}</span>
-              <span className={`font-medium ${selecionado ? 'text-green-900' : ''}`}>
+            {/* Header com ícone e nome */}
+            <div className="flex items-center mb-2">
+              <div className="mr-3">
+                <ProfessionalIcon 
+                  type={banco.icon} 
+                  size={20} 
+                />
+              </div>
+              <h3 className={`font-semibold text-base leading-tight ${
+                selecionado ? 'text-blue-900' : 'text-gray-900'
+              }`}>
                 {banco.nome}
-              </span>
+              </h3>
             </div>
-            <p className="text-xs text-gray-500">
+            
+            {/* Descrição técnica */}
+            <p className="text-sm text-gray-600 mb-1">
               {banco.descricao}
             </p>
+            
+            {/* Limitações em destaque */}
             {banco.limitacao && (
-              <p className="text-xs text-amber-600 mt-1">
-                ⚠️ {banco.limitacao}
-              </p>
+              <div className="flex items-start mt-2">
+                <div className="w-1 h-1 bg-amber-500 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                <p className="text-xs text-amber-700 font-medium">
+                  {banco.limitacao}
+                </p>
+              </div>
             )}
           </div>
         </div>
-        <div className="text-right ml-4">
+        
+        {/* Preço com melhor hierarquia visual */}
+        <div className="text-right ml-6 flex-shrink-0">
           {preco === 0 ? (
-            <span className="text-sm font-medium text-green-600">
+            <div className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
               GRATUITO
-            </span>
+            </div>
           ) : (
-            <span className="text-sm text-gray-600">
-              R$ {preco.toFixed(2)}/mês
-            </span>
+            <div className="text-right">
+              <div className="text-lg font-bold text-gray-900">
+                R$ {preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              </div>
+              <div className="text-xs text-gray-500">
+                por mês
+              </div>
+            </div>
           )}
         </div>
       </div>
