@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import ProjectHeader from '@/components/ProjectHeader';
 import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
@@ -19,6 +20,9 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <ModernHero />
+      
+      {/* Project Header - NOVO */}
+      <ProjectHeader />
       
       {/* Toggle para escolher o modo */}
       <div className="container mx-auto px-6 py-4">
