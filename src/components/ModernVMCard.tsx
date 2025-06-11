@@ -3,8 +3,9 @@ import React from 'react';
 import { VM } from '@/types';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
-import { Server, Cpu, MemoryStick, HardDrive, Trash2, Copy, CheckCircle } from 'lucide-react';
+import { Server, Trash2, Copy, CheckCircle } from 'lucide-react';
 import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
+import ProfessionalIcon from './ProfessionalIcon';
 
 interface ModernVMCardProps {
   vm: VM;
@@ -18,7 +19,7 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
 
   const getOSIcon = () => {
     const so = todosSistemasOperacionais.find(s => s.id === vm.sistemaOperacional);
-    return so?.icon || '💻';
+    return so?.icon || 'monitor';
   };
 
   const getSistemaOperacionalNome = () => {
@@ -49,12 +50,16 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all ${
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
               isSelected 
-                ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg' 
-                : 'bg-gray-100 text-gray-600'
+                ? 'bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg' 
+                : 'bg-gray-100'
             }`}>
-              {getOSIcon()}
+              <ProfessionalIcon 
+                type={getOSIcon()} 
+                size={24} 
+                className={isSelected ? 'text-white' : 'text-gray-600'} 
+              />
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 text-lg">{vm.nome}</h3>
@@ -96,21 +101,21 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="text-center">
             <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Cpu className="w-5 h-5 text-gray-600" />
+              <ProfessionalIcon type="cpu" size={20} className="text-gray-600" />
             </div>
             <div className="text-2xl font-bold text-gray-900">{vm.vcpu}</div>
             <div className="text-xs text-gray-500 uppercase tracking-wide">vCPU</div>
           </div>
           <div className="text-center">
             <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <MemoryStick className="w-5 h-5 text-gray-600" />
+              <ProfessionalIcon type="ram" size={20} className="text-gray-600" />
             </div>
             <div className="text-2xl font-bold text-gray-900">{vm.ram}</div>
             <div className="text-xs text-gray-500 uppercase tracking-wide">GB RAM</div>
           </div>
           <div className="text-center">
             <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <HardDrive className="w-5 h-5 text-gray-600" />
+              <ProfessionalIcon type="storage" size={20} className="text-gray-600" />
             </div>
             <div className="text-2xl font-bold text-gray-900">{vm.discoFCM + vm.discoSSD}</div>
             <div className="text-xs text-gray-500 uppercase tracking-wide">GB Storage</div>
@@ -121,12 +126,14 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
         {(vm.sistemaOperacional || vm.bancoDados) && (
           <div className="flex flex-wrap gap-2 mb-4">
             {vm.sistemaOperacional && (
-              <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full flex items-center gap-1">
+                <ProfessionalIcon type={getOSIcon()} size={12} />
                 {getSistemaOperacionalNome()}
               </span>
             )}
             {vm.bancoDados && (
-              <span className="px-3 py-1 bg-orange-50 text-orange-700 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-orange-50 text-orange-700 text-xs font-medium rounded-full flex items-center gap-1">
+                <ProfessionalIcon type="database" size={12} />
                 {getBancoDadosNome()}
               </span>
             )}

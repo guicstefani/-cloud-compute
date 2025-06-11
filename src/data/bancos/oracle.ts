@@ -9,7 +9,7 @@ export const oracle: BancoDados[] = [
     descricao: 'Gratuito (limitado)',
     categoria: 'oracle',
     limitacao: 'Máximo 12GB, 2GB RAM',
-    icon: '🔴'
+    icon: 'oracle'
   },
   {
     id: 'oracle-standard',
@@ -17,7 +17,7 @@ export const oracle: BancoDados[] = [
     preco: 2800,
     descricao: 'Por processador/mês',
     categoria: 'oracle',
-    icon: '🔴'
+    icon: 'oracle'
   },
   {
     id: 'oracle-enterprise',
@@ -25,6 +25,6 @@ export const oracle: BancoDados[] = [
     preco: 4500,
     descricao: 'Por processador/mês',
     categoria: 'oracle',
-    icon: '🔴'
+    icon: 'oracle'
   }
 ];

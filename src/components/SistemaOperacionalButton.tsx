@@ -2,6 +2,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { SistemaOperacional } from '@/types';
+import ProfessionalIcon from './ProfessionalIcon';
 
 interface SistemaOperacionalButtonProps {
   sistema: SistemaOperacional;
@@ -44,7 +45,11 @@ const SistemaOperacionalButton = ({
           </div>
           <div className="flex-1">
             <div className="flex items-center mb-1">
-              <span className="text-lg mr-2">{sistema.icon}</span>
+              <ProfessionalIcon 
+                type={sistema.icon} 
+                size={20} 
+                className="mr-2" 
+              />
               <span className={`font-medium ${selecionado ? 'text-green-900' : ''}`}>
                 {sistema.nome}
               </span>

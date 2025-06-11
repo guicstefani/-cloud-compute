@@ -8,7 +8,7 @@ export const linuxEnterprise: SistemaOperacional[] = [
     preco: 1200,
     descricao: 'Por servidor/mês',
     categoria: 'linux-enterprise',
-    icon: '🎩'
+    icon: 'redhat'
   }
 ];
 
@@ -19,7 +19,7 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '🟠'
+    icon: 'ubuntu'
   },
   {
     id: 'ubuntu-22',
@@ -27,7 +27,7 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '🟠'
+    icon: 'ubuntu'
   },
   {
     id: 'centos-7',
@@ -35,7 +35,7 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '💜'
+    icon: 'centos'
   },
   {
     id: 'rocky-linux',
@@ -43,7 +43,7 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '🏔️'
+    icon: 'rocky'
   },
   {
     id: 'alma-linux',
@@ -51,7 +51,7 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '💚'
+    icon: 'alma'
   },
   {
     id: 'debian-11',
@@ -59,7 +59,7 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '🔴'
+    icon: 'debian'
   },
   {
     id: 'debian-12',
@@ -67,6 +67,6 @@ export const linuxGratuitos: SistemaOperacional[] = [
     preco: 0,
     descricao: 'Gratuito',
     categoria: 'linux-gratuito',
-    icon: '🔴'
+    icon: 'debian'
   }
 ];

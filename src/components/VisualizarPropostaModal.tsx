@@ -5,8 +5,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Proposta } from '@/types/proposta';
 import { formatCurrency } from '@/utils/calculadora';
-import { Building, User, Calendar, Server, Shield, Database, HardDrive, Monitor } from 'lucide-react';
+import { Building, User, Calendar, Server, Shield, Database, HardDrive } from 'lucide-react';
 import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
+import ProfessionalIcon from './ProfessionalIcon';
 
 interface VisualizarPropostaModalProps {
   open: boolean;
@@ -32,9 +33,19 @@ const VisualizarPropostaModal = ({ open, onOpenChange, proposta }: VisualizarPro
     return so ? so.nome : 'Não selecionado';
   };
 
+  const obterIconeSistemaOperacional = (id: string) => {
+    const so = todosSistemasOperacionais.find(s => s.id === id);
+    return so ? so.icon : 'monitor';
+  };
+
   const obterNomeBancoDados = (id: string) => {
     const bd = todosBancosDados.find(b => b.id === id);
     return bd ? bd.nome : 'Não selecionado';
+  };
+
+  const obterIconeBancoDados = (id: string) => {
+    const bd = todosBancosDados.find(b => b.id === id);
+    return bd ? bd.icon : 'database';
   };
 
   const obterTipoBackup = (tipo: string) => {
@@ -164,16 +175,20 @@ const VisualizarPropostaModal = ({ open, onOpenChange, proposta }: VisualizarPro
             {/* Sistemas Operacionais */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h4 className="font-medium text-blue-800 mb-3 flex items-center">
-                <Monitor className="w-4 h-4 mr-2" />
+                <ProfessionalIcon type="monitor" size={16} className="mr-2" />
                 Sistemas Operacionais
               </h4>
               {proposta.configuracao.vms.filter((vm: any) => vm.sistemaOperacional).length > 0 ? (
-                <ul className="space-y-1 text-sm">
+                <ul className="space-y-2 text-sm">
                   {proposta.configuracao.vms
                     .filter((vm: any) => vm.sistemaOperacional)
                     .map((vm: any, index: number) => (
-                      <li key={index} className="text-blue-700">
-                        • {vm.nome}: {obterNomeSistemaOperacional(vm.sistemaOperacional)}
+                      <li key={index} className="text-blue-700 flex items-center gap-2">
+                        <ProfessionalIcon 
+                          type={obterIconeSistemaOperacional(vm.sistemaOperacional)} 
+                          size={16} 
+                        />
+                        {vm.nome}: {obterNomeSistemaOperacional(vm.sistemaOperacional)}
                       </li>
                     ))}
                 </ul>
@@ -189,12 +204,16 @@ const VisualizarPropostaModal = ({ open, onOpenChange, proposta }: VisualizarPro
                 Bancos de Dados
               </h4>
               {proposta.configuracao.vms.filter((vm: any) => vm.bancoDados).length > 0 ? (
-                <ul className="space-y-1 text-sm">
+                <ul className="space-y-2 text-sm">
                   {proposta.configuracao.vms
                     .filter((vm: any) => vm.bancoDados)
                     .map((vm: any, index: number) => (
-                      <li key={index} className="text-purple-700">
-                        • {vm.nome}: {obterNomeBancoDados(vm.bancoDados)}
+                      <li key={index} className="text-purple-700 flex items-center gap-2">
+                        <ProfessionalIcon 
+                          type={obterIconeBancoDados(vm.bancoDados)} 
+                          size={16} 
+                        />
+                        {vm.nome}: {obterNomeBancoDados(vm.bancoDados)}
                       </li>
                     ))}
                 </ul>
@@ -223,7 +242,6 @@ const VisualizarPropostaModal = ({ open, onOpenChange, proposta }: VisualizarPro
               </ul>
             </div>
 
-            {/* Storage e Backup */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
               <h4 className="font-medium text-green-800 mb-3 flex items-center">
                 <HardDrive className="w-4 h-4 mr-2" />
@@ -257,7 +275,6 @@ const VisualizarPropostaModal = ({ open, onOpenChange, proposta }: VisualizarPro
           </div>
         )}
 
-        {/* Rodapé */}
         <div className="border-t pt-4 mt-6">
           <div className="text-center text-sm text-gray-500">
             Proposta gerada pela Calculadora Optidata • {formatarData(proposta.dataCriacao)}

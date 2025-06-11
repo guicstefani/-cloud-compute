@@ -8,7 +8,7 @@ export const sistemasWindows: SistemaOperacional[] = [
     preco: (vcpu: number) => Math.ceil(vcpu / 2) * 55,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'windows',
-    icon: '🪟'
+    icon: 'windows'
   },
   {
     id: 'windows-2022-datacenter',
@@ -16,6 +16,6 @@ export const sistemasWindows: SistemaOperacional[] = [
     preco: (vcpu: number) => Math.ceil(vcpu / 2) * 55,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'windows',
-    icon: '🪟'
+    icon: 'windows'
   }
 ];

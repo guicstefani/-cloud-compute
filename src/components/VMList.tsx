@@ -2,10 +2,11 @@
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { Button } from '@/components/ui/button';
-import { Copy, Trash2, Monitor, HardDrive, MoreVertical, CheckCircle } from 'lucide-react';
+import { Copy, Trash2, Monitor, CheckCircle } from 'lucide-react';
 import { VM_TEMPLATES } from '@/data/templates';
 import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
 import PremiumEmptyState from './PremiumEmptyState';
+import ProfessionalIcon from './ProfessionalIcon';
 
 const VMList = () => {
   const { vms, selectedVMId, precos, selectVM, duplicateVM, removeVM, addVM } = useCalculadoraStore();
@@ -162,13 +163,15 @@ const VMList = () => {
               {(vm.sistemaOperacional || vm.bancoDados) && (
                 <div className="flex flex-wrap gap-2 mb-6">
                   {vm.sistemaOperacional && (
-                    <span className="inline-flex items-center px-3 py-1 bg-[#EFF6FF] text-[#2563EB] text-xs font-medium rounded-full">
-                      💻 {getSistemaOperacionalNome(vm)}
+                    <span className="inline-flex items-center px-3 py-1 bg-[#EFF6FF] text-[#2563EB] text-xs font-medium rounded-full gap-1">
+                      <ProfessionalIcon type="monitor" size={12} />
+                      {getSistemaOperacionalNome(vm)}
                     </span>
                   )}
                   {vm.bancoDados && (
-                    <span className="inline-flex items-center px-3 py-1 bg-[#FEF2F2] text-[#EF4444] text-xs font-medium rounded-full">
-                      🗄️ {getBancoDadosNome(vm)}
+                    <span className="inline-flex items-center px-3 py-1 bg-[#FEF2F2] text-[#EF4444] text-xs font-medium rounded-full gap-1">
+                      <ProfessionalIcon type="database" size={12} />
+                      {getBancoDadosNome(vm)}
                     </span>
                   )}
                 </div>

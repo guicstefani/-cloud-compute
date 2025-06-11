@@ -8,7 +8,7 @@ export const bancosGratuitos: BancoDados[] = [
     preco: 0,
     descricao: 'Gratuito e open source',
     categoria: 'open-source',
-    icon: '🐘'
+    icon: 'postgresql'
   },
   {
     id: 'mysql',
@@ -16,7 +16,7 @@ export const bancosGratuitos: BancoDados[] = [
     preco: 0,
     descricao: 'Gratuito e open source',
     categoria: 'open-source',
-    icon: '🐬'
+    icon: 'mysql'
   },
   {
     id: 'mariadb',
@@ -24,7 +24,7 @@ export const bancosGratuitos: BancoDados[] = [
     preco: 0,
     descricao: 'Gratuito e open source',
     categoria: 'open-source',
-    icon: '🌊'
+    icon: 'mariadb'
   },
   {
     id: 'mongodb',
@@ -32,7 +32,7 @@ export const bancosGratuitos: BancoDados[] = [
     preco: 0,
     descricao: 'Gratuito e open source',
     categoria: 'open-source',
-    icon: '🍃'
+    icon: 'mongodb'
   },
   {
     id: 'redis',
@@ -40,7 +40,7 @@ export const bancosGratuitos: BancoDados[] = [
     preco: 0,
     descricao: 'Cache/NoSQL gratuito',
     categoria: 'open-source',
-    icon: '🔴'
+    icon: 'redis'
   },
   {
     id: 'elasticsearch',
@@ -48,7 +48,7 @@ export const bancosGratuitos: BancoDados[] = [
     preco: 0,
     descricao: 'Search engine gratuito',
     categoria: 'open-source',
-    icon: '🟡'
+    icon: 'elasticsearch'
   }
 ];
 
@@ -59,7 +59,7 @@ export const bancosEnterprise: BancoDados[] = [
     preco: 5000,
     descricao: 'Por servidor/mês',
     categoria: 'enterprise-nosql',
-    icon: '💎'
+    icon: 'sap'
   },
   {
     id: 'mysql-enterprise',
@@ -67,7 +67,7 @@ export const bancosEnterprise: BancoDados[] = [
     preco: 800,
     descricao: 'Com suporte Oracle',
     categoria: 'enterprise-nosql',
-    icon: '🐬'
+    icon: 'mysql'
   },
   {
     id: 'mongodb-enterprise',
@@ -75,7 +75,7 @@ export const bancosEnterprise: BancoDados[] = [
     preco: 1200,
     descricao: 'Com suporte comercial',
     categoria: 'enterprise-nosql',
-    icon: '🍃'
+    icon: 'mongodb'
   },
   {
     id: 'cassandra-enterprise',
@@ -83,6 +83,6 @@ export const bancosEnterprise: BancoDados[] = [
     preco: 1500,
     descricao: 'NoSQL distribuído',
     categoria: 'enterprise-nosql',
-    icon: '💫'
+    icon: 'cassandra'
   }
 ];

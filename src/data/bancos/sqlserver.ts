@@ -9,7 +9,7 @@ export const sqlServer: BancoDados[] = [
     descricao: 'Gratuito (limitado a 10GB)',
     categoria: 'sql-server',
     limitacao: 'Máximo 10GB, 1GB RAM',
-    icon: '🔵'
+    icon: 'sqlserver'
   },
   {
     id: 'sql-web',
@@ -17,7 +17,7 @@ export const sqlServer: BancoDados[] = [
     preco: (vcpu: number) => Math.ceil(vcpu / 2) * 140,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'sql-server',
-    icon: '🔵'
+    icon: 'sqlserver'
   },
   {
     id: 'sql-standard',
@@ -25,7 +25,7 @@ export const sqlServer: BancoDados[] = [
     preco: (vcpu: number) => Math.ceil(vcpu / 2) * 800,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'sql-server',
-    icon: '🔵'
+    icon: 'sqlserver'
   },
   {
     id: 'sql-enterprise',
@@ -33,6 +33,6 @@ export const sqlServer: BancoDados[] = [
     preco: (vcpu: number) => Math.ceil(vcpu / 2) * 5200,
     descricao: 'Licença a cada 2 vCPUs',
     categoria: 'sql-server',
-    icon: '🔵'
+    icon: 'sqlserver'
   }
 ];
