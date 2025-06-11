@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Calculator, Menu, X, Download, Settings } from 'lucide-react';
+import { Calculator, Settings, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/useMobile';
 
@@ -10,30 +10,30 @@ const Header = () => {
 
   return (
     <>
-      {/* Desktop Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm mobile-hide">
-        <div className="container mx-auto px-4 lg:px-6 py-4">
+      {/* Desktop Header - Compacto e Técnico */}
+      <header className="bg-slate-50 border-b border-slate-200 mobile-hide">
+        <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#0066CC] to-[#0052A3] rounded-xl flex items-center justify-center">
-                <Calculator className="w-6 h-6 text-white" />
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center">
+                <Calculator className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Calculadora Cloud Privada
+                <h1 className="text-lg font-semibold text-slate-800">
+                  Optidata Cloud Calculator
                 </h1>
-                <p className="text-sm text-gray-600">
-                  Optidata - Soluções em Nuvem
+                <p className="text-xs text-slate-500">
+                  Ferramenta Interna v2.1
                 </p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm" className="border-gray-300">
+            <div className="flex items-center space-x-2">
+              <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-800">
                 <Settings className="w-4 h-4 mr-2" />
-                Configurações
+                Config
               </Button>
-              <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
+              <Button variant="default" size="sm" className="bg-slate-800 hover:bg-slate-900 text-white">
                 <Download className="w-4 h-4 mr-2" />
                 Exportar
               </Button>
@@ -42,57 +42,29 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Mobile Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm mobile-show safe-top">
+      {/* Mobile Header - Simplificado */}
+      <header className="sticky top-0 z-50 bg-slate-50 border-b border-slate-200 mobile-show safe-top">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#0066CC] to-[#0052A3] rounded-lg flex items-center justify-center">
-              <Calculator className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center">
+              <Calculator className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">
-                Calculadora Cloud
+              <h1 className="text-base font-semibold text-slate-800">
+                Cloud Calculator
               </h1>
-              <p className="text-xs text-gray-600">Optidata</p>
+              <p className="text-xs text-slate-500">Optidata</p>
             </div>
           </div>
           
           <Button
             variant="ghost"
-            size="icon"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="touch-target"
+            size="sm"
+            className="text-slate-600"
           >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            <Settings className="w-4 h-4" />
           </Button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="border-t border-gray-200 bg-white animate-slide-down">
-            <div className="p-4 space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start border-gray-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Configurações
-              </Button>
-              <Button 
-                className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Exportar PDF
-              </Button>
-            </div>
-          </div>
-        )}
       </header>
     </>
   );
