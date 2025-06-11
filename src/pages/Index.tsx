@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
@@ -147,5 +148,3 @@ const Index = () => {
 };
 
 export default Index;
-
-</initial_code>
