@@ -1,3 +1,4 @@
+
 import { VM, Precos, DetalhamentoCusto, Desconto } from '@/types';
 import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
 
@@ -9,7 +10,7 @@ const arredondar = (valor: number): number => {
 export class CalculadoraCloud {
   constructor(private precos: Precos) {}
 
-  calcularVM(vm: VM, descontoGlobal?: number): DetalhamentoCusto {
+  calcularVM(vm: VM): DetalhamentoCusto {
     // Infraestrutura - cálculo preciso sem arredondamento intermediário
     const vcpuCalculo = vm.vcpu * this.precos.vcpuHora * this.precos.horasMes;
     const ramCalculo = vm.ram * this.precos.ramHora * this.precos.horasMes;
@@ -36,14 +37,11 @@ export class CalculadoraCloud {
     // Licenças adicionais
     const licencasAdicionais = this.calcularLicencasAdicionais(vm);
 
-    // Subtotal infraestrutura ANTES do desconto
+    // Subtotal infraestrutura ANTES do desconto individual
     const subtotalInfraOriginal = arredondar(vcpu + ram + storage + backup + monitoramento);
     
-    // Determinar qual desconto usar (global tem prioridade)
-    const descontoPercentual = descontoGlobal !== undefined ? descontoGlobal : (vm.descontoIndividual || 0);
-    
-    // Aplicar desconto APENAS na infraestrutura
-    const descontoIndividual = arredondar(subtotalInfraOriginal * descontoPercentual / 100);
+    // Aplicar desconto individual APENAS na infraestrutura
+    const descontoIndividual = arredondar(subtotalInfraOriginal * (vm.descontoIndividual || 0) / 100);
     const subtotalInfra = arredondar(subtotalInfraOriginal - descontoIndividual);
     
     const subtotalLicencas = arredondar(sistemaOperacional + bancoDados + Object.values(licencasAdicionais).reduce((a, b) => a + b, 0));
@@ -159,7 +157,7 @@ export class CalculadoraCloud {
     return custoComDesconto;
   }
 
-  calcularTotalGeral(vms: VM[], descontos: Desconto[], descontoGlobal?: number): {
+  calcularTotalGeral(vms: VM[], descontos: Desconto[]): {
     vms: Array<{ vm: VM; custo: DetalhamentoCusto }>;
     totalSemDesconto: number;
     totalComDesconto: number;
@@ -167,7 +165,7 @@ export class CalculadoraCloud {
   } {
     const vmsCustos = vms.map(vm => ({
       vm,
-      custo: this.aplicarDescontos(this.calcularVM(vm, descontoGlobal), descontos)
+      custo: this.aplicarDescontos(this.calcularVM(vm), descontos)
     }));
 
     const totalSemDesconto = arredondar(vmsCustos.reduce((total, item) => {

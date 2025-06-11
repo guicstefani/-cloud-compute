@@ -1,6 +1,5 @@
 
 import { useCalculadoraStore } from '@/store/calculadora';
-import { useProjetoStore } from '@/store/projeto';
 import { CalculadoraCloud, formatCurrency, formatNumber } from '@/utils/calculadora';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,8 +21,7 @@ interface PricingSummaryProps {
 }
 
 const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
-  const { vms } = useCalculadoraStore();
-  const { desconto } = useProjetoStore();
+  const { vms, descontos } = useCalculadoraStore();
   
   if (vms.length === 0) {
     return (
@@ -39,9 +37,7 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
     );
   }
 
-  // Calcular o desconto global se ativo
-  const descontoGlobal = desconto.modo === 'global' ? desconto.percentualGlobal : undefined;
-  const resultado = calculadora.calcularTotalGeral(vms, [], descontoGlobal);
+  const resultado = calculadora.calcularTotalGeral(vms, descontos);
   const { vms: vmsCustos, totalSemDesconto, totalComDesconto, economia } = resultado;
 
   // Estatísticas gerais

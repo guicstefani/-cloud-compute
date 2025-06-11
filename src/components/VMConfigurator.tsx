@@ -1,5 +1,4 @@
 import { useCalculadoraStore } from '@/store/calculadora';
-import { useProjetoStore } from '@/store/projeto';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
 import { Input } from '@/components/ui/input';
@@ -25,8 +24,7 @@ import {
   Check,
   Heart,
   Zap,
-  Tag,
-  Percent
+  Tag
 } from 'lucide-react';
 import { 
   sistemasWindows,
@@ -48,11 +46,7 @@ interface VMConfiguratorProps {
 
 const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
   const { updateVM } = useCalculadoraStore();
-  const { desconto } = useProjetoStore();
-  
-  // Usar desconto global se ativo, senão usar individual
-  const descontoEfetivo = desconto.modo === 'global' ? desconto.percentualGlobal : undefined;
-  const custo = calculadora.calcularVM(vm, descontoEfetivo);
+  const custo = calculadora.calcularVM(vm);
 
   const handleUpdate = (updates: Partial<VM>) => {
     updateVM(vm.id, updates);
@@ -120,14 +114,9 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
             <Badge variant="outline" className="text-xs">
               {vm.status === 'rascunho' ? 'Rascunho' : 'Finalizada'}
             </Badge>
-            {desconto.modo === 'global' && desconto.percentualGlobal > 0 && (
-              <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200">
-                Desconto Global {desconto.percentualGlobal}%
-              </Badge>
-            )}
-            {desconto.modo === 'individual' && vm.descontoIndividual > 0 && (
+            {vm.descontoIndividual > 0 && (
               <Badge className="text-xs bg-green-100 text-green-700 border-green-200">
-                Desconto Individual {vm.descontoIndividual}%
+                Desconto {vm.descontoIndividual}%
               </Badge>
             )}
           </div>
@@ -135,9 +124,6 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
           {custo.descontoIndividual > 0 && (
             <div className="text-sm text-green-600 optidata-gradient-light p-3 rounded-lg">
               💰 Economia: {formatCurrency(custo.descontoIndividual)}
-              {desconto.modo === 'global' && (
-                <span className="block text-xs mt-1">Aplicado via desconto global</span>
-              )}
             </div>
           )}
         </div>
@@ -650,99 +636,81 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Desconto Exclusivo - CONDICIONALMENTE EXIBIDO */}
-      {desconto.modo === 'individual' && (
-        <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-          <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
-            <Tag className="w-5 h-5 mr-2" />
-            Desconto Exclusivo para esta VM
-          </h4>
-          
-          <div className="space-y-4">
-            {/* Slider de Desconto */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-gray-700">
-                  Percentual de Desconto
-                </span>
-                <span className="text-2xl font-bold text-blue-600">
-                  {vm.descontoIndividual || 0}%
-                </span>
-              </div>
-              
-              <input
-                type="range"
-                min="0"
-                max="50"
-                value={vm.descontoIndividual || 0}
-                onChange={(e) => handleUpdate({ descontoIndividual: parseInt(e.target.value) })}
-                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB 100%)`
-                }}
-              />
-              
-              {/* Labels do slider */}
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>0%</span>
-                <span>25%</span>
-                <span>50%</span>
-              </div>
+      {/* Desconto Exclusivo - VERSÃO CORRIGIDA */}
+      <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+        <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+          <Tag className="w-5 h-5 mr-2" />
+          Desconto Exclusivo para esta VM
+        </h4>
+        
+        <div className="space-y-4">
+          {/* Slider de Desconto */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-gray-700">
+                Percentual de Desconto
+              </span>
+              <span className="text-2xl font-bold text-blue-600">
+                {vm.descontoIndividual || 0}%
+              </span>
             </div>
-
-            {/* Aviso sobre aplicação do desconto */}
-            <div className="bg-blue-100 rounded-lg p-3">
-              <p className="text-sm text-blue-800 flex items-start">
-                <Info className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
-                Aplicado apenas em infraestrutura. Licenças não têm desconto.
-              </p>
+            
+            <input
+              type="range"
+              min="0"
+              max="50"
+              value={vm.descontoIndividual || 0}
+              onChange={(e) => handleUpdate({ descontoIndividual: parseInt(e.target.value) })}
+              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              style={{
+                background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB 100%)`
+              }}
+            />
+            
+            {/* Labels do slider */}
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0%</span>
+              <span>25%</span>
+              <span>50%</span>
             </div>
-
-            {/* Breakdown de valores */}
-            {(vm.descontoIndividual || 0) > 0 && (
-              <div className="space-y-3 bg-white rounded-lg p-4 border">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Infraestrutura original:</span>
-                  <span className="font-medium">{formatCurrency(custo.subtotalInfraOriginal)}</span>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Com desconto ({vm.descontoIndividual}%):</span>
-                  <span className="font-medium text-blue-600">
-                    {formatCurrency(custo.subtotalInfra)}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between text-sm font-semibold text-green-600 pt-2 border-t">
-                  <span>Economia mensal:</span>
-                  <span>{formatCurrency(custo.descontoIndividual)}</span>
-                </div>
-                
-                <div className="flex justify-between text-sm text-green-600">
-                  <span>Economia anual:</span>
-                  <span>{formatCurrency(custo.descontoIndividual * 12)}</span>
-                </div>
-              </div>
-            )}
           </div>
-        </div>
-      )}
 
-      {/* Aviso quando desconto global está ativo */}
-      {desconto.modo === 'global' && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
-          <h4 className="text-lg font-semibold text-blue-900 mb-2 flex items-center">
-            <Percent className="w-5 h-5 mr-2" />
-            Desconto Global Ativo
-          </h4>
-          <p className="text-blue-700 text-sm mb-3">
-            Esta VM está usando o desconto global de <strong>{desconto.percentualGlobal}%</strong> definido no cabeçalho do projeto.
-          </p>
-          <p className="text-blue-600 text-xs">
-            Para usar desconto individual, altere para modo "Individual" no cabeçalho do projeto.
-          </p>
+          {/* Aviso sobre aplicação do desconto */}
+          <div className="bg-blue-100 rounded-lg p-3">
+            <p className="text-sm text-blue-800 flex items-start">
+              <Info className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+              Aplicado apenas em infraestrutura. Licenças não têm desconto.
+            </p>
+          </div>
+
+          {/* Breakdown de valores */}
+          {(vm.descontoIndividual || 0) > 0 && (
+            <div className="space-y-3 bg-white rounded-lg p-4 border">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Infraestrutura original:</span>
+                <span className="font-medium">{formatCurrency(custo.subtotalInfraOriginal)}</span>
+              </div>
+              
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Com desconto ({vm.descontoIndividual}%):</span>
+                <span className="font-medium text-blue-600">
+                  {formatCurrency(custo.subtotalInfra)}
+                </span>
+              </div>
+              
+              <div className="flex justify-between text-sm font-semibold text-green-600 pt-2 border-t">
+                <span>Economia mensal:</span>
+                <span>{formatCurrency(custo.descontoIndividual)}</span>
+              </div>
+              
+              <div className="flex justify-between text-sm text-green-600">
+                <span>Economia anual:</span>
+                <span>{formatCurrency(custo.descontoIndividual * 12)}</span>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Resumo de Custos */}
       <CollapsibleCard
@@ -791,7 +759,7 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
                 <span className="line-through">{formatCurrency(custo.subtotalInfraOriginal)}</span>
               </div>
               <div className="flex justify-between py-2 text-green-600 border-b border-gray-200">
-                <span className="text-sm">Desconto ({desconto.modo === 'global' ? 'Global' : 'Individual'} {desconto.modo === 'global' ? desconto.percentualGlobal : vm.descontoIndividual}%)</span>
+                <span className="text-sm">Desconto Individual ({vm.descontoIndividual}%)</span>
                 <span>-{formatCurrency(custo.descontoIndividual)}</span>
               </div>
               <div className="flex justify-between py-2 font-medium border-b border-gray-200">
