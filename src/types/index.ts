@@ -1,3 +1,4 @@
+
 export interface VM {
   id: string;
   nome: string;
@@ -150,5 +151,3 @@ export interface Template {
   icon: string;
   vm: Partial<VM>;
 }
-
-export * from './proposta';

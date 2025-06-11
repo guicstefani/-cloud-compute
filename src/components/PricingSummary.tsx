@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency, formatNumber } from '@/utils/calculadora';
 import { Card } from '@/components/ui/card';
@@ -14,10 +13,8 @@ import {
   Cpu,
   MemoryStick,
   HardDrive,
-  Shield,
-  FileText
+  Shield
 } from 'lucide-react';
-import CriarPropostaModal from './CriarPropostaModal';
 
 interface PricingSummaryProps {
   calculadora: CalculadoraCloud;
@@ -25,7 +22,6 @@ interface PricingSummaryProps {
 
 const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
   const { vms, descontos } = useCalculadoraStore();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
   
   if (vms.length === 0) {
     return (
@@ -275,13 +271,6 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
         <h3 className="text-lg font-semibold mb-4 text-gray-900">Próximos Passos</h3>
         
         <div className="flex flex-wrap gap-3">
-          <Button 
-            onClick={() => setIsModalOpen(true)}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            <FileText className="w-4 h-4 mr-2" />
-            Criar Proposta
-          </Button>
           <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
             <Download className="w-4 h-4 mr-2" />
             Exportar PDF
@@ -300,21 +289,11 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
 
         <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="text-sm text-gray-700">
-            <strong>Próximos passos:</strong> Crie uma proposta formal para acompanhar todo o processo comercial, 
-            desde a configuração técnica até a aprovação final do cliente.
+            <strong>Próximos passos:</strong> Entre em contato com nossa equipe comercial 
+            para finalizar a proposta e iniciar a migração para a cloud privada Optidata.
           </div>
         </div>
       </div>
-
-      {/* Modal de Criar Proposta */}
-      <CriarPropostaModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        tipoConfiguracao="vm"
-        valorTotal={totalComDesconto}
-        descontoAplicado={((totalSemDesconto - totalComDesconto) / totalSemDesconto) * 100}
-        configuracaoTecnica={{ vms, descontos }}
-      />
     </div>
   );
 };
