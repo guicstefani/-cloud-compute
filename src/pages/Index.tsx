@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import ModernVMList from '@/components/ModernVMList';
+import VMList from '@/components/VMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
 import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
 import ListaPropostas from '@/components/ListaPropostas';
+import Header from '@/components/Header';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
 import { Server, Database, TrendingUp, FileText } from 'lucide-react';
@@ -18,6 +19,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Header />
+      
       {/* Navigation Compacta */}
       <div className="bg-white border-b border-slate-200 sticky top-16 z-40">
         <div className="container mx-auto px-6 py-3">
@@ -81,16 +84,16 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Main Content - Three Panel Layout */}
+      {/* Main Content */}
       <div className="container mx-auto px-6 py-6">
         {modoCalculo === 'vm' ? (
           <div className="grid grid-cols-12 gap-6 h-full">
-            {/* Painel Esquerdo - Lista de VMs (25%) */}
+            {/* Painel Esquerdo - Lista de VMs */}
             <div className="col-span-3">
-              <ModernVMList />
+              <VMList />
             </div>
             
-            {/* Painel Central - Configuração (50%) */}
+            {/* Painel Central - Configuração */}
             <div className="col-span-6">
               {selectedVM ? (
                 <div className="bg-white rounded-lg border border-slate-200 p-6 h-full">
@@ -111,7 +114,7 @@ const Index = () => {
               )}
             </div>
             
-            {/* Painel Direito - Resumo (25%) */}
+            {/* Painel Direito - Resumo */}
             <div className="col-span-3">
               <ModernSummaryCard />
             </div>
