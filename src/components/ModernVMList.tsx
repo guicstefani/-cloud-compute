@@ -3,9 +3,9 @@ import React from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
 import { Button } from '@/components/ui/button';
-import { Plus, Grid, List } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 import { VM_TEMPLATES } from '@/data/templates';
-import CompactVMCard from './CompactVMCard';
+import ModernVMCard from './ModernVMCard';
 
 const ModernVMList = () => {
   const { vms, selectedVMId, precos, addVM } = useCalculadoraStore();
@@ -13,46 +13,50 @@ const ModernVMList = () => {
 
   if (vms.length === 0) {
     return (
-      <div className="space-y-6">
-        {/* Empty State Compacto */}
-        <div className="text-center py-12 bg-white rounded-lg border border-slate-200">
-          <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Plus className="w-6 h-6 text-slate-500" />
+      <div className="space-y-8">
+        {/* Empty State */}
+        <div className="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-200">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <Plus className="w-10 h-10 text-white" />
           </div>
-          <h3 className="text-lg font-semibold text-slate-800 mb-2">
-            Primeiro Servidor
+          <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+            Configure seu primeiro servidor
           </h3>
-          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">
-            Configure os recursos necessários para sua aplicação
+          <p className="text-gray-500 mb-8 max-w-md mx-auto">
+            Comece selecionando os recursos necessários para sua aplicação
           </p>
           <Button
             onClick={() => addVM()}
-            className="bg-slate-800 hover:bg-slate-900 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Nova VM
+            <Plus className="w-5 h-5 mr-2" />
+            Criar Primeira VM
           </Button>
         </div>
 
-        {/* Templates Compactos */}
+        {/* Templates Section */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3 uppercase tracking-wide">
-            Templates Rápidos
-          </h3>
-          <div className="grid gap-2">
-            {VM_TEMPLATES.slice(0, 3).map(template => (
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-5 h-5 text-yellow-500" />
+            <h3 className="text-lg font-semibold text-gray-900">Templates Prontos</h3>
+          </div>
+          <div className="grid gap-4">
+            {VM_TEMPLATES.map(template => (
               <button
                 key={template.id}
                 onClick={() => addVM(template.vm)}
-                className="w-full p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-slate-300 hover:bg-slate-50 transition-all group"
+                className="w-full p-6 text-left bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-lg transition-all duration-200 group"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-slate-100 rounded flex items-center justify-center text-sm group-hover:bg-slate-200 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center text-xl group-hover:from-blue-100 group-hover:to-blue-200 transition-all">
                     {template.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-slate-800">{template.nome}</div>
-                    <div className="text-xs text-slate-500">{template.descricao}</div>
+                    <h4 className="font-semibold text-gray-900 mb-1">{template.nome}</h4>
+                    <p className="text-sm text-gray-500">{template.descricao}</p>
+                  </div>
+                  <div className="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
                   </div>
                 </div>
               </button>
@@ -64,43 +68,32 @@ const ModernVMList = () => {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Header Funcional */}
+    <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-800">Servidores</h2>
-          <p className="text-sm text-slate-500">
-            {vms.length} configurado{vms.length !== 1 ? 's' : ''}
+          <h2 className="text-2xl font-bold text-gray-900">Seus Servidores</h2>
+          <p className="text-gray-500">
+            {vms.length} servidor{vms.length !== 1 ? 'es' : ''} configurado{vms.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-slate-600"
-          >
-            <Grid className="w-4 h-4" />
-          </Button>
-          <Button
-            onClick={() => addVM()}
-            size="sm"
-            className="bg-slate-800 hover:bg-slate-900 text-white"
-          >
-            <Plus className="w-4 h-4 mr-1" />
-            Adicionar
-          </Button>
-        </div>
+        <Button
+          onClick={() => addVM()}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Adicionar VM
+        </Button>
       </div>
 
-      {/* VM Cards Compactos */}
-      <div className="grid gap-3">
-        {vms.map((vm, index) => (
-          <CompactVMCard
+      {/* VM Cards */}
+      <div className="grid gap-6">
+        {vms.map(vm => (
+          <ModernVMCard
             key={vm.id}
             vm={vm}
             calculadora={calculadora}
             isSelected={vm.id === selectedVMId}
-            index={index}
           />
         ))}
       </div>
