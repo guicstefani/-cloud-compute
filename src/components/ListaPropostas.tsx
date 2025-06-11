@@ -6,9 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Proposta } from '@/types/proposta';
 import { formatCurrency } from '@/utils/calculadora';
 import { FileText, Calendar, User, Building } from 'lucide-react';
+import VisualizarPropostaModal from '@/components/VisualizarPropostaModal';
 
 const ListaPropostas = () => {
   const [propostas, setPropostas] = useState<Proposta[]>([]);
+  const [propostaSelecionada, setPropostaSelecionada] = useState<Proposta | null>(null);
+  const [modalVisualizarAberto, setModalVisualizarAberto] = useState(false);
 
   useEffect(() => {
     const proposalsSalvas = JSON.parse(localStorage.getItem('propostas') || '[]');
@@ -17,6 +20,11 @@ const ListaPropostas = () => {
 
   const formatarData = (dataISO: string) => {
     return new Date(dataISO).toLocaleDateString('pt-BR');
+  };
+
+  const handleVisualizarProposta = (proposta: Proposta) => {
+    setPropostaSelecionada(proposta);
+    setModalVisualizarAberto(true);
   };
 
   if (propostas.length === 0) {
@@ -77,7 +85,11 @@ const ListaPropostas = () => {
               </div>
               
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleVisualizarProposta(proposta)}
+                >
                   Visualizar
                 </Button>
                 <Button variant="outline" size="sm">
@@ -91,6 +103,13 @@ const ListaPropostas = () => {
           ))}
         </div>
       </div>
+
+      {/* Modal de Visualização */}
+      <VisualizarPropostaModal 
+        open={modalVisualizarAberto}
+        onOpenChange={setModalVisualizarAberto}
+        proposta={propostaSelecionada}
+      />
     </div>
   );
 };
