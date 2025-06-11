@@ -1,5 +1,5 @@
-
 import { useCalculadoraStore } from '@/store/calculadora';
+import { useProjetoStore } from '@/store/projeto';
 import { CalculadoraCloud, formatCurrency, formatNumber } from '@/utils/calculadora';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,8 @@ interface PricingSummaryProps {
 }
 
 const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
-  const { vms, descontos } = useCalculadoraStore();
+  const { vms } = useCalculadoraStore();
+  const { desconto } = useProjetoStore();
   
   if (vms.length === 0) {
     return (
@@ -37,7 +38,7 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
     );
   }
 
-  const resultado = calculadora.calcularTotalGeral(vms, descontos);
+  const resultado = calculadora.calcularTotalGeral(vms, desconto);
   const { vms: vmsCustos, totalSemDesconto, totalComDesconto, economia } = resultado;
 
   // Estatísticas gerais

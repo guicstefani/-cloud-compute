@@ -10,9 +10,10 @@ interface CalculadoraState {
   precos: Precos;
   
   // Actions
-  addVM: () => void;
+  addVM: (vm?: Partial<VM>) => void;
   removeVM: (id: string) => void;
   updateVM: (id: string, updates: Partial<VM>) => void;
+  duplicateVM: (id: string) => void;
   selectVM: (id: string) => void;
   resetCalculadora: () => void;
 }
@@ -49,7 +50,7 @@ const PRECOS_DEFAULT: Precos = {
   }
 };
 
-const criarNovaVM = (): VM => ({
+const criarNovaVM = (dados?: Partial<VM>): VM => ({
   id: crypto.randomUUID(),
   nome: `VM ${Date.now().toString().slice(-4)}`,
   vcpu: 2,
@@ -70,7 +71,8 @@ const criarNovaVM = (): VM => ({
   ipsAdicionais: 0,
   waf: 'none',
   descontoIndividual: 0,
-  status: 'rascunho'
+  status: 'rascunho',
+  ...dados
 });
 
 export const useCalculadoraStore = create<CalculadoraState>()(
@@ -80,8 +82,8 @@ export const useCalculadoraStore = create<CalculadoraState>()(
       selectedVMId: null,
       precos: PRECOS_DEFAULT,
 
-      addVM: () => {
-        const novaVM = criarNovaVM();
+      addVM: (vm?: Partial<VM>) => {
+        const novaVM = criarNovaVM(vm);
         set((state) => ({
           vms: [...state.vms, novaVM],
           selectedVMId: novaVM.id
@@ -97,6 +99,24 @@ export const useCalculadoraStore = create<CalculadoraState>()(
               ? (novasVMs.length > 0 ? novasVMs[0].id : null)
               : state.selectedVMId
           };
+        });
+      },
+
+      duplicateVM: (id) => {
+        set((state) => {
+          const vmOriginal = state.vms.find(vm => vm.id === id);
+          if (vmOriginal) {
+            const vmDuplicada = criarNovaVM({
+              ...vmOriginal,
+              nome: `${vmOriginal.nome} (Cópia)`,
+              id: undefined // será gerado um novo ID
+            });
+            return {
+              vms: [...state.vms, vmDuplicada],
+              selectedVMId: vmDuplicada.id
+            };
+          }
+          return state;
         });
       },
 
