@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
 import { formatCurrency } from '@/utils/calculadora';
 import { gerarPDFProposta } from '@/utils/pdfGenerator';
 import { 
@@ -22,7 +23,8 @@ import {
   Download,
   Save,
   Zap,
-  Headphones
+  Headphones,
+  Percent
 } from 'lucide-react';
 
 interface ItemUpgrade {
@@ -38,6 +40,7 @@ interface ItemUpgrade {
 
 const UpgradeModule = () => {
   const [itensUpgrade, setItensUpgrade] = useState<ItemUpgrade[]>([]);
+  const [descontoRecursos, setDescontoRecursos] = useState<number>(0);
 
   const CATALOGO_UPGRADES = {
     recursos: [
@@ -145,18 +148,32 @@ const UpgradeModule = () => {
   };
 
   const adicionarItem = (catalogoItem: any, categoria: string) => {
-    const novoItem: ItemUpgrade = {
-      id: `${catalogoItem.id}-${Date.now()}`,
-      categoria: categoria as any,
-      nome: catalogoItem.nome,
-      descricao: catalogoItem.descricao,
-      preco: catalogoItem.preco,
-      unidade: catalogoItem.unidade,
-      quantidade: 1,
-      icon: catalogoItem.icon
-    };
-    
-    setItensUpgrade(prev => [...prev, novoItem]);
+    setItensUpgrade(prev => {
+      // Verificar se o item já existe (sistema de carrinho)
+      const itemExistente = prev.find(item => item.id.startsWith(catalogoItem.id));
+      
+      if (itemExistente) {
+        // Se existe, incrementar quantidade
+        return prev.map(item => 
+          item.id === itemExistente.id 
+            ? { ...item, quantidade: item.quantidade + 1 }
+            : item
+        );
+      } else {
+        // Se não existe, criar novo item
+        const novoItem: ItemUpgrade = {
+          id: `${catalogoItem.id}-${Date.now()}`,
+          categoria: categoria as any,
+          nome: catalogoItem.nome,
+          descricao: catalogoItem.descricao,
+          preco: catalogoItem.preco,
+          unidade: catalogoItem.unidade,
+          quantidade: 1,
+          icon: catalogoItem.icon
+        };
+        return [...prev, novoItem];
+      }
+    });
   };
 
   const atualizarQuantidade = (id: string, quantidade: number) => {
@@ -175,13 +192,45 @@ const UpgradeModule = () => {
     setItensUpgrade(prev => prev.filter(item => item.id !== id));
   };
 
-  const totalUpgrade = itensUpgrade.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+  // Cálculo com desconto aplicado apenas em recursos
+  const calcularTotais = () => {
+    let totalRecursos = 0;
+    let totalLicencas = 0;
+    let totalServicos = 0;
+
+    itensUpgrade.forEach(item => {
+      const subtotal = item.preco * item.quantidade;
+      
+      if (item.categoria === 'recursos') {
+        totalRecursos += subtotal;
+      } else if (item.categoria === 'licencas') {
+        totalLicencas += subtotal;
+      } else if (item.categoria === 'servicos') {
+        totalServicos += subtotal;
+      }
+    });
+
+    const descontoAplicado = totalRecursos * (descontoRecursos / 100);
+    const totalRecursosComDesconto = totalRecursos - descontoAplicado;
+    const totalGeral = totalRecursosComDesconto + totalLicencas + totalServicos;
+
+    return {
+      totalRecursos,
+      totalRecursosComDesconto,
+      totalLicencas,
+      totalServicos,
+      descontoAplicado,
+      totalGeral
+    };
+  };
+
+  const totais = calcularTotais();
 
   const handleGerarPDF = () => {
     gerarPDFProposta({
       tipo: 'upgrades',
       upgrades: itensUpgrade,
-      total: totalUpgrade
+      total: totais.totalGeral
     });
   };
 
@@ -203,7 +252,14 @@ const UpgradeModule = () => {
               <div>
                 <h4 className="font-medium text-gray-900">{item.nome}</h4>
                 <p className="text-sm text-gray-600">{item.descricao}</p>
-                <p className="text-xs text-gray-500">{formatCurrency(item.preco)} por {item.unidade}</p>
+                <p className="text-xs text-gray-500">
+                  {formatCurrency(item.preco)} por {item.unidade}
+                  {categoria === 'recursos' && descontoRecursos > 0 && (
+                    <span className="text-green-600 ml-2">
+                      ({formatCurrency(item.preco * (1 - descontoRecursos / 100))} com desconto)
+                    </span>
+                  )}
+                </p>
               </div>
             </div>
             <Button
@@ -216,6 +272,38 @@ const UpgradeModule = () => {
             </Button>
           </div>
         ))}
+      </div>
+    </Card>
+  );
+
+  const renderDescontoRecursos = () => (
+    <Card className="p-6 mb-6 bg-blue-50 border-blue-200">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <Percent className="w-5 h-5 text-blue-600" />
+        Desconto em Recursos Computacionais
+      </h3>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-700">Desconto aplicado:</span>
+          <span className="text-lg font-bold text-blue-600">{descontoRecursos}%</span>
+        </div>
+        <Slider
+          value={[descontoRecursos]}
+          onValueChange={(value) => setDescontoRecursos(value[0])}
+          max={50}
+          step={1}
+          className="w-full"
+        />
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>0%</span>
+          <span>25%</span>
+          <span>50%</span>
+        </div>
+        {totais.descontoAplicado > 0 && (
+          <div className="text-sm text-green-600 font-medium">
+            Economia: {formatCurrency(totais.descontoAplicado)} por mês
+          </div>
+        )}
       </div>
     </Card>
   );
@@ -233,6 +321,7 @@ const UpgradeModule = () => {
         </div>
 
         {renderCatalogo('recursos', 'Recursos Computacionais')}
+        {renderDescontoRecursos()}
         {renderCatalogo('licencas', 'Licenças Avulsas')}
         {renderCatalogo('servicos', 'Serviços Adicionais')}
       </div>
@@ -250,11 +339,50 @@ const UpgradeModule = () => {
                 <Calculator className="w-5 h-5 text-blue-300" />
               </div>
               <div className="text-4xl font-bold mb-1">
-                {formatCurrency(totalUpgrade)}
+                {formatCurrency(totais.totalGeral)}
               </div>
               <div className="text-blue-200 text-sm">
                 {itensUpgrade.length} item{itensUpgrade.length !== 1 ? 'ns' : ''} selecionado{itensUpgrade.length !== 1 ? 's' : ''}
               </div>
+              
+              {/* Breakdown de custos */}
+              {totais.totalRecursos > 0 && (
+                <div className="mt-4 pt-4 border-t border-blue-800/50">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-blue-200">Recursos:</span>
+                      <span className="text-white">
+                        {descontoRecursos > 0 ? (
+                          <>
+                            <span className="line-through text-blue-300">{formatCurrency(totais.totalRecursos)}</span>
+                            <span className="ml-2">{formatCurrency(totais.totalRecursosComDesconto)}</span>
+                          </>
+                        ) : (
+                          formatCurrency(totais.totalRecursos)
+                        )}
+                      </span>
+                    </div>
+                    {totais.totalLicencas > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">Licenças:</span>
+                        <span className="text-white">{formatCurrency(totais.totalLicencas)}</span>
+                      </div>
+                    )}
+                    {totais.totalServicos > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-blue-200">Serviços:</span>
+                        <span className="text-white">{formatCurrency(totais.totalServicos)}</span>
+                      </div>
+                    )}
+                    {totais.descontoAplicado > 0 && (
+                      <div className="flex justify-between text-green-300">
+                        <span>Economia:</span>
+                        <span>-{formatCurrency(totais.descontoAplicado)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -273,42 +401,57 @@ const UpgradeModule = () => {
               </div>
             ) : (
               <div className="space-y-3 max-h-96 overflow-y-auto">
-                {itensUpgrade.map(item => (
-                  <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-2 flex-1">
-                      {item.icon}
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm truncate">{item.nome}</div>
-                        <div className="text-xs text-gray-600">{formatCurrency(item.preco)}</div>
+                {itensUpgrade.map(item => {
+                  const precoComDesconto = item.categoria === 'recursos' 
+                    ? item.preco * (1 - descontoRecursos / 100)
+                    : item.preco;
+                  
+                  return (
+                    <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-2 flex-1">
+                        {item.icon}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm truncate">{item.nome}</div>
+                          <div className="text-xs text-gray-600">
+                            {item.categoria === 'recursos' && descontoRecursos > 0 ? (
+                              <>
+                                <span className="line-through text-gray-400">{formatCurrency(item.preco)}</span>
+                                <span className="ml-1 text-green-600">{formatCurrency(precoComDesconto)}</span>
+                              </>
+                            ) : (
+                              formatCurrency(item.preco)
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </Button>
+                        <Input
+                          type="number"
+                          value={item.quantidade}
+                          onChange={(e) => atualizarQuantidade(item.id, parseInt(e.target.value) || 0)}
+                          className="w-12 h-8 text-center text-sm"
+                          min="0"
+                        />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => atualizarQuantidade(item.id, item.quantidade - 1)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </Button>
-                      <Input
-                        type="number"
-                        value={item.quantidade}
-                        onChange={(e) => atualizarQuantidade(item.id, parseInt(e.target.value) || 0)}
-                        className="w-12 h-8 text-center text-sm"
-                        min="0"
-                      />
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => atualizarQuantidade(item.id, item.quantidade + 1)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Plus className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </Card>
