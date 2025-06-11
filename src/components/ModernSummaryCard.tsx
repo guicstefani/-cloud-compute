@@ -1,13 +1,14 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { gerarPDFProposta } from '@/utils/pdfGenerator';
 import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, FileText } from 'lucide-react';
+import CriarPropostaModal from '@/components/CriarPropostaModal';
 
 const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
+  const [modalPropostaAberto, setModalPropostaAberto] = useState(false);
   
   const handleGerarPDF = () => {
     gerarPDFProposta({
@@ -87,6 +88,15 @@ const ModernSummaryCard = () => {
           <FileText className="w-5 h-5 inline mr-2" />
           Gerar PDF da Proposta
         </button>
+        
+        <button 
+          onClick={() => setModalPropostaAberto(true)}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+        >
+          <Save className="w-5 h-5 inline mr-2" />
+          Criar Proposta
+        </button>
+        
         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl">
           <Download className="w-5 h-5 inline mr-2" />
           Exportar Excel
@@ -143,6 +153,13 @@ const ModernSummaryCard = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal para criar proposta */}
+      <CriarPropostaModal 
+        open={modalPropostaAberto}
+        onOpenChange={setModalPropostaAberto}
+        calculadora={calculadora}
+      />
     </div>
   );
 };
