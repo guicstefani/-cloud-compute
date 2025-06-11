@@ -1,13 +1,14 @@
-
 import jsPDF from 'jspdf';
 import { CalculadoraCloud, formatCurrency } from './calculadora';
 import { VM } from '@/types';
 
 export interface PDFData {
-  tipo: 'vm' | 'pool';
+  tipo: 'vm' | 'pool' | 'upgrades';
   vms?: VM[];
   pool?: any;
-  calculadora: CalculadoraCloud;
+  upgrades?: any[];
+  total?: number;
+  calculadora?: CalculadoraCloud;
   descontos?: any[];
 }
 
@@ -35,14 +36,21 @@ export const gerarPDFProposta = (data: PDFData) => {
   // Título da proposta
   pdf.setFontSize(16);
   pdf.setTextColor(0, 0, 0);
-  pdf.text(`PROPOSTA COMERCIAL - ${data.tipo === 'vm' ? 'VMs INDIVIDUAIS' : 'POOL DE RECURSOS'}`, margin, yPosition);
+  let titulo = '';
+  if (data.tipo === 'vm') titulo = 'VMs INDIVIDUAIS';
+  else if (data.tipo === 'pool') titulo = 'POOL DE RECURSOS';
+  else if (data.tipo === 'upgrades') titulo = 'UPGRADES E SERVIÇOS AVULSOS';
+  
+  pdf.text(`PROPOSTA COMERCIAL - ${titulo}`, margin, yPosition);
 
   yPosition += 20;
 
-  if (data.tipo === 'vm' && data.vms) {
+  if (data.tipo === 'vm' && data.vms && data.calculadora) {
     gerarSecaoVMs(pdf, data.vms, data.calculadora, data.descontos || [], margin, yPosition);
   } else if (data.tipo === 'pool' && data.pool) {
     gerarSecaoPool(pdf, data.pool, margin, yPosition);
+  } else if (data.tipo === 'upgrades' && data.upgrades) {
+    gerarSecaoUpgrades(pdf, data.upgrades, data.total || 0, margin, yPosition);
   }
 
   // Rodapé
@@ -53,7 +61,12 @@ export const gerarPDFProposta = (data: PDFData) => {
   pdf.text('Optidata Cloud Computing - www.optidata.com.br', pageWidth - margin - 80, pdf.internal.pageSize.height - 20);
 
   // Download do PDF
-  const nomeArquivo = `Proposta_Optidata_${data.tipo === 'vm' ? 'VMs' : 'Pool'}_${dataAtual.replace(/\//g, '-')}.pdf`;
+  let nomeArquivo = '';
+  if (data.tipo === 'vm') nomeArquivo = 'Proposta_Optidata_VMs';
+  else if (data.tipo === 'pool') nomeArquivo = 'Proposta_Optidata_Pool';
+  else if (data.tipo === 'upgrades') nomeArquivo = 'Proposta_Optidata_Upgrades';
+  
+  nomeArquivo += `_${dataAtual.replace(/\//g, '-')}.pdf`;
   pdf.save(nomeArquivo);
 };
 
@@ -227,6 +240,85 @@ const gerarSecaoPool = (pdf: jsPDF, pool: any, margin: number, startY: number) =
     pdf.text(`${item.item}: ${formatCurrency(Math.abs(item.valor))}${item.valor < 0 ? ' (desconto)' : ''}`, margin + 10, yPos);
     yPos += 8;
   });
+};
+
+const gerarSecaoUpgrades = (pdf: jsPDF, upgrades: any[], total: number, margin: number, startY: number) => {
+  let yPos = startY;
+  const pageWidth = pdf.internal.pageSize.width;
+
+  // Resumo geral
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 102, 204);
+  pdf.text('RESUMO DOS UPGRADES', margin, yPos);
+  yPos += 15;
+
+  // Box do total
+  pdf.setFillColor(240, 248, 255);
+  pdf.rect(margin, yPos, pageWidth - 2 * margin, 25, 'F');
+  
+  pdf.setFontSize(12);
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(`Total de Itens: ${upgrades.length}`, margin + 10, yPos + 10);
+  pdf.text(`Valor Total Mensal: ${formatCurrency(total)}`, margin + 10, yPos + 20);
+
+  yPos += 35;
+
+  // Detalhamento por categoria
+  const categorias = {
+    recursos: 'Recursos Computacionais',
+    licencas: 'Licenças Avulsas',
+    servicos: 'Serviços Adicionais'
+  };
+
+  Object.entries(categorias).forEach(([key, titulo]) => {
+    const itensCategoria = upgrades.filter(item => item.categoria === key);
+    
+    if (itensCategoria.length > 0) {
+      if (yPos > pdf.internal.pageSize.height - 80) {
+        pdf.addPage();
+        yPos = 30;
+      }
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(0, 102, 204);
+      pdf.text(titulo, margin, yPos);
+      yPos += 12;
+
+      itensCategoria.forEach((item) => {
+        if (yPos > pdf.internal.pageSize.height - 40) {
+          pdf.addPage();
+          yPos = 30;
+        }
+
+        pdf.setFontSize(11);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(`• ${item.nome}`, margin + 5, yPos);
+        pdf.text(`Qtd: ${item.quantidade}`, margin + 100, yPos);
+        pdf.text(`Subtotal: ${formatCurrency(item.preco * item.quantidade)}`, margin + 140, yPos);
+        yPos += 7;
+      });
+
+      yPos += 5;
+    }
+  });
+
+  // Projeção anual
+  yPos += 10;
+  if (yPos > pdf.internal.pageSize.height - 60) {
+    pdf.addPage();
+    yPos = 30;
+  }
+
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 102, 204);
+  pdf.text('PROJEÇÃO ANUAL', margin, yPos);
+  yPos += 15;
+
+  pdf.setFontSize(11);
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(`Valor Mensal: ${formatCurrency(total)}`, margin + 10, yPos);
+  yPos += 8;
+  pdf.text(`Valor Anual: ${formatCurrency(total * 12)}`, margin + 10, yPos);
 };
 
 const calcularCustosPool = (pool: any) => {

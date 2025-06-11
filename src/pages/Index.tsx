@@ -5,15 +5,16 @@ import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
 import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
+import UpgradeModule from '@/components/UpgradeModule';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
-import { Server, Database } from 'lucide-react';
+import { Server, Database, TrendingUp } from 'lucide-react';
 
 const Index = () => {
   const { vms, selectedVMId, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
-  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool'>('vm');
+  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades'>('vm');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,7 +24,7 @@ const Index = () => {
       {/* Toggle para escolher o modo */}
       <div className="container mx-auto px-6 py-4">
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex items-center justify-center space-x-8">
+          <div className="flex items-center justify-center space-x-4">
             <button
               onClick={() => setModoCalculo('vm')}
               className={`
@@ -51,12 +52,28 @@ const Index = () => {
               <Database className="w-5 h-5 mr-2" />
               Pool de Recursos
             </button>
+
+            <button
+              onClick={() => setModoCalculo('upgrades')}
+              className={`
+                flex items-center px-6 py-3 rounded-lg font-medium transition-all
+                ${modoCalculo === 'upgrades' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }
+              `}
+            >
+              <TrendingUp className="w-5 h-5 mr-2" />
+              Upgrades
+            </button>
           </div>
           
           <p className="text-center text-sm text-gray-600 mt-3">
             {modoCalculo === 'vm' 
               ? 'Configure cada máquina virtual individualmente'
-              : 'Cote recursos totais para múltiplas VMs de uma vez'
+              : modoCalculo === 'pool'
+              ? 'Cote recursos totais para múltiplas VMs de uma vez'
+              : 'Calcule itens e serviços avulsos'
             }
           </p>
         </div>
@@ -98,9 +115,12 @@ const Index = () => {
               <ModernSummaryCard />
             </div>
           </div>
-        ) : (
-          // Novo modo Pool
+        ) : modoCalculo === 'pool' ? (
+          // Modo Pool (existente)
           <PoolDeRecursos />
+        ) : (
+          // Novo modo Upgrades
+          <UpgradeModule />
         )}
       </div>
     </div>
