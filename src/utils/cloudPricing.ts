@@ -118,32 +118,5 @@ export const CLOUD_PRICING: Record<string, CloudProvider> = {
       additionalCostPerVcpu: 0.046 * USD_TO_BRL * HOURS_PER_MONTH, // R$ 184.80
       note: 'Cobrança separada'
     }
-  },
-
-  magalu: {
-    name: 'Magalu Cloud',
-    logo: '🛒',
-    color: 'purple',
-    region: 'Brasil',
-    calculatorUrl: 'https://magalu.cloud/precos/',
-    
-    compute: {
-      // Baseado nos exemplos: R$ 7.41/hora para 4vCPU = R$ 1.85/vCPU/hora
-      vcpuPerMonth: 1.85 * HOURS_PER_MONTH, // R$ 1.332,00
-      // Baseado em 16GB para 4vCPU = R$ 0.46/GB/hora  
-      ramPerGBMonth: 0.46 * HOURS_PER_MONTH, // R$ 331,20
-    },
-    
-    storage: {
-      // Object Storage: R$ 0.002/30MB = R$ 0.067/GB/mês
-      pricePerGBMonth: 0.067, // R$ 0.067
-      type: 'Object Storage'
-    },
-    
-    windows: {
-      included: false,
-      additionalCostPerVcpu: 50, // Estimativa R$ 50/vCPU/mês
-      note: 'Preço sob consulta'
-    }
   }
 };

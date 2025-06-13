@@ -12,7 +12,7 @@ interface UseCloudComparisonProps {
 export const useCloudComparison = ({
   optidataCost,
   vms,
-  enabledProviders = ['aws', 'azure', 'gcp', 'oracle', 'magalu']
+  enabledProviders = ['aws', 'azure', 'gcp', 'oracle'] // Removido Magalu
 }: UseCloudComparisonProps) => {
   const [results, setResults] = useState<ComparisonResult[]>([]);
   const [loading, setLoading] = useState(false);
