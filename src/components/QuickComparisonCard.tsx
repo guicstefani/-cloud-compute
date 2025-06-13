@@ -17,7 +17,7 @@ export const QuickComparisonCard: React.FC<QuickComparisonCardProps> = ({
   const { results, loading, metrics } = useCloudComparison({
     optidataCost,
     vms,
-    enabledProviders: ['aws', 'azure', 'gcp'] // Principais apenas
+    enabledProviders: ['aws', 'azure', 'gcp', 'oracle'] // Sem Magalu
   });
 
   if (loading) {
@@ -48,7 +48,7 @@ export const QuickComparisonCard: React.FC<QuickComparisonCardProps> = ({
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-medium">vs Top Clouds</span>
+            <span className="text-sm font-medium">vs Clouds Públicas</span>
           </div>
           
           <Badge variant={position <= 2 ? "default" : "secondary"}>
@@ -81,7 +81,7 @@ export const QuickComparisonCard: React.FC<QuickComparisonCardProps> = ({
         </div>
 
         <div className="mt-3 flex items-center justify-between text-xs text-gray-600">
-          <span>Comparação vs {results.length} clouds</span>
+          <span>Comparação vs {results.length} clouds globais</span>
           <TrendingUp className="w-3 h-3" />
         </div>
       </CardContent>
