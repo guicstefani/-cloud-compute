@@ -1,3 +1,4 @@
+
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency, formatNumber } from '@/utils/calculadora';
 import { Card } from '@/components/ui/card';
@@ -12,10 +13,13 @@ import {
   Cpu,
   MemoryStick,
   HardDrive,
-  Shield
+  Shield,
+  BarChart3
 } from 'lucide-react';
 import { useState } from 'react';
 import CriarPropostaModal from '@/components/CriarPropostaModal';
+import { CloudComparisonButton } from '@/components/CloudComparisonButton';
+import { QuickComparisonCard } from '@/components/QuickComparisonCard';
 
 interface PricingSummaryProps {
   calculadora: CalculadoraCloud;
@@ -119,6 +123,28 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Market Intelligence Section */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-purple-600" />
+          Market Intelligence
+        </h3>
+        
+        {/* Quick comparison preview */}
+        <QuickComparisonCard 
+          optidataCost={totalComDesconto}
+          vms={vms}
+        />
+        
+        {/* Cloud comparison button */}
+        <CloudComparisonButton 
+          optidataCost={totalComDesconto}
+          vms={vms}
+          size="lg"
+          variant="default"
+        />
       </div>
 
       {/* Breakdown por Categoria */}
