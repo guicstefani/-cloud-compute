@@ -17,6 +17,7 @@ interface CloudComparisonButtonProps {
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'sm' | 'default' | 'lg';
   showIcon?: boolean;
+  className?: string;
 }
 
 export const CloudComparisonButton: React.FC<CloudComparisonButtonProps> = ({
@@ -24,7 +25,8 @@ export const CloudComparisonButton: React.FC<CloudComparisonButtonProps> = ({
   vms,
   variant = 'outline',
   size = 'default',
-  showIcon = true
+  showIcon = true,
+  className
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -37,7 +39,7 @@ export const CloudComparisonButton: React.FC<CloudComparisonButtonProps> = ({
           variant={variant}
           size={size}
           disabled={!canCompare}
-          className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200 hover:from-purple-100 hover:to-blue-100 text-purple-700"
+          className={`flex items-center gap-2 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200 hover:from-purple-100 hover:to-blue-100 text-purple-700 ${className || ''}`}
         >
           {showIcon && <BarChart3 className="w-4 h-4" />}
           Comparar Clouds
