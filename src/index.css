@@ -80,38 +80,17 @@
 }
 
 @layer components {
-  /* FORÇA REMOÇÃO COMPLETA DE AMARELO/YELLOW */
-  * {
-    /* Remove qualquer fundo amarelo que possa aparecer */
-    background-color: var(--background) !important;
-  }
-
-  /* Override específico para elementos comuns */
-  *[style*="yellow"],
-  *[style*="rgb(255, 255, 0)"],
-  *[style*="#FFFF00"],
-  *[style*="#FFF"],
-  *[class*="yellow"],
-  *[class*="amber"] {
-    background-color: white !important;
-    color: #1F2937 !important;
-  }
-
-  /* Remove autofill amarelo do navegador */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px white inset !important;
-    -webkit-text-fill-color: #1F2937 !important;
-    background-color: white !important;
-    background-image: none !important;
-  }
-
-  /* Força transparência em elementos problemáticos */
-  .no-yellow-bg {
-    background-color: transparent !important;
-    background-image: none !important;
+  /* REMOVE ALL YELLOW/AMBER COLORS */
+  [class*="yellow"],
+  [class*="amber"],
+  [style*="yellow"],
+  [style*="#FF"],
+  [style*="#FD"],
+  [style*="#FC"],
+  [style*="#FB"],
+  [style*="#FA"] {
+    background-color: #F5F5F5 !important;
+    color: #333333 !important;
   }
 
   /* Premium Card Design - Optidata Style */
@@ -119,7 +98,6 @@
     @apply bg-white rounded-lg shadow-sm hover:shadow-lg overflow-hidden;
     border: 1px solid #E5E7EB;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: white !important;
   }
   
   .premium-card:hover {
@@ -132,7 +110,6 @@
     @apply bg-white rounded-lg overflow-hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid #E5E7EB;
-    background-color: white !important;
   }
 
   .premium-vm-card:hover {
@@ -142,7 +119,7 @@
 
   .premium-vm-card.selected {
     border-color: #22C55E;
-    background: linear-gradient(to right, #D1FAE5 0%, #FFFFFF 100%) !important;
+    background: linear-gradient(to right, #D1FAE5 0%, #FFFFFF 100%);
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
     transform: scale(1.02);
   }
@@ -151,7 +128,7 @@
   .premium-input, .input-field {
     @apply border-2 rounded-lg px-4 py-3 text-base transition-all duration-300;
     border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
     font-size: 16px; /* Previne zoom no iOS */
   }
 
@@ -159,25 +136,24 @@
     outline: none;
     border-color: #0066CC;
     box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-    background-color: white !important;
   }
 
   .premium-input.success, .input-field.success {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
   }
 
   /* Premium Button Styles - Optidata */
   .btn-optidata {
     @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
-    background: #0066CC !important;
+    background: #0066CC;
     color: #FFFFFF;
     border: none;
     cursor: pointer;
   }
 
   .btn-optidata:hover {
-    background: #0052A3 !important;
+    background: #0052A3;
     box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
     transform: translateY(-1px);
   }
@@ -188,13 +164,13 @@
 
   .btn-optidata-secondary {
     @apply px-5 py-2 font-semibold rounded-lg transition-all duration-300;
-    background: transparent !important;
+    background: transparent;
     color: #0066CC;
     border: 2px solid #0066CC;
   }
 
   .btn-optidata-secondary:hover {
-    background: #0066CC !important;
+    background: #0066CC;
     color: #FFFFFF;
   }
 
@@ -202,17 +178,17 @@
   .option-card {
     @apply relative p-4 rounded-lg cursor-pointer transition-all duration-300;
     border: 2px solid #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
   }
 
   .option-card:hover {
     border-color: #0066CC;
-    background: #EFF6FF !important;
+    background: #EFF6FF;
   }
 
   .option-card.selected {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
     transform: scale(1.02);
   }
@@ -231,17 +207,17 @@
   .os-option {
     @apply w-full p-4 rounded-lg border-2 text-left transition-all duration-300;
     border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
   }
 
   .os-option:hover {
     border-color: #0066CC;
-    background: #EFF6FF !important;
+    background: #EFF6FF;
   }
 
   .os-option.selected {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
     box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
     transform: scale(1.02);
   }
@@ -250,17 +226,17 @@
   .checkbox-container {
     @apply flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300;
     border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
   }
 
   .checkbox-container:hover {
     border-color: #0066CC;
-    background: #EFF6FF !important;
+    background: #EFF6FF;
   }
 
   .checkbox-container.checked {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
   }
 
@@ -288,7 +264,7 @@
     appearance: none;
     width: 24px;
     height: 24px;
-    background: #0066CC !important;
+    background: #0066CC;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -297,7 +273,7 @@
   .mobile-slider::-moz-range-thumb {
     width: 24px;
     height: 24px;
-    background: #0066CC !important;
+    background: #0066CC;
     border-radius: 50%;
     cursor: pointer;
     border: none;
@@ -308,7 +284,6 @@
   .mobile-bottom-bar {
     @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-bottom;
     box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-    background-color: white !important;
   }
 
   /* Touch targets para mobile */
@@ -316,6 +291,22 @@
     @apply min-h-12 min-w-12;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Remove autofill amarelo */
+  .no-autofill:-webkit-autofill,
+  .no-autofill:-webkit-autofill:hover,
+  .no-autofill:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+
+  /* Remove QUALQUER amarelo de autofill */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #111827 !important;
   }
 
   /* Container responsivo */
@@ -342,13 +333,11 @@
     /* Mobile card optimizations */
     .premium-vm-card {
       @apply rounded-lg text-sm;
-      background-color: white !important;
     }
 
     /* Larger touch targets on mobile */
     button, input, select, textarea {
       @apply touch-target;
-      background-color: white !important;
     }
   }
 
@@ -392,11 +381,11 @@
   }
 
   .bg-optidata-blue {
-    background-color: #0066CC !important;
+    background-color: #0066CC;
   }
 
   .bg-optidata-success {
-    background-color: #22C55E !important;
+    background-color: #22C55E;
   }
 
   .border-optidata-blue {
@@ -405,18 +394,6 @@
 
   .border-optidata-success {
     border-color: #22C55E;
-  }
-
-  /* Força fundo branco em todos os elementos */
-  .force-white-bg {
-    background-color: white !important;
-    background-image: none !important;
-  }
-
-  /* Remove qualquer cor amarela */
-  .no-yellow {
-    background-color: transparent !important;
-    color: #1F2937 !important;
   }
 }
 
@@ -474,23 +451,9 @@
 /* Focus states for accessibility */
 *:focus-visible {
   @apply outline-none ring-2 ring-blue-500 ring-offset-2;
-  background-color: white !important;
 }
 
 /* Selection styles */
 ::selection {
   @apply bg-blue-500/20 text-gray-900;
 }
-
-/* GLOBAL OVERRIDE - Remove qualquer amarelo que apareça */
-* {
-  background-color: inherit !important;
-}
-
-*[style*="background-color: rgb(255, 255, 0)"],
-*[style*="background-color: yellow"],
-*[style*="background-color: #FFFF00"],
-*[style*="background-color: #FFF"] {
-  background-color: white !important;
-}
-
