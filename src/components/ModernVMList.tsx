@@ -2,14 +2,16 @@
 import React, { useState } from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
-import { Plus, FileSpreadsheet } from 'lucide-react';
+import { Plus, FileSpreadsheet, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ModernVMCard from './ModernVMCard';
 import ImportadorExcelModal from './ImportadorExcelModal';
+import ImportadorExcelModalIA from './ImportadorExcelModalIA';
 
 const ModernVMList = () => {
   const { vms, addVM, precos } = useCalculadoraStore();
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [importIAModalOpen, setImportIAModalOpen] = useState(false);
   const calculadora = new CalculadoraCloud(precos);
 
   return (
@@ -25,6 +27,15 @@ const ModernVMList = () => {
           >
             <FileSpreadsheet className="w-4 h-4 mr-2" />
             Importar Excel
+          </Button>
+          <Button 
+            onClick={() => setImportIAModalOpen(true)}
+            variant="outline"
+            size="sm"
+            className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+          >
+            <Bot className="w-4 h-4 mr-2" />
+            🤖 Importar com IA
           </Button>
           <Button onClick={() => addVM()} size="sm">
             <Plus className="w-4 h-4 mr-2" />
@@ -68,14 +79,27 @@ const ModernVMList = () => {
               <FileSpreadsheet className="w-4 h-4 mr-2" />
               Importar do Excel
             </Button>
+            <Button 
+              onClick={() => setImportIAModalOpen(true)}
+              variant="outline"
+              className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+            >
+              <Bot className="w-4 h-4 mr-2" />
+              🤖 Importar com IA
+            </Button>
           </div>
         </div>
       )}
 
-      {/* Import Modal */}
+      {/* Import Modals */}
       <ImportadorExcelModal 
         open={importModalOpen}
         onOpenChange={setImportModalOpen}
+      />
+      
+      <ImportadorExcelModalIA 
+        open={importIAModalOpen}
+        onOpenChange={setImportIAModalOpen}
       />
     </div>
   );
