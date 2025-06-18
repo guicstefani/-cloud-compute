@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import { Button } from '@/components/ui/button';
@@ -497,9 +496,10 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
                       {campo === 'sistemaOperacional' ? 'Sistema Operacional' : campo}:
                     </label>
                     <Select 
-                      value={coluna || ''} 
+                      value={coluna || 'none'} 
                       onValueChange={(valor) => {
-                        setMapeamento(prev => ({ ...prev, [campo]: valor }));
+                        const novoValor = valor === 'none' ? null : valor;
+                        setMapeamento(prev => ({ ...prev, [campo]: novoValor }));
                         setTimeout(reprocessarDados, 100);
                       }}
                     >
@@ -507,7 +507,7 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
                         <SelectValue placeholder="Selecione..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Nenhuma</SelectItem>
+                        <SelectItem value="none">Nenhuma</SelectItem>
                         {colunas.map(col => (
                           <SelectItem key={col} value={col}>{col}</SelectItem>
                         ))}
