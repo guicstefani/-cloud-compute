@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { VM } from '@/types';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
@@ -20,6 +23,7 @@ interface MapeamentoColunas {
 }
 
 interface VMDetectada {
+  id: string;
   nome: string;
   vcpu: number;
   ram: number;
@@ -28,6 +32,7 @@ interface VMDetectada {
   custoEstimado: number;
   status: 'valida' | 'erro' | 'aviso';
   erro?: string;
+  selecionada: boolean;
   original?: any;
 }
 
@@ -205,6 +210,7 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
       const custoEstimado = calculadora.calcularVM(vmTemp as VM).total;
 
       return {
+        id: `import-${Date.now()}-${index}`,
         nome,
         vcpu,
         ram,
@@ -213,6 +219,7 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
         custoEstimado,
         status,
         erro,
+        selecionada: status !== 'erro',
         original: linha
       };
     }).filter(vm => vm.vcpu > 0 && vm.ram > 0);
@@ -235,16 +242,25 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
       const headers = jsonData[0] as string[];
       const dados = jsonData.slice(1);
       
-      setDadosOriginais(dados);
+      // Converter array de arrays para array de objetos
+      const dadosObjetos = dados.map(linha => {
+        const obj: any = {};
+        headers.forEach((header, index) => {
+          obj[header] = linha[index];
+        });
+        return obj;
+      });
+      
+      setDadosOriginais(dadosObjetos);
       setColunas(headers);
       
       // Analisar com IA
-      const resultado = await analisarComIA(dados, headers);
+      const resultado = await analisarComIA(dadosObjetos, headers);
       setAnaliseIA(resultado);
       setMapeamento(resultado.mapeamento);
       
       // Processar dados inicialmente
-      const vmsProcessadas = processarDadosComMapeamento(dados, resultado.mapeamento);
+      const vmsProcessadas = processarDadosComMapeamento(dadosObjetos, resultado.mapeamento);
       setVmsDetectadas(vmsProcessadas);
       
     } catch (err: any) {
@@ -269,6 +285,53 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
       const vmsProcessadas = processarDadosComMapeamento(dadosOriginais, resultado.mapeamento);
       setVmsDetectadas(vmsProcessadas);
     }
+  };
+
+  const toggleVMSelecionada = (vmId: string) => {
+    setVmsDetectadas(prev => 
+      prev.map(vm => 
+        vm.id === vmId ? { ...vm, selecionada: !vm.selecionada } : vm
+      )
+    );
+  };
+
+  const selecionarTodas = (selecionadas: boolean) => {
+    setVmsDetectadas(prev => 
+      prev.map(vm => ({ ...vm, selecionada: selecionadas && vm.status !== 'erro' }))
+    );
+  };
+
+  const importarVMsSelecionadas = () => {
+    const vmsSelecionadas = vmsDetectadas.filter(vm => vm.selecionada && vm.status !== 'erro');
+    
+    vmsSelecionadas.forEach(vmDetectada => {
+      const novaVM: Partial<VM> = {
+        nome: vmDetectada.nome,
+        vcpu: vmDetectada.vcpu,
+        ram: vmDetectada.ram,
+        discoSSD: vmDetectada.disco,
+        discoFCM: 0,
+        backupTipo: 'padrao',
+        sistemaOperacional: vmDetectada.sistemaOperacional,
+        bancoDados: '',
+        antivirus: false,
+        tsplus: { enabled: false, usuarios: 5, advancedSecurity: false, twoFactor: false },
+        thinprint: false,
+        ipsAdicionais: 0,
+        waf: 'none',
+        descontoIndividual: 0,
+        status: 'rascunho'
+      };
+      
+      addVM(novaVM);
+    });
+    
+    toast({
+      title: "🤖 Importação IA concluída!",
+      description: `${vmsSelecionadas.length} VMs foram analisadas e adicionadas pela IA.`,
+    });
+    
+    onClose();
   };
 
   const handleFileSelect = (file: File) => {
@@ -316,41 +379,9 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
     XLSX.writeFile(wb, 'template-vms-ia-optidata.xlsx');
   };
 
-  const confirmarImportacao = () => {
-    const vmsValidas = vmsDetectadas.filter(vm => vm.status !== 'erro');
-    
-    vmsValidas.forEach(vmDetectada => {
-      const novaVM: Partial<VM> = {
-        nome: vmDetectada.nome,
-        vcpu: vmDetectada.vcpu,
-        ram: vmDetectada.ram,
-        discoSSD: vmDetectada.disco,
-        discoFCM: 0,
-        backupTipo: 'padrao',
-        sistemaOperacional: vmDetectada.sistemaOperacional,
-        bancoDados: '',
-        antivirus: false,
-        tsplus: { enabled: false, usuarios: 5, advancedSecurity: false, twoFactor: false },
-        thinprint: false,
-        ipsAdicionais: 0,
-        waf: 'none',
-        descontoIndividual: 0,
-        status: 'rascunho'
-      };
-      
-      addVM(novaVM);
-    });
-    
-    toast({
-      title: "🤖 Importação IA concluída!",
-      description: `${vmsValidas.length} VMs foram analisadas e adicionadas pela IA.`,
-    });
-    
-    onClose();
-  };
-
-  const totalCusto = vmsDetectadas.reduce((sum, vm) => sum + vm.custoEstimado, 0);
+  const totalCusto = vmsDetectadas.filter(vm => vm.selecionada).reduce((sum, vm) => sum + vm.custoEstimado, 0);
   const vmsValidas = vmsDetectadas.filter(vm => vm.status !== 'erro');
+  const vmsSelecionadas = vmsDetectadas.filter(vm => vm.selecionada);
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -533,7 +564,7 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600">{vmsDetectadas.length}</div>
                   <div className="text-sm text-gray-600">VMs Detectadas</div>
@@ -543,6 +574,10 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
                   <div className="text-sm text-gray-600">VMs Válidas</div>
                 </div>
                 <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{vmsSelecionadas.length}</div>
+                  <div className="text-sm text-gray-600">Selecionadas</div>
+                </div>
+                <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">{formatCurrency(totalCusto)}</div>
                   <div className="text-sm text-gray-600">Custo Total/Mês</div>
                 </div>
@@ -550,23 +585,73 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
             </CardContent>
           </Card>
 
-          {/* VMs List */}
+          {/* VMs Table */}
           <Card>
             <CardHeader>
-              <CardTitle>🤖 VMs Analisadas pela IA</CardTitle>
+              <CardTitle className="flex items-center justify-between">
+                <span>🤖 VMs Analisadas pela IA</span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => selecionarTodas(true)}
+                  >
+                    Selecionar Todas
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => selecionarTodas(false)}
+                  >
+                    Desmarcar Todas
+                  </Button>
+                </div>
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {vmsDetectadas.map((vm, index) => (
-                  <div key={index} className={`p-4 rounded-lg border ${
-                    vm.status === 'erro' ? 'border-red-200 bg-red-50' :
-                    vm.status === 'aviso' ? 'border-yellow-200 bg-yellow-50' :
-                    'border-green-200 bg-green-50'
-                  }`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3">
-                          <h4 className="font-medium">{vm.nome}</h4>
+              <div className="max-h-96 overflow-y-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox
+                          checked={vmsSelecionadas.length === vmsValidas.length && vmsValidas.length > 0}
+                          onCheckedChange={(checked) => selecionarTodas(!!checked)}
+                        />
+                      </TableHead>
+                      <TableHead>Nome</TableHead>
+                      <TableHead>vCPU</TableHead>
+                      <TableHead>RAM</TableHead>
+                      <TableHead>Disco</TableHead>
+                      <TableHead>SO</TableHead>
+                      <TableHead className="text-right">Custo/Mês</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {vmsDetectadas.map((vm) => (
+                      <TableRow key={vm.id}>
+                        <TableCell>
+                          <Checkbox
+                            checked={vm.selecionada}
+                            disabled={vm.status === 'erro'}
+                            onCheckedChange={() => toggleVMSelecionada(vm.id)}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{vm.nome}</TableCell>
+                        <TableCell>{vm.vcpu}</TableCell>
+                        <TableCell>{vm.ram} GB</TableCell>
+                        <TableCell>{vm.disco} GB</TableCell>
+                        <TableCell>
+                          {vm.sistemaOperacional ? 
+                            (vm.sistemaOperacional.includes('windows') ? 'Windows' : 'Linux') : 
+                            'N/A'
+                          }
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          {formatCurrency(vm.custoEstimado)}
+                        </TableCell>
+                        <TableCell>
                           <Badge variant={
                             vm.status === 'erro' ? 'destructive' :
                             vm.status === 'aviso' ? 'secondary' : 'default'
@@ -574,22 +659,14 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
                             {vm.status === 'erro' ? 'Erro' :
                              vm.status === 'aviso' ? 'Aviso' : '✅ Válida'}
                           </Badge>
-                        </div>
-                        <div className="text-sm text-gray-600 mt-1">
-                          {vm.vcpu} vCPU • {vm.ram} GB RAM • {vm.disco} GB Disco
-                          {vm.sistemaOperacional && ` • ${vm.sistemaOperacional.includes('windows') ? 'Windows' : 'Linux'}`}
-                        </div>
-                        {vm.erro && (
-                          <div className="text-sm text-red-600 mt-1">🤖 {vm.erro}</div>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <div className="font-medium">{formatCurrency(vm.custoEstimado)}</div>
-                        <div className="text-sm text-gray-600">por mês</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                          {vm.erro && (
+                            <div className="text-xs text-red-600 mt-1">{vm.erro}</div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>
@@ -605,9 +682,13 @@ const ImportadorExcelIA = ({ onClose }: { onClose: () => void }) => {
               }}>
                 🔄 Analisar Outra Planilha
               </Button>
-              <Button onClick={confirmarImportacao} className="bg-blue-600 hover:bg-blue-700">
+              <Button 
+                onClick={importarVMsSelecionadas} 
+                className="bg-blue-600 hover:bg-blue-700"
+                disabled={vmsSelecionadas.length === 0}
+              >
                 <Bot className="w-4 h-4 mr-2" />
-                🚀 Importar {vmsValidas.length} VMs (IA)
+                🚀 Importar {vmsSelecionadas.length} VMs Selecionadas
               </Button>
             </div>
           )}
