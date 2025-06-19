@@ -103,19 +103,19 @@ export function CleanVMCard({ vm, calculadora, isSelected, onSelect }: CleanVMCa
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-gray-500">Infraestrutura:</span>
-                <span className="ml-2 font-medium">{formatCurrency(custo.infraestrutura)}</span>
+                <span className="ml-2 font-medium">{formatCurrency(custo.subtotalInfra)}</span>
               </div>
               <div>
                 <span className="text-gray-500">Licenças:</span>
-                <span className="ml-2 font-medium">{formatCurrency(custo.licencas)}</span>
+                <span className="ml-2 font-medium">{formatCurrency(custo.subtotalLicencas)}</span>
               </div>
               <div>
                 <span className="text-gray-500">Backup:</span>
                 <span className="ml-2 font-medium">{formatCurrency(custo.backup)}</span>
               </div>
               <div>
-                <span className="text-gray-500">Extras:</span>
-                <span className="ml-2 font-medium">{formatCurrency(custo.extras)}</span>
+                <span className="text-gray-500">Storage:</span>
+                <span className="ml-2 font-medium">{formatCurrency(custo.storage)}</span>
               </div>
             </div>
             {vm.sistemaOperacional && (
