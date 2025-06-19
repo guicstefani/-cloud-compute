@@ -3,28 +3,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System Optidata Cloud - Versão Oficial */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Design System Optidata Cloud - Dark Professional Theme */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @layer base {
   :root {
-    --background: 249 250 251;
-    --foreground: 17 24 39;
+    --background: 10 10 10;
+    --foreground: 255 255 255;
 
-    --card: 255 255 255;
-    --card-foreground: 17 24 39;
+    --card: 20 20 20;
+    --card-foreground: 255 255 255;
 
-    --popover: 255 255 255;
-    --popover-foreground: 17 24 39;
+    --popover: 20 20 20;
+    --popover-foreground: 255 255 255;
 
-    --primary: 0 102 204;
-    --primary-foreground: 255 255 255;
+    --primary: 255 213 0;
+    --primary-foreground: 0 0 0;
 
-    --secondary: 243 244 246;
-    --secondary-foreground: 17 24 39;
+    --secondary: 38 38 38;
+    --secondary-foreground: 255 255 255;
 
-    --muted: 243 244 246;
-    --muted-foreground: 107 114 128;
+    --muted: 38 38 38;
+    --muted-foreground: 163 163 163;
 
     --accent: 34 197 94;
     --accent-foreground: 255 255 255;
@@ -32,463 +32,258 @@
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 229 231 235;
-    --input: 229 231 235;
-    --ring: 0 102 204;
+    --border: 38 38 38;
+    --input: 38 38 38;
+    --ring: 255 213 0;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Optidata Brand Colors */
-    --optidata-blue: 0 102 204;
-    --optidata-blue-dark: 0 82 163;
+    /* Optidata Brand Colors - Dark Theme */
+    --optidata-primary: 255 213 0;
+    --optidata-primary-dark: 230 194 0;
+    --optidata-background: 10 10 10;
+    --optidata-surface: 20 20 20;
+    --optidata-border: 38 38 38;
     --optidata-success: 34 197 94;
-    --optidata-success-light: 209 250 229;
-    --optidata-gray-dark: 17 24 39;
-    --optidata-gray-medium: 107 114 128;
-    --optidata-gray-light: 243 244 246;
-    --optidata-warning: 245 158 11;
     --optidata-error: 239 68 68;
     --optidata-info: 59 130 246;
+    --optidata-warning: 245 158 11;
+  }
+
+  * {
+    @apply border-border;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
+    background-color: #0A0A0A;
+    color: #FFFFFF;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+    line-height: 1.2;
   }
 
   h1 {
-    @apply text-4xl font-bold;
-    line-height: 1.2;
+    @apply text-4xl font-black;
   }
 
   h2 {
-    @apply text-2xl font-semibold;
-    line-height: 1.2;
+    @apply text-2xl font-bold;
   }
 
   h3 {
     @apply text-xl font-semibold;
-    line-height: 1.2;
-  }
-
-  small {
-    @apply text-sm;
-    line-height: 1.4;
   }
 }
 
 @layer components {
-  /* FORÇAR FUNDO BRANCO - SOLUÇÃO UNIVERSAL */
-  .force-white-bg {
-    background-color: #ffffff !important;
-    background-image: none !important;
+  /* Dark Theme Base Styles */
+  .dark-surface {
+    background-color: #141414;
+    border-color: #262626;
   }
 
-  .container-white {
-    background-color: #ffffff !important;
+  .dark-text-primary {
+    color: #FFFFFF;
   }
 
-  /* REMOVE ALL YELLOW/AMBER COLORS - FORÇA BRANCO */
-  [class*="yellow"],
-  [class*="amber"],
-  [style*="yellow"],
-  [style*="#FF"],
-  [style*="#FD"],
-  [style*="#FC"],
-  [style*="#FB"],
-  [style*="#FA"] {
-    background-color: #FFFFFF !important;
-    color: #333333 !important;
+  .dark-text-secondary {
+    color: #A3A3A3;
   }
 
-  /* Cards e containers - FORÇA BRANCO */
-  .vm-card,
-  .pricing-summary,
-  .configurator-panel,
-  [class*="card"],
-  [class*="panel"] {
-    background-color: #ffffff !important;
+  .dark-text-muted {
+    color: #737373;
   }
 
-  /* Inputs e campos - FORÇA BRANCO */
-  input[type="text"],
-  input[type="number"],
-  select,
-  textarea {
-    background-color: #ffffff !important;
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-[#FFD500] hover:bg-[#FFC700] text-black font-semibold;
+    transition: all 0.2s ease;
   }
 
-  /* Remove autocomplete yellow */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-    -webkit-text-fill-color: #111827 !important;
-    background-color: #ffffff !important;
+  .btn-secondary {
+    @apply bg-[#141414] hover:bg-[#1A1A1A] text-white border border-[#262626];
+    transition: all 0.2s ease;
   }
 
-  /* Premium Card Design - Optidata Style */
-  .premium-card {
-    @apply bg-white rounded-lg shadow-sm hover:shadow-lg overflow-hidden;
-    border: 1px solid #E5E7EB;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: #ffffff !important;
-  }
-  
-  .premium-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  /* Card Styles */
+  .card-dark {
+    @apply bg-[#141414] border border-[#262626] rounded-xl;
+    transition: all 0.3s ease;
   }
 
-  /* VM Card específico */
-  .premium-vm-card {
-    @apply bg-white rounded-lg overflow-hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid #E5E7EB;
-    background-color: #ffffff !important;
+  .card-dark:hover {
+    @apply border-[#FFD500]/30;
+    box-shadow: 0 0 0 1px rgba(255, 213, 0, 0.1);
   }
 
-  .premium-vm-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  /* Input Styles */
+  .input-dark {
+    @apply bg-[#141414] border border-[#262626] text-white placeholder-gray-500;
+    transition: all 0.2s ease;
   }
 
-  .premium-vm-card.selected {
-    border-color: #22C55E;
-    background: linear-gradient(to right, #D1FAE5 0%, #FFFFFF 100%);
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-    transform: scale(1.02);
-  }
-
-  /* Enhanced Input Styles - FORÇA BRANCO */
-  .premium-input, .input-field {
-    @apply border-2 rounded-lg px-4 py-3 text-base transition-all duration-300;
-    border-color: #E5E7EB;
-    background: #FFFFFF !important;
-    font-size: 16px; /* Previne zoom no iOS */
-  }
-
-  .premium-input:focus, .input-field:focus {
+  .input-dark:focus {
+    @apply border-[#FFD500] ring-1 ring-[#FFD500]/20;
     outline: none;
-    border-color: #0066CC;
-    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-    background-color: #ffffff !important;
   }
 
-  .premium-input.success, .input-field.success {
-    border-color: #22C55E;
-    background: #D1FAE5;
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(to right, #FFFFFF, #FFD500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Premium Button Styles - Optidata */
-  .btn-optidata {
-    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
-    background: #0066CC;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
+  /* Glow Effects */
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(255, 213, 0, 0.3);
   }
 
-  .btn-optidata:hover {
-    background: #0052A3;
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
-    transform: translateY(-1px);
+  .glow-success {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
   }
 
-  .btn-optidata:active {
-    transform: translateY(1px);
-  }
-
-  .btn-optidata-secondary {
-    @apply px-5 py-2 font-semibold rounded-lg transition-all duration-300;
-    background: transparent;
-    color: #0066CC;
-    border: 2px solid #0066CC;
-  }
-
-  .btn-optidata-secondary:hover {
-    background: #0066CC;
-    color: #FFFFFF;
-  }
-
-  /* GREEN Feedback Visual para Seleções */
-  .option-card {
-    @apply relative p-4 rounded-lg cursor-pointer transition-all duration-300;
-    border: 2px solid #E5E7EB;
-    background: #FFFFFF !important;
-  }
-
-  .option-card:hover {
-    border-color: #0066CC;
-    background: #EFF6FF !important;
-  }
-
-  .option-card.selected {
-    border-color: #22C55E;
-    background: #D1FAE5 !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-    transform: scale(1.02);
-  }
-
-  .option-card.selected::before {
-    content: '✓';
-    @apply absolute top-2 right-2 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold;
-  }
-
-  .option-card.selected::after {
-    content: '';
-    @apply absolute left-0 top-0 bottom-0 w-1 bg-green-500 rounded-r;
-  }
-
-  /* Sistema Operacional com Feedback Verde */
-  .os-option {
-    @apply w-full p-4 rounded-lg border-2 text-left transition-all duration-300;
-    border-color: #E5E7EB;
-    background: #FFFFFF !important;
-  }
-
-  .os-option:hover {
-    border-color: #0066CC;
-    background: #EFF6FF !important;
-  }
-
-  .os-option.selected {
-    border-color: #22C55E;
-    background: #D1FAE5 !important;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
-    transform: scale(1.02);
-  }
-
-  /* Checkbox/Switch com Feedback Verde */
-  .checkbox-container {
-    @apply flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300;
-    border-color: #E5E7EB;
-    background: #FFFFFF !important;
-  }
-
-  .checkbox-container:hover {
-    border-color: #0066CC;
-    background: #EFF6FF !important;
-  }
-
-  .checkbox-container.checked {
-    border-color: #22C55E;
-    background: #D1FAE5 !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-  }
-
-  /* Premium Slider - Verde quando ativo */
-  .premium-slider .slider-track {
-    @apply bg-gray-200 h-2 rounded-full;
-  }
-
-  .premium-slider .slider-range {
-    @apply bg-green-500 h-2 rounded-full;
-  }
-
-  .premium-slider .slider-thumb {
-    @apply w-6 h-6 bg-white border-2 border-green-500 rounded-full shadow-lg;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .premium-slider .slider-thumb:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-  }
-
-  /* Slider customizado mobile */
-  .mobile-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    background: #0066CC;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .mobile-slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    background: #0066CC;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Mobile Bottom Bar */
-  .mobile-bottom-bar {
-    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-bottom;
-    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff !important;
-  }
-
-  /* Touch targets para mobile */
-  .touch-target {
-    @apply min-h-12 min-w-12;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Container responsivo */
-  .container-optidata {
-    @apply max-w-6xl mx-auto px-4;
-  }
-
-  @media (min-width: 768px) {
-    .container-optidata {
-      @apply px-6;
+  /* Animations */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(255, 213, 0, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(255, 213, 0, 0.8);
     }
   }
 
-  /* Mobile specific - FORÇA BRANCO */
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite;
+  }
+
+  /* Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #141414;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FFD500;
+  }
+
+  /* Mobile Optimizations */
   @media (max-width: 768px) {
-    .mobile-hide {
-      @apply hidden;
+    .mobile-padding {
+      @apply px-4 py-3;
     }
 
-    .mobile-show {
-      @apply block;
+    .mobile-text {
+      @apply text-sm;
     }
 
-    /* Mobile card optimizations - FORÇA BRANCO */
-    .premium-vm-card {
-      @apply rounded-lg text-sm;
-      background-color: #ffffff !important;
-    }
-
-    /* Fixes específicos para mobile - FORÇA BRANCO */
-    .vm-card,
-    .pricing-summary,
-    .configurator {
-      background-color: #ffffff !important;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    /* Larger touch targets on mobile */
-    button, input, select, textarea {
-      @apply touch-target;
-      background-color: #ffffff !important;
-    }
-  }
-
-  @media (min-width: 769px) {
-    .mobile-hide {
-      @apply block;
-    }
-
-    .mobile-show {
-      @apply hidden;
+    .mobile-button {
+      @apply w-full py-4 text-base;
     }
   }
 }
 
 @layer utilities {
-  /* Safe area utilities */
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
+  /* Spacing Utilities */
+  .space-y-section {
+    @apply space-y-8;
   }
 
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
+  .space-y-card {
+    @apply space-y-6;
   }
 
-  /* Touch utilities */
-  .no-tap-highlight {
-    -webkit-tap-highlight-color: transparent;
+  /* Text Utilities */
+  .text-hero {
+    @apply text-5xl font-black tracking-tight;
   }
 
-  /* Text utilities Optidata */
-  .text-gradient-optidata {
-    @apply bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent;
+  .text-heading {
+    @apply text-2xl font-bold;
   }
 
-  .text-optidata-blue {
-    color: #0066CC;
+  .text-subheading {
+    @apply text-xl font-semibold;
   }
 
-  .text-optidata-success {
-    color: #22C55E;
+  .text-body {
+    @apply text-base;
   }
 
-  .bg-optidata-blue {
-    background-color: #0066CC;
+  .text-small {
+    @apply text-sm;
   }
 
-  .bg-optidata-success {
-    background-color: #22C55E;
+  /* Background Utilities */
+  .bg-optidata-gradient {
+    background: linear-gradient(135deg, #FFD500 0%, #FFC700 100%);
   }
 
-  .border-optidata-blue {
-    border-color: #0066CC;
+  .bg-dark-gradient {
+    background: linear-gradient(135deg, #0A0A0A 0%, #141414 100%);
   }
 
-  .border-optidata-success {
-    border-color: #22C55E;
+  /* Border Utilities */
+  .border-optidata {
+    @apply border-[#FFD500];
   }
-}
 
-/* Enhanced Keyframes */
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
+  .border-dark {
+    @apply border-[#262626];
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 
-@keyframes slideDown {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
+  /* Shadow Utilities */
+  .shadow-optidata {
+    box-shadow: 0 4px 6px -1px rgba(255, 213, 0, 0.1);
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes spin {
-  to { 
-    transform: rotate(360deg); 
+  .shadow-dark {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   }
 }
 
 /* Focus states for accessibility */
 *:focus-visible {
-  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+  @apply outline-none ring-2 ring-[#FFD500] ring-offset-2 ring-offset-[#0A0A0A];
 }
 
 /* Selection styles */
 ::selection {
-  @apply bg-blue-500/20 text-gray-900;
+  @apply bg-[#FFD500]/20 text-white;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading states */
+.loading-shimmer {
+  background: linear-gradient(90deg, #141414 25%, #262626 50%, #141414 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
