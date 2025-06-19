@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
@@ -7,6 +6,7 @@ import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
 import ListaPropostas from '@/components/ListaPropostas';
+import { AuthHeader } from '@/components/AuthHeader';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
 import { Server, Database, TrendingUp, FileText } from 'lucide-react';
@@ -19,6 +19,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Auth Header */}
+      <AuthHeader />
+      
       {/* Hero Section */}
       <ModernHero />
       
