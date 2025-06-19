@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Server, DollarSign } from 'lucide-react';
+import { TrendingUp, Server, DollarSign, FileText } from 'lucide-react';
 import { designSystem } from '@/styles/designSystem';
 import ActionButton from './ActionButton';
 
