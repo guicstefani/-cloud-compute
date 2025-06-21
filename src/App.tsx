@@ -23,7 +23,7 @@ const App = () => {
         forcePremiumColors();
       }, 500);
       
-      // Inicializar enhancements visuais cinematográficos
+      // Inicializar enhancements visuais simples
       const enhancementsCleanup = initPremiumEnhancements();
       
       return () => {

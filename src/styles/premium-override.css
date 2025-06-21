@@ -1,7 +1,7 @@
 
-/* PREMIUM OVERRIDE - CORES ESCURAS FORÇADAS */
+/* PREMIUM OVERRIDE - CORES ESCURAS SIMPLES */
 
-/* 1. RESET COMPLETO - FORÇA PRETO EM TUDO */
+/* 1. RESET GLOBAL */
 * {
   color-scheme: dark !important;
 }
