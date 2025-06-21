@@ -1,7 +1,203 @@
 
-/* OVERRIDE FORÇADO - PRETO/DOURADO DEFINITIVO */
+/* SOLUÇÃO NUCLEAR PARA LOVABLE - OVERRIDE TOTAL */
 
-/* 1. BODY E BACKGROUNDS */
+/* 1. CARDS BRANCOS - FORÇA PRETO */
+[class*="bg-white"],
+[class*="bg-background"],
+.bg-background,
+.bg-card,
+div[class*="rounded-lg"][class*="shadow"],
+div[class*="rounded-xl"][class*="shadow"] {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+}
+
+/* 2. MODAL/DIALOG CONFIGURADOR VM */
+[role="dialog"],
+[data-state="open"],
+[class*="DialogContent"],
+[class*="modal"],
+.fixed.inset-0 > div > div {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+/* 3. MARKET INTELLIGENCE BOX */
+div:has(> div:contains("Market Intelligence")),
+[class*="Market Intelligence"] {
+  background-color: #1e1e1e !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* 4. SLIDERS AZUIS - FORÇA DOURADO */
+input[type="range"],
+[class*="slider"],
+.accent-blue-500,
+.accent-primary {
+  accent-color: #DCAE1D !important;
+}
+
+/* Webkit para Chrome/Edge */
+input[type="range"]::-webkit-slider-thumb {
+  background: #DCAE1D !important;
+  box-shadow: 0 0 10px rgba(220, 174, 29, 0.5) !important;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  background: #DCAE1D !important;
+  border: none !important;
+}
+
+/* Track do slider */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #2a2a2a !important;
+}
+
+/* 5. INPUTS BRANCOS */
+input:not([type="range"]),
+select,
+textarea,
+[class*="Input"],
+[class*="Select"] {
+  background-color: #141414 !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+/* 6. TABS DO MODAL */
+[role="tablist"],
+[class*="TabsList"] {
+  background-color: #1a1a1a !important;
+}
+
+[role="tab"][data-state="active"],
+[class*="TabsTrigger"][data-state="active"] {
+  background-color: rgba(220, 174, 29, 0.2) !important;
+  color: #DCAE1D !important;
+}
+
+/* 7. DROPDOWN/SELECT */
+[role="combobox"],
+[class*="Select"],
+select {
+  background-color: #141414 !important;
+  border: 1px solid #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+/* 8. CHECKBOX E RADIO */
+input[type="checkbox"],
+input[type="radio"] {
+  background-color: #141414 !important;
+  border-color: #2a2a2a !important;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  background-color: #DCAE1D !important;
+  border-color: #DCAE1D !important;
+}
+
+/* 9. TEXTO AZUL - FORÇA DOURADO */
+.text-blue-500,
+.text-blue-600,
+.text-primary,
+[class*="text-blue"],
+a:not(.premium-button) {
+  color: #DCAE1D !important;
+}
+
+/* 10. CARDS ESPECÍFICOS DA VM */
+div:has(> div > span:contains("vCPU")),
+div:has(> div > span:contains("GB RAM")),
+div:has(> div > span:contains("GB STORAGE")) {
+  background-color: #1e1e1e !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* 11. AREA DE DESCONTO */
+div:has(> span:contains("Desconto Exclusivo")) {
+  background-color: rgba(220, 174, 29, 0.05) !important;
+  border: 1px solid rgba(220, 174, 29, 0.2) !important;
+}
+
+/* 12. RESUMO DE CUSTOS */
+div:has(> h3:contains("Resumo de Custos")),
+div:has(> div:contains("Total Mensal")) {
+  background-color: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* 13. HOVER STATES */
+[class*="hover:bg-gray"]:hover,
+[class*="hover:bg-blue"]:hover {
+  background-color: rgba(220, 174, 29, 0.1) !important;
+}
+
+/* 14. BADGES E LABELS */
+.bg-green-100,
+.bg-blue-100,
+.bg-yellow-100,
+[class*="badge"] {
+  background-color: rgba(220, 174, 29, 0.1) !important;
+  color: #DCAE1D !important;
+  border: 1px solid rgba(220, 174, 29, 0.3) !important;
+}
+
+/* 15. SCROLLBAR EM MODAIS */
+[class*="overflow-y-auto"]::-webkit-scrollbar,
+[class*="overflow-auto"]::-webkit-scrollbar {
+  width: 8px !important;
+  background: #1a1a1a !important;
+}
+
+[class*="overflow-y-auto"]::-webkit-scrollbar-thumb,
+[class*="overflow-auto"]::-webkit-scrollbar-thumb {
+  background: #2a2a2a !important;
+  border-radius: 4px !important;
+}
+
+[class*="overflow-y-auto"]::-webkit-scrollbar-thumb:hover,
+[class*="overflow-auto"]::-webkit-scrollbar-thumb:hover {
+  background: #DCAE1D !important;
+}
+
+/* 16. FORÇA TEXTO BRANCO ONDE NECESSÁRIO */
+h1, h2, h3, h4, h5, h6,
+p, span, div, label {
+  color: inherit !important;
+}
+
+[class*="text-gray-900"],
+[class*="text-gray-800"],
+[class*="text-black"] {
+  color: #ffffff !important;
+}
+
+[class*="text-gray-600"],
+[class*="text-gray-500"] {
+  color: #a0a0a0 !important;
+}
+
+/* 17. ÍCONES PREMIUM */
+svg {
+  color: currentColor !important;
+}
+
+/* 18. REMOVER QUALQUER FUNDO BRANCO INLINE */
+[style*="background-color: white"],
+[style*="background-color: #ffffff"],
+[style*="background-color: rgb(255, 255, 255)"] {
+  background-color: #1e1e1e !important;
+}
+
+/* 19. FORÇAR PRIORIDADE MÁXIMA */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
+}
+
+/* 20. BODY E BACKGROUNDS ESPECÍFICOS */
 body,
 .force-white-bg,
 .bg-gray-50,
@@ -10,43 +206,7 @@ body,
   color: #ffffff !important;
 }
 
-/* 2. CARDS E CONTAINERS */
-.premium-card,
-.bg-white.rounded-lg,
-.bg-white.shadow-md,
-[class*="bg-white"] {
-  background-color: #1e1e1e !important;
-  background-image: none !important;
-  border: 1px solid #2a2a2a !important;
-  color: #ffffff !important;
-}
-
-.premium-card:hover {
-  border-color: rgba(220, 174, 29, 0.3) !important;
-  box-shadow: 0 0 30px rgba(220, 174, 29, 0.3) !important;
-}
-
-/* 3. INPUTS E FORMULÁRIOS */
-input[type="text"],
-input[type="number"],
-select,
-textarea,
-.bg-gray-50,
-[class*="bg-gray-50"] {
-  background-color: #141414 !important;
-  border-color: #2a2a2a !important;
-  color: #ffffff !important;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #DCAE1D !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.2) !important;
-}
-
-/* 4. BOTÕES PREMIUM */
+/* 21. BOTÕES PREMIUM */
 .bg-blue-600,
 .bg-blue-500,
 .bg-green-600,
@@ -65,15 +225,7 @@ button[class*="bg-blue"]:hover {
   box-shadow: 0 8px 20px rgba(220, 174, 29, 0.4) !important;
 }
 
-/* 5. TEXTOS DOURADOS */
-.text-blue-600,
-.text-blue-500,
-.text-indigo-600,
-[class*="text-blue"] {
-  color: #DCAE1D !important;
-}
-
-/* 6. MODALS E DIALOGS */
+/* 22. MODALS E DIALOGS EXTRAS */
 .fixed.inset-0.bg-gray-500,
 [role="dialog"] {
   background-color: rgba(0, 0, 0, 0.8) !important;
@@ -84,61 +236,21 @@ button[class*="bg-blue"]:hover {
   border: 1px solid #2a2a2a !important;
 }
 
-/* 7. TABS E NAVEGAÇÃO */
-.bg-gray-100,
-[class*="bg-gray-100"] {
-  background-color: #1a1a1a !important;
-}
-
-/* 8. FOCUS E RINGS */
+/* 23. FOCUS E RINGS */
 *:focus,
 *:focus-visible {
   --tw-ring-color: #DCAE1D !important;
   outline-color: #DCAE1D !important;
 }
 
-/* 9. SCROLLBAR PREMIUM */
-::-webkit-scrollbar {
-  width: 10px;
-  background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #DCAE1D;
-}
-
-/* 10. SLIDERS E RANGE */
-input[type="range"] {
-  accent-color: #DCAE1D !important;
-}
-
-/* 11. BADGES E PILLS */
-.bg-green-100 {
-  background-color: rgba(220, 174, 29, 0.1) !important;
-  color: #DCAE1D !important;
-}
-
-/* 12. REMOVER GRADIENTES AZUIS */
-[class*="from-blue"],
-[class*="to-blue"],
-[class*="from-indigo"],
-[class*="to-indigo"] {
-  background-image: linear-gradient(to bottom right, #1a1a1a, #0a0a0a) !important;
-}
-
-/* 13. VM CARDS ESPECÍFICOS */
+/* 24. VM CARDS ESPECÍFICOS */
 .premium-vm-card.selected {
   border-color: #DCAE1D !important;
   background: linear-gradient(to right, rgba(220, 174, 29, 0.1) 0%, #1e1e1e 100%) !important;
   box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1) !important;
 }
 
-/* 14. SUMMARY CARDS */
+/* 25. SUMMARY CARDS */
 .text-gradient-optidata {
   background: linear-gradient(to right, #DCAE1D, #F4C430) !important;
   -webkit-background-clip: text !important;
@@ -146,13 +258,21 @@ input[type="range"] {
   -webkit-text-fill-color: transparent !important;
 }
 
-/* 15. ESPECÍFICOS DO SHADCN */
+/* 26. ESPECÍFICOS DO SHADCN */
 [data-state="active"] {
   background-color: rgba(220, 174, 29, 0.2) !important;
   color: #DCAE1D !important;
 }
 
-/* 16. SIDEBAR CORRIGIDA */
+/* 27. SIDEBAR CORRIGIDA */
 .bg-dark {
   background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%) !important;
+}
+
+/* 28. REMOVER GRADIENTES AZUIS */
+[class*="from-blue"],
+[class*="to-blue"],
+[class*="from-indigo"],
+[class*="to-indigo"] {
+  background-image: linear-gradient(to bottom right, #1a1a1a, #0a0a0a) !important;
 }
