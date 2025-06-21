@@ -290,8 +290,9 @@
       @apply rounded-lg text-sm;
     }
 
+    /* Touch targets para mobile - minimum 44px */
     button, input, select, textarea {
-      @apply touch-target;
+      @apply min-h-touch min-w-touch;
     }
   }
 
