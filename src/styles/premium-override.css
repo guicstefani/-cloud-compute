@@ -1,93 +1,380 @@
 
-/* PREMIUM OVERRIDE - CORES ESCURAS SIMPLES */
+/* ====================================
+   PREMIUM DARK THEME - SOFISTICADO E MINIMALISTA
+   Inspirado em: Linear, Raycast, Vercel, Arc Browser
+   ==================================== */
 
-/* 1. RESET GLOBAL */
+/* 1. PALETA REFINADA - MENOS É MAIS */
+:root {
+  /* Base - Tons de cinza neutros e elegantes */
+  --gray-000: #ffffff;
+  --gray-050: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-850: #1a1a1a;
+  --gray-900: #171717;
+  --gray-950: #0a0a0a;
+  
+  /* Accent principal - Azul profundo sofisticado */
+  --accent-primary: #0ea5e9;      /* Sky blue */
+  --accent-primary-dark: #0284c7;
+  --accent-primary-darker: #0369a1;
+  --accent-primary-light: #38bdf8;
+  --accent-primary-lighter: #7dd3fc;
+  
+  /* Accent secundário - Violeta sutil */
+  --accent-secondary: #8b5cf6;
+  --accent-secondary-dark: #7c3aed;
+  --accent-secondary-light: #a78bfa;
+  
+  /* Estados e feedback */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Optidata Gold - USAR COM EXTREMA MODERAÇÃO */
+  --optidata-gold: #DCAE1D;
+  --optidata-gold-subtle: rgba(220, 174, 29, 0.05);
+  
+  /* Superfícies e layers */
+  --surface-base: var(--gray-950);
+  --surface-elevated: var(--gray-900);
+  --surface-overlay: var(--gray-850);
+  --surface-card: rgba(23, 23, 23, 0.5);
+  
+  /* Bordas */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  
+  /* Sombras refinadas */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+/* 2. RESET E BASE MINIMALISTA */
 * {
-  color-scheme: dark !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  background: #0a0a0a !important;
-  color: #ffffff !important;
+body,
+.premium-app {
+  background: var(--surface-base);
+  color: var(--gray-200);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+  line-height: 1.5;
 }
 
-/* 2. FORÇA PRETO EM ELEMENTOS BRANCOS */
-*[style*="background-color: white"],
-*[style*="background-color: #ffffff"],
-*[style*="background-color: rgb(255, 255, 255)"],
-*[style*="background: white"],
-*[style*="background: #ffffff"],
-.bg-white,
-[class*="bg-white"] {
-  background: #1e1e1e !important;
-  color: #ffffff !important;
+/* Gradiente sutil de fundo - sem exageros */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at 20% 80%,
+    rgba(14, 165, 233, 0.04) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* 3. CARDS E CONTAINERS */
+/* 3. CARDS MINIMALISTAS */
 .premium-card,
-[class*="rounded-lg"],
-[class*="rounded-xl"],
-[class*="shadow"] {
-  background: rgba(30, 30, 30, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #ffffff !important;
+[class*="rounded-lg"][class*="shadow"],
+[class*="bg-white"] {
+  background: var(--surface-card) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all 0.2s ease !important;
 }
 
-/* 4. BOTÕES DOURADOS */
-button,
-[class*="bg-blue"],
-[class*="bg-yellow"] {
-  background: linear-gradient(135deg, #DCAE1D, #F4C430) !important;
-  color: #000000 !important;
-  border: none !important;
+.premium-card:hover,
+[class*="rounded-lg"]:hover {
+  border-color: var(--border-default) !important;
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-1px) !important;
 }
 
-/* 5. INPUTS ESCUROS */
+/* 4. BOTÕES ELEGANTES */
+/* Botão primário - Azul sofisticado */
+.premium-button,
+button[class*="bg-yellow"],
+button[class*="bg-blue"],
+button[class*="bg-green"] {
+  background: var(--accent-primary) !important;
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all 0.15s ease !important;
+}
+
+.premium-button:hover {
+  background: var(--accent-primary-dark) !important;
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-1px) !important;
+}
+
+.premium-button:active {
+  background: var(--accent-primary-darker) !important;
+  transform: translateY(0) !important;
+}
+
+/* Botão secundário - Outline sutil */
+.premium-button-secondary {
+  background: transparent !important;
+  color: var(--gray-300) !important;
+  border: 1px solid var(--border-default) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.15s ease !important;
+}
+
+.premium-button-secondary:hover {
+  background: var(--surface-overlay) !important;
+  color: var(--gray-100) !important;
+  border-color: var(--border-strong) !important;
+}
+
+/* Botões Optidata - Dourado APENAS aqui */
+[class*="Gerar PDF"],
+[class*="Criar Proposta"],
+[class*="Exportar"] {
+  background: linear-gradient(135deg, var(--gray-800), var(--gray-700)) !important;
+  color: var(--optidata-gold) !important;
+  border: 1px solid rgba(220, 174, 29, 0.2) !important;
+  font-weight: 600 !important;
+}
+
+[class*="Gerar PDF"]:hover,
+[class*="Criar Proposta"]:hover,
+[class*="Exportar"]:hover {
+  background: linear-gradient(135deg, var(--gray-700), var(--gray-600)) !important;
+  border-color: rgba(220, 174, 29, 0.3) !important;
+  box-shadow: 0 0 20px rgba(220, 174, 29, 0.1) !important;
+}
+
+/* 5. INPUTS LIMPOS */
 input:not([type="range"]),
 select,
 textarea {
-  background: #141414 !important;
-  border: 1px solid #2a2a2a !important;
-  color: #ffffff !important;
+  background: var(--surface-elevated) !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--gray-100) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  transition: all 0.15s ease !important;
 }
 
-/* 6. SLIDERS DOURADOS */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+  background: var(--surface-overlay) !important;
+}
+
+/* 6. SLIDERS MINIMALISTAS */
 input[type="range"] {
-  accent-color: #DCAE1D !important;
+  -webkit-appearance: none !important;
+  height: 6px !important;
+  background: var(--gray-800) !important;
+  border-radius: 3px !important;
+  outline: none !important;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  background: #DCAE1D !important;
-  border: none !important;
+  -webkit-appearance: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  background: var(--accent-primary) !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: all 0.15s ease !important;
+  border: 2px solid var(--surface-base) !important;
 }
 
-input[type="range"]::-webkit-slider-track {
-  background: #2a2a2a !important;
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--accent-primary-light) !important;
+  transform: scale(1.1) !important;
 }
 
-/* 7. TEXTOS */
-h1, h2, h3, h4, h5, h6, p, span, div {
-  color: #ffffff !important;
+/* 7. TEXTOS HIERÁRQUICOS */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--gray-100) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
 }
 
-/* 8. CORES DOURADAS PARA ELEMENTOS AZUIS */
-[class*="text-blue"]:not(button) {
-  color: #DCAE1D !important;
+p, span, div {
+  color: var(--gray-300) !important;
 }
 
-/* 9. MODAL E DIALOGS */
-[role="dialog"] {
-  background: #1a1a1a !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+/* Links e textos de destaque */
+a, 
+[class*="text-blue"],
+[class*="text-yellow"] {
+  color: var(--accent-primary) !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
 }
 
-/* 10. SCROLLBAR */
+a:hover {
+  color: var(--accent-primary-light) !important;
+}
+
+/* 8. CORREÇÕES ESPECÍFICAS */
+/* Market Intelligence */
+div:has(> :contains("Market Intelligence")),
+[class*="Market"] {
+  background: var(--surface-elevated) !important;
+  border: 1px solid var(--border-subtle) !important;
+}
+
+/* Box de desconto - Sutil */
+div:has(> :contains("Desconto")),
+[class*="Desconto"] {
+  background: var(--surface-overlay) !important;
+  border: 1px solid var(--border-default) !important;
+}
+
+/* Tabs e navegação */
+[role="tab"],
+[class*="TabsTrigger"] {
+  color: var(--gray-400) !important;
+  background: transparent !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+}
+
+[role="tab"][data-state="active"],
+[class*="TabsTrigger"][data-state="active"] {
+  color: var(--gray-100) !important;
+  background: var(--surface-overlay) !important;
+}
+
+/* 9. SCROLLBAR ELEGANTE */
 ::-webkit-scrollbar {
-  width: 8px;
-  background: #1a1a1a;
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-base);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DCAE1D;
-  border-radius: 4px;
+  background: var(--gray-700);
+  border-radius: 5px;
+  border: 2px solid var(--surface-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+/* 10. ESTADOS E FEEDBACK */
+/* Success */
+.success,
+[class*="green"] {
+  color: var(--color-success) !important;
+}
+
+/* Error */
+.error,
+[class*="red"] {
+  color: var(--color-error) !important;
+}
+
+/* Warning - Único lugar onde usamos dourado como alerta */
+.warning {
+  color: var(--optidata-gold) !important;
+}
+
+/* 11. ANIMAÇÕES SUTIS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Loading states */
+[class*="animate-pulse"] {
+  animation: pulse 2s ease-in-out infinite !important;
+}
+
+/* 12. REMOVER EXCESSOS */
+/* Remover qualquer gradiente dourado exagerado */
+[class*="gradient"],
+[class*="from-yellow"],
+[class*="to-yellow"] {
+  background: none !important;
+}
+
+/* Forçar fundo escuro onde necessário */
+[class*="bg-white"],
+[style*="background-color: white"],
+[style*="background: white"] {
+  background: var(--surface-card) !important;
+  color: var(--gray-200) !important;
+}
+
+/* 13. SIDEBAR REFINADA */
+aside,
+[class*="sidebar"] {
+  background: var(--surface-elevated) !important;
+  border-right: 1px solid var(--border-subtle) !important;
+}
+
+/* Logo Optidata - Único lugar com destaque dourado */
+[class*="Optidata"],
+.logo {
+  color: var(--gray-100) !important;
+}
+
+.logo-accent {
+  color: var(--optidata-gold) !important;
+}
+
+/* 14. MODAL E OVERLAYS */
+[role="dialog"] {
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+[role="dialog"] > div {
+  background: var(--surface-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border-radius: 16px !important;
 }

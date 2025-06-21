@@ -1,58 +1,89 @@
 
 export function initPremiumEnhancements() {
-  // Função simples para corrigir cores
-  const fixColorBugs = () => {
-    try {
-      // Fix para elementos brancos
-      document.querySelectorAll('*').forEach(element => {
-        const el = element as HTMLElement;
-        const computed = window.getComputedStyle(el);
-        
-        if (computed.backgroundColor === 'rgb(255, 255, 255)' || 
-            computed.backgroundColor === 'white' ||
-            el.style.backgroundColor === 'white') {
-          
-          if (el.className.includes('rounded') || el.className.includes('card')) {
-            el.style.background = 'rgba(30, 30, 30, 0.6)';
-            el.style.border = '1px solid rgba(255, 255, 255, 0.05)';
-          } else {
-            el.style.backgroundColor = '#0a0a0a';
-          }
-          el.style.color = '#ffffff';
-        }
+  // Sofisticação através de micro-interações
+  const initSophisticatedInteractions = () => {
+    // Hover sutil em cards
+    document.querySelectorAll('.premium-card, [class*="rounded-lg"]').forEach(card => {
+      const element = card as HTMLElement;
+      
+      element.addEventListener('mouseenter', () => {
+        element.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        element.style.transform = 'translateY(-2px)';
       });
-
-      // Fix para sliders
-      document.querySelectorAll('input[type="range"]').forEach(slider => {
-        const el = slider as HTMLInputElement;
-        el.style.accentColor = '#DCAE1D';
+      
+      element.addEventListener('mouseleave', () => {
+        element.style.transform = 'translateY(0)';
       });
-    } catch (error) {
-      console.log('Erro no premium enhancement:', error);
-    }
-  };
-
-  // Aplicar fixes
-  setTimeout(fixColorBugs, 100);
-
-  // Observer simples
-  let observer: MutationObserver | null = null;
-  try {
-    observer = new MutationObserver(() => {
-      fixColorBugs();
     });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
+    // Feedback tátil em botões
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        const button = target.tagName === 'BUTTON' ? target : target.closest('button')!;
+        button.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 150);
+      }
     });
-  } catch (error) {
-    console.log('Observer error:', error);
-  }
 
-  return () => {
-    if (observer) {
-      observer.disconnect();
-    }
+    // Smooth scroll global
+    document.documentElement.style.scrollBehavior = 'smooth';
   };
+
+  // Corrigir elementos específicos que ainda podem ter problemas
+  const fixSpecificElements = () => {
+    // Market Intelligence
+    document.querySelectorAll('*').forEach(element => {
+      const el = element as HTMLElement;
+      if (el.textContent?.includes('Market Intelligence') && el.children.length < 5) {
+        el.style.background = 'var(--surface-elevated)';
+        el.style.border = '1px solid var(--border-subtle)';
+        el.style.backdropFilter = 'blur(12px)';
+      }
+    });
+
+    // Remover qualquer dourado excessivo
+    document.querySelectorAll('*').forEach(element => {
+      const el = element as HTMLElement;
+      const computed = window.getComputedStyle(el);
+      
+      // Se tem cor dourada e não é um botão específico
+      if (computed.backgroundColor.includes('220, 174, 29') && 
+          !el.textContent?.includes('PDF') && 
+          !el.textContent?.includes('Proposta') && 
+          !el.textContent?.includes('Exportar')) {
+        el.style.background = 'var(--surface-card)';
+        el.style.backdropFilter = 'blur(12px)';
+      }
+    });
+
+    // Ajustar sliders para azul
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+      const el = slider as HTMLInputElement;
+      el.style.accentColor = 'var(--accent-primary)';
+    });
+  };
+
+  // Adicionar classe de corpo para garantir que tudo funciona
+  document.body.classList.add('sophisticated-theme');
+
+  // Executar tudo
+  setTimeout(() => {
+    initSophisticatedInteractions();
+    fixSpecificElements();
+  }, 100);
+
+  // Observer para mudanças no DOM
+  const observer = new MutationObserver(() => {
+    fixSpecificElements();
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+  return () => observer.disconnect();
 }
