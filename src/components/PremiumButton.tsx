@@ -3,7 +3,7 @@ import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 
-interface PremiumButtonProps extends HTMLMotionProps<"button"> {
+interface PremiumButtonProps extends Omit<HTMLMotionProps<"button">, 'animate'> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
