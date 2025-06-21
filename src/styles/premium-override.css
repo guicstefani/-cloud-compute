@@ -1,278 +1,403 @@
 
-/* SOLUÇÃO NUCLEAR PARA LOVABLE - OVERRIDE TOTAL */
+/* ====================================
+   PREMIUM DARK THEME - VISUAL CINEMATOGRÁFICO
+   Inspirado em: Vercel, Linear, Stripe, Raycast
+   ==================================== */
 
-/* 1. CARDS BRANCOS - FORÇA PRETO */
+/* 1. VARIÁVEIS PREMIUM REFINADAS */
+:root {
+  /* Pretos com nuances */
+  --black-void: #000000;
+  --black-deep: #0a0a0a;
+  --black-rich: #0f0f0f;
+  --black-soft: #141414;
+  --black-elevated: #1a1a1a;
+  --black-card: #1e1e1e;
+  --black-hover: #242424;
+  
+  /* Dourados premium */
+  --gold-primary: #DCAE1D;
+  --gold-light: #F4C430;
+  --gold-dark: #B8941A;
+  --gold-glow: #FFD700;
+  
+  /* Gradientes sofisticados */
+  --gradient-radial: radial-gradient(circle at 30% 50%, rgba(220, 174, 29, 0.05) 0%, transparent 50%);
+  --gradient-mesh: 
+    radial-gradient(at 40% 20%, rgba(220, 174, 29, 0.03) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(244, 196, 48, 0.02) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(220, 174, 29, 0.02) 0px, transparent 50%);
+  --gradient-glow: linear-gradient(135deg, rgba(220, 174, 29, 0.1) 0%, transparent 40%);
+  
+  /* Animações */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* 2. BACKGROUND DINÂMICO GLOBAL */
+body,
+.premium-app {
+  background: var(--black-deep);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Mesh gradient animado de fundo */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-mesh);
+  opacity: 1;
+  z-index: 0;
+  animation: meshMove 20s ease-in-out infinite;
+}
+
+@keyframes meshMove {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* Noise texture para profundidade */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.02;
+  z-index: 1;
+  pointer-events: none;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.01) 35px, rgba(255,255,255,.01) 70px);
+}
+
+/* 3. CARDS PREMIUM COM GLASSMORPHISM */
+.premium-card,
 [class*="bg-white"],
-[class*="bg-background"],
-.bg-background,
-.bg-card,
-div[class*="rounded-lg"][class*="shadow"],
-div[class*="rounded-xl"][class*="shadow"] {
-  background-color: #1e1e1e !important;
-  color: #ffffff !important;
+[class*="rounded-lg"][class*="shadow"],
+[class*="rounded-xl"][class*="shadow"] {
+  background: rgba(30, 30, 30, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
+  transition: var(--transition-smooth) !important;
+  position: relative;
+  overflow: hidden;
 }
 
-/* 2. MODAL/DIALOG CONFIGURADOR VM */
-[role="dialog"],
-[data-state="open"],
-[class*="DialogContent"],
-[class*="modal"],
-.fixed.inset-0 > div > div {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
+/* Glow effect on hover */
+.premium-card::before,
+[class*="rounded-lg"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-glow);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-/* 3. MARKET INTELLIGENCE BOX */
-div:has(> div:contains("Market Intelligence")),
-[class*="Market Intelligence"] {
-  background-color: #1e1e1e !important;
-  border: 1px solid #2a2a2a !important;
+.premium-card:hover,
+[class*="rounded-lg"]:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(220, 174, 29, 0.2) !important;
+  box-shadow: 
+    0 12px 40px 0 rgba(220, 174, 29, 0.15),
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
 }
 
-/* 4. SLIDERS AZUIS - FORÇA DOURADO */
-input[type="range"],
-[class*="slider"],
-.accent-blue-500,
-.accent-primary {
-  accent-color: #DCAE1D !important;
+.premium-card:hover::before,
+[class*="rounded-lg"]:hover::before {
+  opacity: 1;
 }
 
-/* Webkit para Chrome/Edge */
-input[type="range"]::-webkit-slider-thumb {
-  background: #DCAE1D !important;
-  box-shadow: 0 0 10px rgba(220, 174, 29, 0.5) !important;
+/* 4. BOTÕES PREMIUM COM EFEITO NEON */
+.premium-button,
+.premium-btn,
+[class*="bg-yellow"],
+[class*="bg-blue"],
+[class*="bg-green"],
+button[class*="bg-"] {
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 100%) !important;
+  color: var(--black-deep) !important;
+  font-weight: 600 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: var(--transition-smooth) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Firefox */
-input[type="range"]::-moz-range-thumb {
-  background: #DCAE1D !important;
-  border: none !important;
+/* Efeito de brilho */
+.premium-button::after,
+button[class*="bg-"]::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  transform: rotate(45deg) translate(-100%, -100%);
+  transition: transform 0.6s ease;
 }
 
-/* Track do slider */
-input[type="range"]::-webkit-slider-runnable-track {
-  background: #2a2a2a !important;
+.premium-button:hover::after,
+button[class*="bg-"]:hover::after {
+  transform: rotate(45deg) translate(100%, 100%);
 }
 
-/* 5. INPUTS BRANCOS */
+.premium-button:hover,
+button[class*="bg-"]:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 
+    0 10px 30px rgba(220, 174, 29, 0.4),
+    0 0 30px rgba(220, 174, 29, 0.2) !important;
+}
+
+/* 5. INPUTS PREMIUM COM FOCUS GLOW */
 input:not([type="range"]),
 select,
-textarea,
-[class*="Input"],
-[class*="Select"] {
-  background-color: #141414 !important;
-  border-color: #2a2a2a !important;
+textarea {
+  background: rgba(20, 20, 20, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
+  transition: var(--transition-smooth) !important;
 }
 
-/* 6. TABS DO MODAL */
-[role="tablist"],
-[class*="TabsList"] {
-  background-color: #1a1a1a !important;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: var(--gold-primary) !important;
+  background: rgba(20, 20, 20, 1) !important;
+  box-shadow: 
+    0 0 0 3px rgba(220, 174, 29, 0.1),
+    0 0 20px rgba(220, 174, 29, 0.2),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
 }
 
-[role="tab"][data-state="active"],
-[class*="TabsTrigger"][data-state="active"] {
-  background-color: rgba(220, 174, 29, 0.2) !important;
-  color: #DCAE1D !important;
+/* 6. SLIDERS DOURADOS REFINADOS */
+input[type="range"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
 }
 
-/* 7. DROPDOWN/SELECT */
-[role="combobox"],
-[class*="Select"],
-select {
-  background-color: #141414 !important;
-  border: 1px solid #2a2a2a !important;
-  color: #ffffff !important;
+input[type="range"]::-webkit-slider-track {
+  background: linear-gradient(90deg, var(--gold-primary) 0%, var(--gold-primary) var(--value, 0%), rgba(255, 255, 255, 0.1) var(--value, 0%)) !important;
+  height: 6px !important;
+  border-radius: 3px !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* 8. CHECKBOX E RADIO */
-input[type="checkbox"],
-input[type="radio"] {
-  background-color: #141414 !important;
-  border-color: #2a2a2a !important;
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, var(--gold-light), var(--gold-primary)) !important;
+  box-shadow: 
+    0 2px 10px rgba(220, 174, 29, 0.5),
+    0 0 20px rgba(220, 174, 29, 0.3) !important;
+  transition: var(--transition-smooth) !important;
 }
 
-input[type="checkbox"]:checked,
-input[type="radio"]:checked {
-  background-color: #DCAE1D !important;
-  border-color: #DCAE1D !important;
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2) !important;
+  box-shadow: 
+    0 2px 15px rgba(220, 174, 29, 0.7),
+    0 0 30px rgba(220, 174, 29, 0.5) !important;
 }
 
-/* 9. TEXTO AZUL - FORÇA DOURADO */
-.text-blue-500,
-.text-blue-600,
-.text-primary,
-[class*="text-blue"],
-a:not(.premium-button) {
-  color: #DCAE1D !important;
-}
-
-/* 10. CARDS ESPECÍFICOS DA VM */
-div:has(> div > span:contains("vCPU")),
-div:has(> div > span:contains("GB RAM")),
-div:has(> div > span:contains("GB STORAGE")) {
-  background-color: #1e1e1e !important;
-  border: 1px solid #2a2a2a !important;
-}
-
-/* 11. AREA DE DESCONTO */
-div:has(> span:contains("Desconto Exclusivo")) {
-  background-color: rgba(220, 174, 29, 0.05) !important;
+/* 7. CORREÇÃO ESPECÍFICA: DESCONTO E MARKET INTELLIGENCE */
+/* Box de desconto */
+div:has(> span:contains("Desconto Exclusivo")),
+div:has(> :contains("Desconto Exclusivo")),
+[class*="Desconto"] {
+  background: linear-gradient(135deg, rgba(220, 174, 29, 0.05), rgba(220, 174, 29, 0.02)) !important;
   border: 1px solid rgba(220, 174, 29, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
-/* 12. RESUMO DE CUSTOS */
-div:has(> h3:contains("Resumo de Custos")),
-div:has(> div:contains("Total Mensal")) {
-  background-color: #1a1a1a !important;
-  border: 1px solid #2a2a2a !important;
+/* Market Intelligence - Fix específico */
+div:has(> :contains("Market Intelligence")),
+[class*="Market"],
+[class*="Intelligence"] {
+  background: rgba(30, 30, 30, 0.8) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(220, 174, 29, 0.1) !important;
 }
 
-/* 13. HOVER STATES */
-[class*="hover:bg-gray"]:hover,
-[class*="hover:bg-blue"]:hover {
-  background-color: rgba(220, 174, 29, 0.1) !important;
+/* Pool de Recursos - Cards internos */
+[class*="Pool"] [class*="card"],
+[class*="pool"] [class*="rounded"] {
+  background: rgba(26, 26, 26, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-/* 14. BADGES E LABELS */
-.bg-green-100,
-.bg-blue-100,
-.bg-yellow-100,
-[class*="badge"] {
-  background-color: rgba(220, 174, 29, 0.1) !important;
-  color: #DCAE1D !important;
-  border: 1px solid rgba(220, 174, 29, 0.3) !important;
+/* 8. SCROLLBAR PREMIUM */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
 
-/* 15. SCROLLBAR EM MODAIS */
-[class*="overflow-y-auto"]::-webkit-scrollbar,
-[class*="overflow-auto"]::-webkit-scrollbar {
-  width: 8px !important;
-  background: #1a1a1a !important;
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
 }
 
-[class*="overflow-y-auto"]::-webkit-scrollbar-thumb,
-[class*="overflow-auto"]::-webkit-scrollbar-thumb {
-  background: #2a2a2a !important;
-  border-radius: 4px !important;
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(220, 174, 29, 0.2), rgba(220, 174, 29, 0.1));
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: var(--transition-smooth);
 }
 
-[class*="overflow-y-auto"]::-webkit-scrollbar-thumb:hover,
-[class*="overflow-auto"]::-webkit-scrollbar-thumb:hover {
-  background: #DCAE1D !important;
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(220, 174, 29, 0.4), rgba(220, 174, 29, 0.2));
 }
 
-/* 16. FORÇA TEXTO BRANCO ONDE NECESSÁRIO */
-h1, h2, h3, h4, h5, h6,
-p, span, div, label {
-  color: inherit !important;
+/* 9. ANIMAÇÕES E MICRO-INTERAÇÕES */
+/* Pulse suave em elementos importantes */
+@keyframes softPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
-[class*="text-gray-900"],
-[class*="text-gray-800"],
-[class*="text-black"] {
+/* Glow animado para elementos ativos */
+@keyframes goldGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(220, 174, 29, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(220, 174, 29, 0.5);
+  }
+}
+
+/* Elementos com estado ativo */
+[data-state="active"],
+.active,
+[aria-selected="true"] {
+  background: linear-gradient(135deg, rgba(220, 174, 29, 0.1), rgba(220, 174, 29, 0.05)) !important;
+  border-color: rgba(220, 174, 29, 0.3) !important;
+  animation: goldGlow 3s ease-in-out infinite;
+}
+
+/* 10. TEXTOS E TIPOGRAFIA */
+h1, h2, h3, h4, h5, h6 {
   color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-[class*="text-gray-600"],
-[class*="text-gray-500"] {
-  color: #a0a0a0 !important;
+.text-gold,
+[class*="text-yellow"],
+[class*="text-blue"]:not(button) {
+  color: var(--gold-primary) !important;
+  text-shadow: 0 0 20px rgba(220, 174, 29, 0.5);
 }
 
-/* 17. ÍCONES PREMIUM */
-svg {
-  color: currentColor !important;
+/* 11. LOADING STATES PREMIUM */
+.loading,
+[class*="animate-pulse"] {
+  background: linear-gradient(
+    90deg,
+    rgba(220, 174, 29, 0.05) 0%,
+    rgba(220, 174, 29, 0.1) 50%,
+    rgba(220, 174, 29, 0.05) 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.5s ease-in-out infinite !important;
 }
 
-/* 18. REMOVER QUALQUER FUNDO BRANCO INLINE */
-[style*="background-color: white"],
-[style*="background-color: #ffffff"],
-[style*="background-color: rgb(255, 255, 255)"] {
-  background-color: #1e1e1e !important;
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-/* 19. FORÇAR PRIORIDADE MÁXIMA */
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
-}
-
-/* 20. BODY E BACKGROUNDS ESPECÍFICOS */
-body,
-.force-white-bg,
-.bg-gray-50,
-.bg-white {
-  background-color: #0a0a0a !important;
-  color: #ffffff !important;
-}
-
-/* 21. BOTÕES PREMIUM */
-.bg-blue-600,
-.bg-blue-500,
-.bg-green-600,
-.bg-green-500,
-button[class*="bg-blue"],
-button[class*="bg-green"] {
-  background: linear-gradient(135deg, #DCAE1D, #F4C430) !important;
-  color: #000000 !important;
-  border: none !important;
-}
-
-.bg-blue-600:hover,
-.bg-blue-500:hover,
-button[class*="bg-blue"]:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 20px rgba(220, 174, 29, 0.4) !important;
-}
-
-/* 22. MODALS E DIALOGS EXTRAS */
-.fixed.inset-0.bg-gray-500,
-[role="dialog"] {
-  background-color: rgba(0, 0, 0, 0.8) !important;
+/* 12. MODAIS E OVERLAYS */
+[role="dialog"],
+.modal-backdrop,
+.fixed.inset-0 {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
 }
 
 [role="dialog"] > div {
-  background-color: #1a1a1a !important;
-  border: 1px solid #2a2a2a !important;
+  background: rgba(26, 26, 26, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 100px rgba(220, 174, 29, 0.1) !important;
 }
 
-/* 23. FOCUS E RINGS */
-*:focus,
-*:focus-visible {
-  --tw-ring-color: #DCAE1D !important;
-  outline-color: #DCAE1D !important;
+/* 13. ELEMENTOS ESPECIAIS */
+/* Badges */
+.badge,
+[class*="badge"] {
+  background: rgba(220, 174, 29, 0.1) !important;
+  border: 1px solid rgba(220, 174, 29, 0.3) !important;
+  color: var(--gold-light) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
-/* 24. VM CARDS ESPECÍFICOS */
-.premium-vm-card.selected {
-  border-color: #DCAE1D !important;
-  background: linear-gradient(to right, rgba(220, 174, 29, 0.1) 0%, #1e1e1e 100%) !important;
-  box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1) !important;
+/* Progress bars */
+[role="progressbar"],
+.progress {
+  background: rgba(255, 255, 255, 0.05) !important;
+  overflow: hidden;
 }
 
-/* 25. SUMMARY CARDS */
-.text-gradient-optidata {
-  background: linear-gradient(to right, #DCAE1D, #F4C430) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+[role="progressbar"] > div,
+.progress-bar {
+  background: linear-gradient(90deg, var(--gold-primary), var(--gold-light)) !important;
+  box-shadow: 0 0 20px rgba(220, 174, 29, 0.5) !important;
 }
 
-/* 26. ESPECÍFICOS DO SHADCN */
-[data-state="active"] {
-  background-color: rgba(220, 174, 29, 0.2) !important;
-  color: #DCAE1D !important;
+/* 14. FORÇA FINAL - REMOVER QUALQUER BRANCO */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(220, 174, 29, 0.2) rgba(255, 255, 255, 0.02);
 }
 
-/* 27. SIDEBAR CORRIGIDA */
-.bg-dark {
-  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%) !important;
-}
-
-/* 28. REMOVER GRADIENTES AZUIS */
-[class*="from-blue"],
-[class*="to-blue"],
-[class*="from-indigo"],
-[class*="to-indigo"] {
-  background-image: linear-gradient(to bottom right, #1a1a1a, #0a0a0a) !important;
+*[style*="background-color: white"],
+*[style*="background-color: #ffffff"],
+*[style*="background-color: rgb(255, 255, 255)"],
+*[style*="background: white"],
+*[style*="background: #ffffff"] {
+  background: var(--black-card) !important;
+  color: #ffffff !important;
 }

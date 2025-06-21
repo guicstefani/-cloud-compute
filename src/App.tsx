@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { forcePremiumColors } from "@/utils/forcePremiumColors";
+import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,13 @@ const App = () => {
       forcePremiumColors();
     }, 500);
     
-    return cleanup;
+    // Inicializar enhancements visuais cinematográficos
+    const enhancementsCleanup = initPremiumEnhancements();
+    
+    return () => {
+      cleanup();
+      enhancementsCleanup();
+    };
   }, []);
 
   return (
