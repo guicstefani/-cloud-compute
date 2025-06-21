@@ -1,403 +1,93 @@
 
-/* ====================================
-   PREMIUM DARK THEME - VISUAL CINEMATOGRÁFICO
-   Inspirado em: Vercel, Linear, Stripe, Raycast
-   ==================================== */
+/* PREMIUM OVERRIDE - CORES ESCURAS FORÇADAS */
 
-/* 1. VARIÁVEIS PREMIUM REFINADAS */
-:root {
-  /* Pretos com nuances */
-  --black-void: #000000;
-  --black-deep: #0a0a0a;
-  --black-rich: #0f0f0f;
-  --black-soft: #141414;
-  --black-elevated: #1a1a1a;
-  --black-card: #1e1e1e;
-  --black-hover: #242424;
-  
-  /* Dourados premium */
-  --gold-primary: #DCAE1D;
-  --gold-light: #F4C430;
-  --gold-dark: #B8941A;
-  --gold-glow: #FFD700;
-  
-  /* Gradientes sofisticados */
-  --gradient-radial: radial-gradient(circle at 30% 50%, rgba(220, 174, 29, 0.05) 0%, transparent 50%);
-  --gradient-mesh: 
-    radial-gradient(at 40% 20%, rgba(220, 174, 29, 0.03) 0px, transparent 50%),
-    radial-gradient(at 80% 0%, rgba(244, 196, 48, 0.02) 0px, transparent 50%),
-    radial-gradient(at 0% 50%, rgba(220, 174, 29, 0.02) 0px, transparent 50%);
-  --gradient-glow: linear-gradient(135deg, rgba(220, 174, 29, 0.1) 0%, transparent 40%);
-  
-  /* Animações */
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* 2. BACKGROUND DINÂMICO GLOBAL */
-body,
-.premium-app {
-  background: var(--black-deep);
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* Mesh gradient animado de fundo */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-mesh);
-  opacity: 1;
-  z-index: 0;
-  animation: meshMove 20s ease-in-out infinite;
-}
-
-@keyframes meshMove {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(30px, -30px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-}
-
-/* Noise texture para profundidade */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.02;
-  z-index: 1;
-  pointer-events: none;
-  background-image: 
-    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.01) 35px, rgba(255,255,255,.01) 70px);
-}
-
-/* 3. CARDS PREMIUM COM GLASSMORPHISM */
-.premium-card,
-[class*="bg-white"],
-[class*="rounded-lg"][class*="shadow"],
-[class*="rounded-xl"][class*="shadow"] {
-  background: rgba(30, 30, 30, 0.6) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.37),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
-  transition: var(--transition-smooth) !important;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Glow effect on hover */
-.premium-card::before,
-[class*="rounded-lg"]::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-glow);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.premium-card:hover,
-[class*="rounded-lg"]:hover {
-  transform: translateY(-2px) !important;
-  border-color: rgba(220, 174, 29, 0.2) !important;
-  box-shadow: 
-    0 12px 40px 0 rgba(220, 174, 29, 0.15),
-    0 8px 32px 0 rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
-}
-
-.premium-card:hover::before,
-[class*="rounded-lg"]:hover::before {
-  opacity: 1;
-}
-
-/* 4. BOTÕES PREMIUM COM EFEITO NEON */
-.premium-button,
-.premium-btn,
-[class*="bg-yellow"],
-[class*="bg-blue"],
-[class*="bg-green"],
-button[class*="bg-"] {
-  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 100%) !important;
-  color: var(--black-deep) !important;
-  font-weight: 600 !important;
-  position: relative !important;
-  overflow: hidden !important;
-  transition: var(--transition-smooth) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Efeito de brilho */
-.premium-button::after,
-button[class*="bg-"]::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 70%
-  );
-  transform: rotate(45deg) translate(-100%, -100%);
-  transition: transform 0.6s ease;
-}
-
-.premium-button:hover::after,
-button[class*="bg-"]:hover::after {
-  transform: rotate(45deg) translate(100%, 100%);
-}
-
-.premium-button:hover,
-button[class*="bg-"]:hover {
-  transform: translateY(-2px) scale(1.02) !important;
-  box-shadow: 
-    0 10px 30px rgba(220, 174, 29, 0.4),
-    0 0 30px rgba(220, 174, 29, 0.2) !important;
-}
-
-/* 5. INPUTS PREMIUM COM FOCUS GLOW */
-input:not([type="range"]),
-select,
-textarea {
-  background: rgba(20, 20, 20, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #ffffff !important;
-  transition: var(--transition-smooth) !important;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none !important;
-  border-color: var(--gold-primary) !important;
-  background: rgba(20, 20, 20, 1) !important;
-  box-shadow: 
-    0 0 0 3px rgba(220, 174, 29, 0.1),
-    0 0 20px rgba(220, 174, 29, 0.2),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05) !important;
-}
-
-/* 6. SLIDERS DOURADOS REFINADOS */
-input[type="range"] {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  background: transparent !important;
-  cursor: pointer !important;
-}
-
-input[type="range"]::-webkit-slider-track {
-  background: linear-gradient(90deg, var(--gold-primary) 0%, var(--gold-primary) var(--value, 0%), rgba(255, 255, 255, 0.1) var(--value, 0%)) !important;
-  height: 6px !important;
-  border-radius: 3px !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none !important;
-  width: 20px !important;
-  height: 20px !important;
-  border-radius: 50% !important;
-  background: radial-gradient(circle, var(--gold-light), var(--gold-primary)) !important;
-  box-shadow: 
-    0 2px 10px rgba(220, 174, 29, 0.5),
-    0 0 20px rgba(220, 174, 29, 0.3) !important;
-  transition: var(--transition-smooth) !important;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.2) !important;
-  box-shadow: 
-    0 2px 15px rgba(220, 174, 29, 0.7),
-    0 0 30px rgba(220, 174, 29, 0.5) !important;
-}
-
-/* 7. CORREÇÃO ESPECÍFICA: DESCONTO E MARKET INTELLIGENCE */
-/* Box de desconto */
-div:has(> span:contains("Desconto Exclusivo")),
-div:has(> :contains("Desconto Exclusivo")),
-[class*="Desconto"] {
-  background: linear-gradient(135deg, rgba(220, 174, 29, 0.05), rgba(220, 174, 29, 0.02)) !important;
-  border: 1px solid rgba(220, 174, 29, 0.2) !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-/* Market Intelligence - Fix específico */
-div:has(> :contains("Market Intelligence")),
-[class*="Market"],
-[class*="Intelligence"] {
-  background: rgba(30, 30, 30, 0.8) !important;
-  backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(220, 174, 29, 0.1) !important;
-}
-
-/* Pool de Recursos - Cards internos */
-[class*="Pool"] [class*="card"],
-[class*="pool"] [class*="rounded"] {
-  background: rgba(26, 26, 26, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-/* 8. SCROLLBAR PREMIUM */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(220, 174, 29, 0.2), rgba(220, 174, 29, 0.1));
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: var(--transition-smooth);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(220, 174, 29, 0.4), rgba(220, 174, 29, 0.2));
-}
-
-/* 9. ANIMAÇÕES E MICRO-INTERAÇÕES */
-/* Pulse suave em elementos importantes */
-@keyframes softPulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-/* Glow animado para elementos ativos */
-@keyframes goldGlow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(220, 174, 29, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(220, 174, 29, 0.5);
-  }
-}
-
-/* Elementos com estado ativo */
-[data-state="active"],
-.active,
-[aria-selected="true"] {
-  background: linear-gradient(135deg, rgba(220, 174, 29, 0.1), rgba(220, 174, 29, 0.05)) !important;
-  border-color: rgba(220, 174, 29, 0.3) !important;
-  animation: goldGlow 3s ease-in-out infinite;
-}
-
-/* 10. TEXTOS E TIPOGRAFIA */
-h1, h2, h3, h4, h5, h6 {
-  color: #ffffff !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.text-gold,
-[class*="text-yellow"],
-[class*="text-blue"]:not(button) {
-  color: var(--gold-primary) !important;
-  text-shadow: 0 0 20px rgba(220, 174, 29, 0.5);
-}
-
-/* 11. LOADING STATES PREMIUM */
-.loading,
-[class*="animate-pulse"] {
-  background: linear-gradient(
-    90deg,
-    rgba(220, 174, 29, 0.05) 0%,
-    rgba(220, 174, 29, 0.1) 50%,
-    rgba(220, 174, 29, 0.05) 100%
-  ) !important;
-  background-size: 200% 100% !important;
-  animation: shimmer 1.5s ease-in-out infinite !important;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* 12. MODAIS E OVERLAYS */
-[role="dialog"],
-.modal-backdrop,
-.fixed.inset-0 {
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(8px) !important;
-}
-
-[role="dialog"] > div {
-  background: rgba(26, 26, 26, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 100px rgba(220, 174, 29, 0.1) !important;
-}
-
-/* 13. ELEMENTOS ESPECIAIS */
-/* Badges */
-.badge,
-[class*="badge"] {
-  background: rgba(220, 174, 29, 0.1) !important;
-  border: 1px solid rgba(220, 174, 29, 0.3) !important;
-  color: var(--gold-light) !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-/* Progress bars */
-[role="progressbar"],
-.progress {
-  background: rgba(255, 255, 255, 0.05) !important;
-  overflow: hidden;
-}
-
-[role="progressbar"] > div,
-.progress-bar {
-  background: linear-gradient(90deg, var(--gold-primary), var(--gold-light)) !important;
-  box-shadow: 0 0 20px rgba(220, 174, 29, 0.5) !important;
-}
-
-/* 14. FORÇA FINAL - REMOVER QUALQUER BRANCO */
+/* 1. RESET COMPLETO - FORÇA PRETO EM TUDO */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(220, 174, 29, 0.2) rgba(255, 255, 255, 0.02);
+  color-scheme: dark !important;
 }
 
+body {
+  background: #0a0a0a !important;
+  color: #ffffff !important;
+}
+
+/* 2. FORÇA PRETO EM ELEMENTOS BRANCOS */
 *[style*="background-color: white"],
 *[style*="background-color: #ffffff"],
 *[style*="background-color: rgb(255, 255, 255)"],
 *[style*="background: white"],
-*[style*="background: #ffffff"] {
-  background: var(--black-card) !important;
+*[style*="background: #ffffff"],
+.bg-white,
+[class*="bg-white"] {
+  background: #1e1e1e !important;
   color: #ffffff !important;
+}
+
+/* 3. CARDS E CONTAINERS */
+.premium-card,
+[class*="rounded-lg"],
+[class*="rounded-xl"],
+[class*="shadow"] {
+  background: rgba(30, 30, 30, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+/* 4. BOTÕES DOURADOS */
+button,
+[class*="bg-blue"],
+[class*="bg-yellow"] {
+  background: linear-gradient(135deg, #DCAE1D, #F4C430) !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+/* 5. INPUTS ESCUROS */
+input:not([type="range"]),
+select,
+textarea {
+  background: #141414 !important;
+  border: 1px solid #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+/* 6. SLIDERS DOURADOS */
+input[type="range"] {
+  accent-color: #DCAE1D !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  background: #DCAE1D !important;
+  border: none !important;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: #2a2a2a !important;
+}
+
+/* 7. TEXTOS */
+h1, h2, h3, h4, h5, h6, p, span, div {
+  color: #ffffff !important;
+}
+
+/* 8. CORES DOURADAS PARA ELEMENTOS AZUIS */
+[class*="text-blue"]:not(button) {
+  color: #DCAE1D !important;
+}
+
+/* 9. MODAL E DIALOGS */
+[role="dialog"] {
+  background: #1a1a1a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 10. SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #DCAE1D;
+  border-radius: 4px;
 }

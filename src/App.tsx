@@ -14,21 +14,25 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    // Forçar cores premium quando o app carregar
-    const cleanup = forcePremiumColors();
-    
-    // Aplicar também após um pequeno delay para garantir que tudo carregou
-    setTimeout(() => {
-      forcePremiumColors();
-    }, 500);
-    
-    // Inicializar enhancements visuais cinematográficos
-    const enhancementsCleanup = initPremiumEnhancements();
-    
-    return () => {
-      cleanup();
-      enhancementsCleanup();
-    };
+    try {
+      // Forçar cores premium quando o app carregar
+      const cleanup = forcePremiumColors();
+      
+      // Aplicar também após um pequeno delay para garantir que tudo carregou
+      setTimeout(() => {
+        forcePremiumColors();
+      }, 500);
+      
+      // Inicializar enhancements visuais cinematográficos
+      const enhancementsCleanup = initPremiumEnhancements();
+      
+      return () => {
+        cleanup();
+        enhancementsCleanup();
+      };
+    } catch (error) {
+      console.log('Erro ao carregar enhancements:', error);
+    }
   }, []);
 
   return (
@@ -39,7 +43,6 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
