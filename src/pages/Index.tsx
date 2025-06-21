@@ -18,21 +18,21 @@ const Index = () => {
   const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
 
   return (
-    <div className="min-h-screen bg-optidata-dark">
-      {/* Hero Section - Mantém gradiente azul mas com toque dourado */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
       <ModernHero />
       
-      {/* Toggle para escolher o modo - VISUAL PREMIUM */}
+      {/* Toggle para escolher o modo */}
       <div className="container mx-auto px-6 py-4">
-        <div className="bg-optidata-dark-card rounded-lg shadow-sm p-4 mb-6 border border-optidata-dark-light">
+        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="flex items-center justify-center space-x-4">
             <button
               onClick={() => setModoCalculo('vm')}
               className={`
-                flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300
+                flex items-center px-6 py-3 rounded-lg font-medium transition-all
                 ${modoCalculo === 'vm' 
-                  ? 'bg-optidata-gold text-optidata-dark shadow-lg' 
-                  : 'bg-optidata-dark-light text-white hover:bg-optidata-dark-light/80 hover:border-optidata-gold/30 border border-transparent'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }
               `}
             >
@@ -43,10 +43,10 @@ const Index = () => {
             <button
               onClick={() => setModoCalculo('pool')}
               className={`
-                flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300
+                flex items-center px-6 py-3 rounded-lg font-medium transition-all
                 ${modoCalculo === 'pool' 
-                  ? 'bg-optidata-gold text-optidata-dark shadow-lg' 
-                  : 'bg-optidata-dark-light text-white hover:bg-optidata-dark-light/80 hover:border-optidata-gold/30 border border-transparent'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }
               `}
             >
@@ -57,10 +57,10 @@ const Index = () => {
             <button
               onClick={() => setModoCalculo('upgrades')}
               className={`
-                flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300
+                flex items-center px-6 py-3 rounded-lg font-medium transition-all
                 ${modoCalculo === 'upgrades' 
-                  ? 'bg-optidata-gold text-optidata-dark shadow-lg' 
-                  : 'bg-optidata-dark-light text-white hover:bg-optidata-dark-light/80 hover:border-optidata-gold/30 border border-transparent'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }
               `}
             >
@@ -71,10 +71,10 @@ const Index = () => {
             <button
               onClick={() => setModoCalculo('propostas')}
               className={`
-                flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300
+                flex items-center px-6 py-3 rounded-lg font-medium transition-all
                 ${modoCalculo === 'propostas' 
-                  ? 'bg-optidata-gold text-optidata-dark shadow-lg' 
-                  : 'bg-optidata-dark-light text-white hover:bg-optidata-dark-light/80 hover:border-optidata-gold/30 border border-transparent'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }
               `}
             >
@@ -83,7 +83,7 @@ const Index = () => {
             </button>
           </div>
           
-          <p className="text-center text-sm text-gray-400 mt-3">
+          <p className="text-center text-sm text-gray-600 mt-3">
             {modoCalculo === 'vm' 
               ? 'Configure cada máquina virtual individualmente'
               : modoCalculo === 'pool'
@@ -109,18 +109,18 @@ const Index = () => {
             {/* VM Configurator - Center Column */}
             <div className="lg:col-span-5">
               {selectedVM ? (
-                <div className="bg-optidata-dark-card rounded-2xl shadow-lg border border-optidata-dark-light p-8">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                   <VMConfigurator vm={selectedVM} calculadora={calculadora} />
                 </div>
               ) : (
-                <div className="bg-optidata-dark-card rounded-2xl shadow-lg border border-optidata-dark-light p-12 text-center">
-                  <div className="w-16 h-16 bg-optidata-dark-light rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl">⚙️</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     Selecione uma VM
                   </h3>
-                  <p className="text-gray-400">
+                  <p className="text-gray-500">
                     Escolha uma VM da lista para configurar seus recursos
                   </p>
                 </div>
