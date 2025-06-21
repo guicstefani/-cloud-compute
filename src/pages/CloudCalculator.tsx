@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Settings, Copy, Trash2, Calculator, Cpu, HardDrive, Database } from 'lucide-react';
 
@@ -556,7 +555,7 @@ const CloudCalculator = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .slider-gold::-webkit-slider-thumb {
           appearance: none;
           width: 20px;
