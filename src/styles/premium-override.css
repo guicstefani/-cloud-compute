@@ -1,0 +1,158 @@
+
+/* OVERRIDE FORÇADO - PRETO/DOURADO DEFINITIVO */
+
+/* 1. BODY E BACKGROUNDS */
+body,
+.force-white-bg,
+.bg-gray-50,
+.bg-white {
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+}
+
+/* 2. CARDS E CONTAINERS */
+.premium-card,
+.bg-white.rounded-lg,
+.bg-white.shadow-md,
+[class*="bg-white"] {
+  background-color: #1e1e1e !important;
+  background-image: none !important;
+  border: 1px solid #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+.premium-card:hover {
+  border-color: rgba(220, 174, 29, 0.3) !important;
+  box-shadow: 0 0 30px rgba(220, 174, 29, 0.3) !important;
+}
+
+/* 3. INPUTS E FORMULÁRIOS */
+input[type="text"],
+input[type="number"],
+select,
+textarea,
+.bg-gray-50,
+[class*="bg-gray-50"] {
+  background-color: #141414 !important;
+  border-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #DCAE1D !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.2) !important;
+}
+
+/* 4. BOTÕES PREMIUM */
+.bg-blue-600,
+.bg-blue-500,
+.bg-green-600,
+.bg-green-500,
+button[class*="bg-blue"],
+button[class*="bg-green"] {
+  background: linear-gradient(135deg, #DCAE1D, #F4C430) !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.bg-blue-600:hover,
+.bg-blue-500:hover,
+button[class*="bg-blue"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(220, 174, 29, 0.4) !important;
+}
+
+/* 5. TEXTOS DOURADOS */
+.text-blue-600,
+.text-blue-500,
+.text-indigo-600,
+[class*="text-blue"] {
+  color: #DCAE1D !important;
+}
+
+/* 6. MODALS E DIALOGS */
+.fixed.inset-0.bg-gray-500,
+[role="dialog"] {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+[role="dialog"] > div {
+  background-color: #1a1a1a !important;
+  border: 1px solid #2a2a2a !important;
+}
+
+/* 7. TABS E NAVEGAÇÃO */
+.bg-gray-100,
+[class*="bg-gray-100"] {
+  background-color: #1a1a1a !important;
+}
+
+/* 8. FOCUS E RINGS */
+*:focus,
+*:focus-visible {
+  --tw-ring-color: #DCAE1D !important;
+  outline-color: #DCAE1D !important;
+}
+
+/* 9. SCROLLBAR PREMIUM */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #DCAE1D;
+}
+
+/* 10. SLIDERS E RANGE */
+input[type="range"] {
+  accent-color: #DCAE1D !important;
+}
+
+/* 11. BADGES E PILLS */
+.bg-green-100 {
+  background-color: rgba(220, 174, 29, 0.1) !important;
+  color: #DCAE1D !important;
+}
+
+/* 12. REMOVER GRADIENTES AZUIS */
+[class*="from-blue"],
+[class*="to-blue"],
+[class*="from-indigo"],
+[class*="to-indigo"] {
+  background-image: linear-gradient(to bottom right, #1a1a1a, #0a0a0a) !important;
+}
+
+/* 13. VM CARDS ESPECÍFICOS */
+.premium-vm-card.selected {
+  border-color: #DCAE1D !important;
+  background: linear-gradient(to right, rgba(220, 174, 29, 0.1) 0%, #1e1e1e 100%) !important;
+  box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1) !important;
+}
+
+/* 14. SUMMARY CARDS */
+.text-gradient-optidata {
+  background: linear-gradient(to right, #DCAE1D, #F4C430) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* 15. ESPECÍFICOS DO SHADCN */
+[data-state="active"] {
+  background-color: rgba(220, 174, 29, 0.2) !important;
+  color: #DCAE1D !important;
+}
+
+/* 16. SIDEBAR CORRIGIDA */
+.bg-dark {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%) !important;
+}
