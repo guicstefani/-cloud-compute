@@ -3,73 +3,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design System Optidata Cloud - Versão Oficial */
+/* Design System Optidata Premium - Versão Dourada/Preta */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 249 250 251;
-    --foreground: 17 24 39;
+    /* TEMA PREMIUM - DOURADO/PRETO */
+    --background: 15 15 15;        /* #0f0f0f - Preto profundo */
+    --foreground: 255 255 255;     /* Branco */
 
-    --card: 255 255 255;
-    --card-foreground: 17 24 39;
+    --card: 30 30 30;              /* #1e1e1e - Cinza escuro */
+    --card-foreground: 255 255 255;
 
-    --popover: 255 255 255;
-    --popover-foreground: 17 24 39;
+    --popover: 30 30 30;
+    --popover-foreground: 255 255 255;
 
-    --primary: 0 102 204;
-    --primary-foreground: 255 255 255;
+    --primary: 220 174 29;         /* #DCAE1D - Dourado */
+    --primary-foreground: 15 15 15; /* Preto no dourado */
 
-    --secondary: 243 244 246;
-    --secondary-foreground: 17 24 39;
+    --secondary: 45 45 45;         /* #2d2d2d */
+    --secondary-foreground: 255 255 255;
 
-    --muted: 243 244 246;
-    --muted-foreground: 107 114 128;
+    --muted: 26 26 26;             /* #1a1a1a */
+    --muted-foreground: 161 161 170;
 
-    --accent: 34 197 94;
-    --accent-foreground: 255 255 255;
+    --accent: 220 174 29;          /* Dourado */
+    --accent-foreground: 15 15 15;
 
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
 
-    --border: 229 231 235;
-    --input: 229 231 235;
-    --ring: 0 102 204;
+    --border: 45 45 45;            /* #2d2d2d */
+    --input: 45 45 45;
+    --ring: 220 174 29;            /* Dourado */
 
     --radius: 0.5rem;
 
-    /* Optidata Brand Colors */
-    --optidata-blue: 0 102 204;
-    --optidata-blue-dark: 0 82 163;
-    --optidata-success: 34 197 94;
-    --optidata-success-light: 209 250 229;
-    --optidata-gray-dark: 17 24 39;
-    --optidata-gray-medium: 107 114 128;
-    --optidata-gray-light: 243 244 246;
-    --optidata-warning: 245 158 11;
-    --optidata-error: 239 68 68;
-    --optidata-info: 59 130 246;
+    /* Optidata Premium Colors */
+    --optidata-gold: 220 174 29;      /* #DCAE1D */
+    --optidata-gold-light: 244 196 48; /* #F4C430 */
+    --optidata-gold-dark: 184 148 26;  /* #B8941A */
+    --optidata-dark: 15 15 15;         /* #0f0f0f */
+    --optidata-dark-card: 30 30 30;    /* #1e1e1e */
+    --optidata-dark-medium: 26 26 26;  /* #1a1a1a */
+    --optidata-dark-light: 45 45 45;   /* #2d2d2d */
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    @apply bg-optidata-dark text-white;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
   }
 
   h1 {
-    @apply text-4xl font-bold;
+    @apply text-4xl font-bold text-white;
     line-height: 1.2;
   }
 
   h2 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-semibold text-white;
     line-height: 1.2;
   }
 
   h3 {
-    @apply text-xl font-semibold;
+    @apply text-xl font-semibold text-white;
     line-height: 1.2;
   }
 
@@ -80,120 +78,68 @@
 }
 
 @layer components {
-  /* FORÇAR FUNDO BRANCO - SOLUÇÃO UNIVERSAL */
-  .force-white-bg {
-    background-color: #ffffff !important;
-    background-image: none !important;
-  }
-
-  .container-white {
-    background-color: #ffffff !important;
-  }
-
-  /* REMOVE ALL YELLOW/AMBER COLORS - FORÇA BRANCO */
-  [class*="yellow"],
-  [class*="amber"],
-  [style*="yellow"],
-  [style*="#FF"],
-  [style*="#FD"],
-  [style*="#FC"],
-  [style*="#FB"],
-  [style*="#FA"] {
-    background-color: #FFFFFF !important;
-    color: #333333 !important;
-  }
-
-  /* Cards e containers - FORÇA BRANCO */
-  .vm-card,
-  .pricing-summary,
-  .configurator-panel,
-  [class*="card"],
-  [class*="panel"] {
-    background-color: #ffffff !important;
-  }
-
-  /* Inputs e campos - FORÇA BRANCO */
-  input[type="text"],
-  input[type="number"],
-  select,
-  textarea {
-    background-color: #ffffff !important;
-  }
-
-  /* Remove autocomplete yellow */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-    -webkit-text-fill-color: #111827 !important;
-    background-color: #ffffff !important;
-  }
-
-  /* Premium Card Design - Optidata Style */
+  /* CARDS PREMIUM */
   .premium-card {
-    @apply bg-white rounded-lg shadow-sm hover:shadow-lg overflow-hidden;
-    border: 1px solid #E5E7EB;
+    @apply bg-optidata-dark-card rounded-lg shadow-lg hover:shadow-xl overflow-hidden border border-optidata-dark-light;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: #ffffff !important;
   }
   
   .premium-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-color: rgba(220, 174, 29, 0.3);
+    box-shadow: 0 4px 16px rgba(220, 174, 29, 0.15);
   }
 
-  /* VM Card específico */
+  /* VM CARDS PREMIUM */
   .premium-vm-card {
-    @apply bg-white rounded-lg overflow-hidden;
+    @apply bg-optidata-dark-card rounded-lg overflow-hidden border-2;
+    border-color: rgba(220, 174, 29, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid #E5E7EB;
-    background-color: #ffffff !important;
   }
 
   .premium-vm-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-color: rgba(220, 174, 29, 0.5);
+    box-shadow: 0 4px 16px rgba(220, 174, 29, 0.2);
   }
 
   .premium-vm-card.selected {
-    border-color: #22C55E;
-    background: linear-gradient(to right, #D1FAE5 0%, #FFFFFF 100%);
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    border-color: #DCAE1D;
+    background: linear-gradient(to right, rgba(220, 174, 29, 0.1) 0%, rgba(30, 30, 30, 1) 100%);
+    box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1);
     transform: scale(1.02);
   }
 
-  /* Enhanced Input Styles - FORÇA BRANCO */
+  /* INPUTS PREMIUM */
   .premium-input, .input-field {
-    @apply border-2 rounded-lg px-4 py-3 text-base transition-all duration-300;
-    border-color: #E5E7EB;
-    background: #FFFFFF !important;
-    font-size: 16px; /* Previne zoom no iOS */
+    @apply border-2 rounded-lg px-4 py-3 text-base transition-all duration-300 bg-optidata-dark text-white;
+    border-color: rgba(45, 45, 45, 1);
+    font-size: 16px;
   }
 
   .premium-input:focus, .input-field:focus {
     outline: none;
-    border-color: #0066CC;
-    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-    background-color: #ffffff !important;
+    border-color: #DCAE1D;
+    box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1);
   }
 
   .premium-input.success, .input-field.success {
-    border-color: #22C55E;
-    background: #D1FAE5;
+    border-color: #10B981;
+    background: rgba(16, 185, 129, 0.1);
   }
 
-  /* Premium Button Styles - Optidata */
+  /* BOTÕES PREMIUM */
   .btn-optidata {
     @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
-    background: #0066CC;
-    color: #FFFFFF;
+    background: #DCAE1D;
+    color: #0f0f0f;
     border: none;
     cursor: pointer;
   }
 
   .btn-optidata:hover {
-    background: #0052A3;
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+    background: #B8941A;
+    box-shadow: 0 4px 12px rgba(220, 174, 29, 0.3);
     transform: translateY(-1px);
   }
 
@@ -204,147 +150,133 @@
   .btn-optidata-secondary {
     @apply px-5 py-2 font-semibold rounded-lg transition-all duration-300;
     background: transparent;
-    color: #0066CC;
-    border: 2px solid #0066CC;
+    color: #DCAE1D;
+    border: 2px solid #DCAE1D;
   }
 
   .btn-optidata-secondary:hover {
-    background: #0066CC;
-    color: #FFFFFF;
+    background: #DCAE1D;
+    color: #0f0f0f;
   }
 
-  /* GREEN Feedback Visual para Seleções */
+  /* FEEDBACK VISUAL DOURADO */
   .option-card {
-    @apply relative p-4 rounded-lg cursor-pointer transition-all duration-300;
-    border: 2px solid #E5E7EB;
-    background: #FFFFFF !important;
+    @apply relative p-4 rounded-lg cursor-pointer transition-all duration-300 bg-optidata-dark-card;
+    border: 2px solid rgba(45, 45, 45, 1);
   }
 
   .option-card:hover {
-    border-color: #0066CC;
-    background: #EFF6FF !important;
+    border-color: rgba(220, 174, 29, 0.5);
+    background: rgba(220, 174, 29, 0.05);
   }
 
   .option-card.selected {
-    border-color: #22C55E;
-    background: #D1FAE5 !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    border-color: #DCAE1D;
+    background: rgba(220, 174, 29, 0.1);
+    box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1);
     transform: scale(1.02);
   }
 
   .option-card.selected::before {
     content: '✓';
-    @apply absolute top-2 right-2 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold;
+    @apply absolute top-2 right-2 w-6 h-6 text-black rounded-full flex items-center justify-center text-sm font-bold;
+    background: #DCAE1D;
   }
 
   .option-card.selected::after {
     content: '';
-    @apply absolute left-0 top-0 bottom-0 w-1 bg-green-500 rounded-r;
+    @apply absolute left-0 top-0 bottom-0 w-1 rounded-r;
+    background: #DCAE1D;
   }
 
-  /* Sistema Operacional com Feedback Verde */
+  /* SISTEMA OPERACIONAL PREMIUM */
   .os-option {
-    @apply w-full p-4 rounded-lg border-2 text-left transition-all duration-300;
-    border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    @apply w-full p-4 rounded-lg border-2 text-left transition-all duration-300 bg-optidata-dark-card text-white;
+    border-color: rgba(45, 45, 45, 1);
   }
 
   .os-option:hover {
-    border-color: #0066CC;
-    background: #EFF6FF !important;
+    border-color: rgba(220, 174, 29, 0.5);
+    background: rgba(220, 174, 29, 0.05);
   }
 
   .os-option.selected {
-    border-color: #22C55E;
-    background: #D1FAE5 !important;
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    border-color: #DCAE1D;
+    background: rgba(220, 174, 29, 0.1);
+    box-shadow: 0 4px 12px rgba(220, 174, 29, 0.2);
     transform: scale(1.02);
   }
 
-  /* Checkbox/Switch com Feedback Verde */
+  /* CHECKBOX PREMIUM */
   .checkbox-container {
-    @apply flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300;
-    border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    @apply flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 bg-optidata-dark-card;
+    border-color: rgba(45, 45, 45, 1);
   }
 
   .checkbox-container:hover {
-    border-color: #0066CC;
-    background: #EFF6FF !important;
+    border-color: rgba(220, 174, 29, 0.5);
+    background: rgba(220, 174, 29, 0.05);
   }
 
   .checkbox-container.checked {
-    border-color: #22C55E;
-    background: #D1FAE5 !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    border-color: #DCAE1D;
+    background: rgba(220, 174, 29, 0.1);
+    box-shadow: 0 0 0 3px rgba(220, 174, 29, 0.1);
   }
 
-  /* Premium Slider - Verde quando ativo */
+  /* SLIDER PREMIUM */
   .premium-slider .slider-track {
-    @apply bg-gray-200 h-2 rounded-full;
+    @apply h-2 rounded-full;
+    background: #2d2d2d;
   }
 
   .premium-slider .slider-range {
-    @apply bg-green-500 h-2 rounded-full;
+    @apply h-2 rounded-full;
+    background: linear-gradient(90deg, #DCAE1D, #F4C430);
   }
 
   .premium-slider .slider-thumb {
-    @apply w-6 h-6 bg-white border-2 border-green-500 rounded-full shadow-lg;
+    @apply w-6 h-6 bg-white rounded-full shadow-lg;
+    border: 2px solid #DCAE1D;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .premium-slider .slider-thumb:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 4px 12px rgba(220, 174, 29, 0.3);
   }
 
-  /* Slider customizado mobile */
-  .mobile-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    background: #0066CC;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .mobile-slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    background: #0066CC;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Mobile Bottom Bar */
+  /* MOBILE ESPECÍFICO */
   .mobile-bottom-bar {
-    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-bottom;
-    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff !important;
+    @apply fixed bottom-0 left-0 right-0 border-t px-4 py-3 safe-bottom;
+    background: #1a1a1a;
+    border-color: rgba(220, 174, 29, 0.2);
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.3);
   }
 
-  /* Touch targets para mobile */
-  .touch-target {
-    @apply min-h-12 min-w-12;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+  /* LOADING SHIMMER DOURADO */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
   }
 
-  /* Container responsivo */
-  .container-optidata {
-    @apply max-w-6xl mx-auto px-4;
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(220, 174, 29, 0.1),
+      transparent
+    );
+    animation: shimmer 2s infinite;
   }
 
-  @media (min-width: 768px) {
-    .container-optidata {
-      @apply px-6;
-    }
-  }
-
-  /* Mobile specific - FORÇA BRANCO */
+  /* RESPONSIVIDADE MANTIDA */
   @media (max-width: 768px) {
     .mobile-hide {
       @apply hidden;
@@ -354,25 +286,12 @@
       @apply block;
     }
 
-    /* Mobile card optimizations - FORÇA BRANCO */
     .premium-vm-card {
       @apply rounded-lg text-sm;
-      background-color: #ffffff !important;
     }
 
-    /* Fixes específicos para mobile - FORÇA BRANCO */
-    .vm-card,
-    .pricing-summary,
-    .configurator {
-      background-color: #ffffff !important;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    /* Larger touch targets on mobile */
     button, input, select, textarea {
       @apply touch-target;
-      background-color: #ffffff !important;
     }
   }
 
@@ -388,65 +307,44 @@
 }
 
 @layer utilities {
-  /* Safe area utilities */
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* Touch utilities */
-  .no-tap-highlight {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Text utilities Optidata */
+  /* UTILITIES PREMIUM */
   .text-gradient-optidata {
-    @apply bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-optidata-gold to-optidata-gold-light bg-clip-text text-transparent;
   }
 
-  .text-optidata-blue {
-    color: #0066CC;
+  .text-optidata-gold {
+    color: #DCAE1D;
   }
 
-  .text-optidata-success {
-    color: #22C55E;
+  .bg-optidata-gold {
+    background-color: #DCAE1D;
   }
 
-  .bg-optidata-blue {
-    background-color: #0066CC;
+  .border-optidata-gold {
+    border-color: #DCAE1D;
   }
 
-  .bg-optidata-success {
-    background-color: #22C55E;
+  /* GLASS MORPHISM PREMIUM */
+  .glass-premium {
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(220, 174, 29, 0.1);
   }
 
-  .border-optidata-blue {
-    border-color: #0066CC;
+  /* GRADIENTES PREMIUM */
+  .gradient-gold {
+    background: linear-gradient(135deg, #DCAE1D 0%, #F4C430 100%);
   }
 
-  .border-optidata-success {
-    border-color: #22C55E;
+  .gradient-dark {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   }
 }
 
-/* Enhanced Keyframes */
+/* KEYFRAMES PREMIUM */
 @keyframes slideUp {
   from {
     transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-10px);
     opacity: 0;
   }
   to {
@@ -477,18 +375,14 @@
   }
 }
 
-@keyframes spin {
-  to { 
-    transform: rotate(360deg); 
-  }
-}
-
-/* Focus states for accessibility */
+/* FOCUS E SELECTION PREMIUM */
 *:focus-visible {
-  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+  @apply outline-none ring-2 ring-offset-2;
+  ring-color: #DCAE1D;
+  ring-offset-color: #0f0f0f;
 }
 
-/* Selection styles */
 ::selection {
-  @apply bg-blue-500/20 text-gray-900;
+  background: rgba(220, 174, 29, 0.2);
+  color: #ffffff;
 }

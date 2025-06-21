@@ -60,10 +60,15 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Cores da marca Optidata
+				// Cores premium Optidata - TEMA DOURADO/PRETO
 				optidata: {
-					blue: '#0066CC',
-					'blue-light': '#00A1E4',
+					gold: '#DCAE1D',           // Dourado principal
+					'gold-light': '#F4C430',   // Amarelo mel
+					'gold-dark': '#B8941A',    // Dourado escuro
+					dark: '#0f0f0f',           // Preto profundo
+					'dark-card': '#1e1e1e',    // Cinza escuro para cards
+					'dark-medium': '#1a1a1a',  // Cinza médio
+					'dark-light': '#2d2d2d',   // Cinza claro
 					success: '#10B981',
 					warning: '#F59E0B',
 					error: '#EF4444',
@@ -187,6 +192,14 @@ export default {
 					'100%': {
 						transform: 'translateX(200px) translateY(10px) rotate(-5deg)'
 					}
+				},
+				'shimmer': {
+					'0%': {
+						transform: 'translateX(-100%)'
+					},
+					'100%': {
+						transform: 'translateX(100%)'
+					}
 				}
 			},
 			animation: {
@@ -198,7 +211,8 @@ export default {
 				'slide-down': 'slide-down 0.3s ease-out',
 				'blob': 'blob 7s infinite',
 				'float': 'float 6s ease-in-out infinite',
-				'fly': 'fly 20s linear infinite'
+				'fly': 'fly 20s linear infinite',
+				'shimmer': 'shimmer 2s infinite'
 			}
 		}
 	},
