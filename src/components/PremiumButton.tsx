@@ -82,7 +82,7 @@ const PremiumButton = React.forwardRef<HTMLButtonElement, PremiumButtonProps>(({
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
         animate={!isDisabled ? {
-          translateX: ['0%', '200%'],
+          x: ['-100%', '200%'],
         } : {}}
         transition={{
           duration: 2,
