@@ -10,7 +10,7 @@ import { CalculadoraCloud } from "@/utils/calculadora";
 import { useState } from "react";
 
 export const ModernVMCalculator = () => {
-  const { vms, selectedVMId, selectVM, updateVM, precos } = useCalculadoraStore();
+  const { vms, selectedVMId, selectVM, updateVM, addVM, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
   
@@ -18,25 +18,24 @@ export const ModernVMCalculator = () => {
 
   const addNewVM = () => {
     if (newVMName.trim()) {
-      const newVM = {
-        id: Date.now().toString(),
+      addVM({
         nome: newVMName,
         vcpu: 1,
-        memoria: 1,
+        ram: 1,
         sistemaOperacional: 'Ubuntu 22.04 LTS',
-        armazenamento: 20,
+        storage: 20,
         backup: false,
         monitoramento: false,
         suporte: false,
         quantidade: 1
-      };
-      // Adicionar VM via store (assumindo que existe uma action)
+      });
       setNewVMName("");
     }
   };
 
   const totalCusto = vms.reduce((total, vm) => {
-    return total + calculadora.calcularVM(vm);
+    const vmCost = calculadora.calcularVM(vm);
+    return total + (typeof vmCost === 'number' ? vmCost : vmCost.total);
   }, 0);
 
   return (
@@ -95,37 +94,42 @@ export const ModernVMCalculator = () => {
 
                   {/* Lista de VMs */}
                   <div className="space-y-3">
-                    {vms.map((vm, index) => (
-                      <motion.div
-                        key={vm.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        onClick={() => selectVM(vm.id)}
-                        className={`
-                          p-4 rounded-xl cursor-pointer transition-all duration-300
-                          ${selectedVMId === vm.id 
-                            ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-2 border-cyan-400/50' 
-                            : 'bg-gray-800/40 border-2 border-gray-700/50 hover:border-cyan-400/30'
-                          }
-                        `}
-                      >
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h3 className="text-white font-semibold">{vm.nome}</h3>
-                            <p className="text-gray-400 text-sm">
-                              {vm.vcpu} vCPU • {vm.memoria}GB RAM
-                            </p>
+                    {vms.map((vm, index) => {
+                      const vmCost = calculadora.calcularVM(vm);
+                      const cost = typeof vmCost === 'number' ? vmCost : vmCost.total;
+                      
+                      return (
+                        <motion.div
+                          key={vm.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          onClick={() => selectVM(vm.id)}
+                          className={`
+                            p-4 rounded-xl cursor-pointer transition-all duration-300
+                            ${selectedVMId === vm.id 
+                              ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-2 border-cyan-400/50' 
+                              : 'bg-gray-800/40 border-2 border-gray-700/50 hover:border-cyan-400/30'
+                            }
+                          `}
+                        >
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <h3 className="text-white font-semibold">{vm.nome}</h3>
+                              <p className="text-gray-400 text-sm">
+                                {vm.vcpu} vCPU • {vm.ram}GB RAM
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-yellow-400 font-bold">
+                                R$ {cost.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                              </p>
+                              <p className="text-gray-400 text-xs">/mês</p>
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-yellow-400 font-bold">
-                              R$ {calculadora.calcularVM(vm).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                            </p>
-                            <p className="text-gray-400 text-xs">/mês</p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </FuturisticCard>
               </div>
@@ -148,24 +152,24 @@ export const ModernVMCalculator = () => {
                           onChange={(value) => updateVM(selectedVM.id, { vcpu: value })}
                         />
                         <FuturisticInput
-                          label="Memória (GB)"
+                          label="RAM (GB)"
                           type="number"
-                          value={selectedVM.memoria}
-                          onChange={(value) => updateVM(selectedVM.id, { memoria: value })}
+                          value={selectedVM.ram}
+                          onChange={(value) => updateVM(selectedVM.id, { ram: value })}
                         />
                       </div>
                       
                       <FuturisticInput
-                        label="Armazenamento (GB)"
+                        label="Storage (GB)"
                         type="number"
-                        value={selectedVM.armazenamento}
-                        onChange={(value) => updateVM(selectedVM.id, { armazenamento: value })}
+                        value={selectedVM.storage}
+                        onChange={(value) => updateVM(selectedVM.id, { storage: value })}
                       />
                       
                       <FuturisticInput
                         label="Quantidade"
                         type="number"
-                        value={selectedVM.quantidade}
+                        value={selectedVM.quantidade || 1}
                         onChange={(value) => updateVM(selectedVM.id, { quantidade: value })}
                       />
 
@@ -276,15 +280,15 @@ export const ModernVMCalculator = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">RAM:</span>
-                        <span className="text-cyan-400">{selectedVM.memoria}GB</span>
+                        <span className="text-cyan-400">{selectedVM.ram}GB</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Storage:</span>
-                        <span className="text-cyan-400">{selectedVM.armazenamento}GB</span>
+                        <span className="text-cyan-400">{selectedVM.storage}GB</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Quantidade:</span>
-                        <span className="text-yellow-400">{selectedVM.quantidade}x</span>
+                        <span className="text-yellow-400">{selectedVM.quantidade || 1}x</span>
                       </div>
                     </div>
                   </FuturisticCard>
