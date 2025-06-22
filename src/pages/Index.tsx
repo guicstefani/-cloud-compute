@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { ModernCalculatorLayout } from '@/components/ModernCalculatorLayout';
-import { ImprovedVMConfigurator } from '@/components/ImprovedVMConfigurator';
+import ImprovedVMConfigurator from '@/components/ImprovedVMConfigurator';
 import { useCalculadoraStore } from '@/store/calculadora';
-import PremiumWrapper from "@/components/PremiumWrapper";
+import { PremiumWrapper } from "@/components/PremiumWrapper";
 
 const Index = () => {
   const { selectedVMId, vms } = useCalculadoraStore();

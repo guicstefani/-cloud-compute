@@ -12,7 +12,7 @@ export const ModernCalculatorLayout = () => {
   const { vms, selectedVMId, precos, selectVM, addVM } = useCalculadoraStore();
   const { calculadora } = useOptimizedCalculation(vms, precos, []);
   
-  const totalGeral = calculadora.calcularTudo(vms, []).total;
+  const totalGeral = calculadora.calcularTotalGeral(vms, []).totalComDesconto;
   const totalInfraestrutura = vms.reduce((sum, vm) => sum + calculadora.calcularVM(vm).subtotalInfra, 0);
 
   return (
