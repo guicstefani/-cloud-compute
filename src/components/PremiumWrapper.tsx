@@ -1,6 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Server, Database, TrendingUp, FileText, Menu, X } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import UserMenu from './UserMenu';
+import type { User } from '@supabase/supabase-js';
 
 interface PremiumWrapperProps {
   children: React.ReactNode;
@@ -10,6 +14,8 @@ interface PremiumWrapperProps {
 
 export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrapperProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
   
   const tabs = [
     { id: 'vm', label: 'Calculadora VM', icon: Server },
@@ -17,6 +23,28 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
     { id: 'upgrades', label: 'Upgrades', icon: TrendingUp },
     { id: 'propostas', label: 'Propostas', icon: FileText }
   ];
+
+  useEffect(() => {
+    // Verifica se há usuário logado
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+
+    getUser();
+
+    // Escuta mudanças na autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        if (!session?.user) {
+          navigate('/login');
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   return (
     <div className="premium-app flex h-screen">
@@ -62,6 +90,15 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
             );
           })}
         </nav>
+
+        {/* User Menu na Sidebar */}
+        {sidebarOpen && (
+          <div className="absolute bottom-16 left-0 right-0 p-4">
+            <div className="w-full">
+              <UserMenu />
+            </div>
+          </div>
+        )}
 
         {/* Footer da Sidebar */}
         {sidebarOpen && (

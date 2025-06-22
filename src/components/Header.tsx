@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { Calculator, Menu, X, Download, Settings } from 'lucide-react';
+import { Calculator, Menu, X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/useMobile';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
 import { LegacyBridge } from '@/shared/services/LegacyBridge';
 import { exportToExcel, exportToCSV } from '@/utils/exportUtils';
+import UserMenu from './UserMenu';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -56,11 +57,6 @@ const Header = () => {
     }
   };
 
-  const handleConfiguracoes = () => {
-    // Por enquanto, apenas um alerta - pode ser expandido para um modal de configurações
-    alert('Configurações em desenvolvimento. Em breve você poderá personalizar preços, descontos e outras opções.');
-  };
-
   return (
     <>
       {/* Desktop Header */}
@@ -82,15 +78,7 @@ const Header = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-gray-300"
-                onClick={handleConfiguracoes}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Configurações
-              </Button>
+              <UserMenu />
               <Button 
                 className="bg-[#0066CC] hover:bg-[#0052A3] text-white"
                 onClick={handleExportPDF}
@@ -136,17 +124,9 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="border-t border-gray-200 bg-white animate-slide-down">
             <div className="p-4 space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start border-gray-300"
-                onClick={() => {
-                  handleConfiguracoes();
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Configurações
-              </Button>
+              <div className="flex justify-center">
+                <UserMenu />
+              </div>
               <Button 
                 className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
                 onClick={() => {
