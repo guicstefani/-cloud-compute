@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
@@ -6,7 +5,6 @@ import { LegacyBridge } from '@/shared/services/LegacyBridge';
 import { exportToExcel } from '@/utils/exportUtils';
 import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, FileText } from 'lucide-react';
 import CriarPropostaModal from '@/components/CriarPropostaModal';
-import { CloudComparisonButton } from '@/components/CloudComparisonButton';
 import { QuickComparisonCard } from '@/components/QuickComparisonCard';
 
 const ModernSummaryCard = () => {
@@ -148,15 +146,6 @@ const ModernSummaryCard = () => {
         <QuickComparisonCard 
           optidataCost={totalComDesconto}
           vms={vms}
-        />
-        
-        {/* Cloud comparison button */}
-        <CloudComparisonButton 
-          optidataCost={totalComDesconto}
-          vms={vms}
-          size="lg"
-          variant="outline"
-          className="w-full"
         />
       </div>
 
