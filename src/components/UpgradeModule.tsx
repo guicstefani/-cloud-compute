@@ -49,11 +49,11 @@ const UpgradeModule = () => {
     
     vms.forEach(vm => {
       // Oportunidade de CPU
-      if (vm.cpu < 8) {
+      if (vm.vcpu < 8) {
         opportunities.push({
           title: `Upgrade CPU - ${vm.nome}`,
-          description: `De ${vm.cpu} para ${vm.cpu * 2} vCPUs`,
-          potential: (vm.cpu * 2 - vm.cpu) * 120 * 12,
+          description: `De ${vm.vcpu} para ${vm.vcpu * 2} vCPUs`,
+          potential: (vm.vcpu * 2 - vm.vcpu) * 120 * 12,
           icon: <Cpu className="w-6 h-6" />,
           urgency: "medium",
           action: "Upgrade CPU"
@@ -73,10 +73,11 @@ const UpgradeModule = () => {
       }
       
       // Oportunidade de Storage
-      if (vm.storage < 500) {
+      const totalStorage = vm.discoFCM + vm.discoSSD;
+      if (totalStorage < 500) {
         opportunities.push({
           title: `Upgrade Storage - ${vm.nome}`,
-          description: `De ${vm.storage}GB para ${vm.storage + 500}GB`,
+          description: `De ${totalStorage}GB para ${totalStorage + 500}GB`,
           potential: 500 * 0.5 * 12,
           icon: <HardDrive className="w-6 h-6" />,
           urgency: "low",
