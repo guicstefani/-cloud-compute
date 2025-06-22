@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { formatCurrency } from '@/utils/calculadora';
-import { gerarPDFProposta } from '@/utils/pdfGenerator';
+import { LegacyBridge } from '@/shared/services/LegacyBridge';
+import { exportToExcel } from '@/utils/exportUtils';
 import { 
   Cpu, 
   MemoryStick, 
@@ -42,6 +42,7 @@ interface ItemUpgrade {
 const UpgradeModule = () => {
   const [itensUpgrade, setItensUpgrade] = useState<ItemUpgrade[]>([]);
   const [descontoRecursos, setDescontoRecursos] = useState<number>(0);
+  const legacyBridge = LegacyBridge.getInstance();
 
   const CATALOGO_UPGRADES = {
     recursos: [
@@ -227,12 +228,95 @@ const UpgradeModule = () => {
 
   const totais = calcularTotais();
 
-  const handleGerarPDF = () => {
-    gerarPDFProposta({
-      tipo: 'upgrades',
-      upgrades: itensUpgrade,
-      total: totais.totalGeral
-    });
+  const handleGerarPDF = async () => {
+    if (itensUpgrade.length === 0) {
+      alert('Adicione pelo menos um item antes de gerar o PDF');
+      return;
+    }
+
+    try {
+      await legacyBridge.generatePDF({
+        tipo: 'upgrades',
+        upgrades: itensUpgrade,
+        total: totais.totalGeral
+      });
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar PDF. Tente novamente.');
+    }
+  };
+
+  const handleExportarExcel = () => {
+    if (itensUpgrade.length === 0) {
+      alert('Adicione pelo menos um item antes de exportar');
+      return;
+    }
+
+    try {
+      // Converter upgrades para formato compatível com exportToExcel
+      const upgradesVMs = itensUpgrade.map(item => ({
+        vm: {
+          id: item.id,
+          nome: item.nome,
+          vcpu: item.categoria === 'recursos' && item.nome.includes('vCPU') ? item.quantidade : 0,
+          ram: item.categoria === 'recursos' && item.nome.includes('RAM') ? item.quantidade : 0,
+          discoFCM: item.categoria === 'recursos' && item.nome.includes('FCM') ? item.quantidade : 0,
+          discoSSD: item.categoria === 'recursos' && item.nome.includes('SSD') ? item.quantidade : 0,
+          sistemaOperacional: 'upgrade',
+          bancoDados: item.categoria === 'licencas' && item.nome.includes('SQL') ? 'sql-standard' : null,
+          antivirus: item.categoria === 'licencas' && item.nome.includes('Antivírus'),
+          tsplus: { enabled: item.categoria === 'licencas' && item.nome.includes('TSPlus'), usuarios: 5 },
+          thinprint: false,
+          ipsAdicionais: item.categoria === 'servicos' && item.nome.includes('IP') ? item.quantidade : 0,
+          waf: item.categoria === 'servicos' && item.nome.includes('WAF') ? 'pro' : 'none',
+          backupTipo: 'none'
+        },
+        custo: {
+          vcpu: 0,
+          ram: 0,
+          storage: 0,
+          backup: 0,
+          monitoramento: item.categoria === 'servicos' && item.nome.includes('Monitoramento') ? item.preco * item.quantidade : 0,
+          subtotalLicencas: item.categoria === 'licencas' ? item.preco * item.quantidade : 0,
+          licencasAdicionais: {},
+          total: item.preco * item.quantidade
+        }
+      }));
+
+      const exportData = {
+        vms: upgradesVMs,
+        totalGeral: totais.totalGeral,
+        economia: totais.descontoAplicado,
+        calculadora: { formatCurrency }
+      };
+      
+      exportToExcel(exportData);
+    } catch (error) {
+      console.error('Erro ao exportar Excel:', error);
+      alert('Erro ao exportar Excel. Tente novamente.');
+    }
+  };
+
+  const handleSalvarConfiguracao = () => {
+    if (itensUpgrade.length === 0) {
+      alert('Não há upgrades para salvar');
+      return;
+    }
+
+    try {
+      const configuracao = {
+        upgrades: itensUpgrade,
+        descontoRecursos,
+        totais,
+        timestamp: new Date().toISOString()
+      };
+      
+      localStorage.setItem('optidata_upgrades', JSON.stringify(configuracao));
+      alert('Configuração de upgrades salva com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar configuração:', error);
+      alert('Erro ao salvar configuração. Tente novamente.');
+    }
   };
 
   const renderCatalogo = (categoria: keyof typeof CATALOGO_UPGRADES, titulo: string) => (
@@ -509,6 +593,7 @@ const UpgradeModule = () => {
               Gerar PDF do Upgrade
             </Button>
             <Button 
+              onClick={handleExportarExcel}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
               disabled={itensUpgrade.length === 0}
             >
@@ -516,6 +601,7 @@ const UpgradeModule = () => {
               Exportar Excel
             </Button>
             <Button 
+              onClick={handleSalvarConfiguracao}
               className="w-full bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md"
               disabled={itensUpgrade.length === 0}
             >

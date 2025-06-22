@@ -3,10 +3,63 @@ import React, { useState } from 'react';
 import { Calculator, Menu, X, Download, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/useMobile';
+import { useCalculadoraStore } from '@/store/calculadora';
+import { CalculadoraCloud } from '@/utils/calculadora';
+import { LegacyBridge } from '@/shared/services/LegacyBridge';
+import { exportToExcel, exportToCSV } from '@/utils/exportUtils';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { vms, descontos, precos } = useCalculadoraStore();
+  const calculadora = new CalculadoraCloud(precos);
+  const legacyBridge = LegacyBridge.getInstance();
+
+  const handleExportPDF = async () => {
+    if (vms.length === 0) {
+      alert('Adicione pelo menos uma VM antes de exportar');
+      return;
+    }
+
+    try {
+      await legacyBridge.generatePDF({
+        tipo: 'vm',
+        vms,
+        calculadora,
+        descontos
+      });
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar PDF. Tente novamente.');
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (vms.length === 0) {
+      alert('Adicione pelo menos uma VM antes de exportar');
+      return;
+    }
+
+    try {
+      const resultado = calculadora.calcularTotalGeral(vms, descontos);
+      const exportData = {
+        vms: resultado.vms,
+        totalGeral: resultado.totalComDesconto,
+        economia: resultado.economia,
+        calculadora
+      };
+      
+      exportToExcel(exportData);
+    } catch (error) {
+      console.error('Erro ao exportar Excel:', error);
+      alert('Erro ao exportar Excel. Tente novamente.');
+    }
+  };
+
+  const handleConfiguracoes = () => {
+    // Por enquanto, apenas um alerta - pode ser expandido para um modal de configurações
+    alert('Configurações em desenvolvimento. Em breve você poderá personalizar preços, descontos e outras opções.');
+  };
 
   return (
     <>
@@ -29,13 +82,21 @@ const Header = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm" className="border-gray-300">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-gray-300"
+                onClick={handleConfiguracoes}
+              >
                 <Settings className="w-4 h-4 mr-2" />
                 Configurações
               </Button>
-              <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
+              <Button 
+                className="bg-[#0066CC] hover:bg-[#0052A3] text-white"
+                onClick={handleExportPDF}
+              >
                 <Download className="w-4 h-4 mr-2" />
-                Exportar
+                Exportar PDF
               </Button>
             </div>
           </div>
@@ -78,17 +139,34 @@ const Header = () => {
               <Button 
                 variant="outline" 
                 className="w-full justify-start border-gray-300"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  handleConfiguracoes();
+                  setIsMobileMenuOpen(false);
+                }}
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Configurações
               </Button>
               <Button 
                 className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  handleExportPDF();
+                  setIsMobileMenuOpen(false);
+                }}
               >
                 <Download className="w-4 h-4 mr-2" />
                 Exportar PDF
+              </Button>
+              <Button 
+                variant="outline"
+                className="w-full justify-start border-gray-300"
+                onClick={() => {
+                  handleExportExcel();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Exportar Excel
               </Button>
             </div>
           </div>

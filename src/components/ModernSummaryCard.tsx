@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
-import { gerarPDFProposta } from '@/utils/pdfGenerator';
+import { LegacyBridge } from '@/shared/services/LegacyBridge';
+import { exportToExcel } from '@/utils/exportUtils';
 import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, FileText } from 'lucide-react';
 import CriarPropostaModal from '@/components/CriarPropostaModal';
 import { CloudComparisonButton } from '@/components/CloudComparisonButton';
@@ -12,14 +13,69 @@ const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const [modalPropostaAberto, setModalPropostaAberto] = useState(false);
+  const legacyBridge = LegacyBridge.getInstance();
   
-  const handleGerarPDF = () => {
-    gerarPDFProposta({
-      tipo: 'vm',
-      vms,
-      calculadora,
-      descontos
-    });
+  const handleGerarPDF = async () => {
+    if (vms.length === 0) {
+      alert('Adicione pelo menos uma VM antes de gerar o PDF');
+      return;
+    }
+
+    try {
+      await legacyBridge.generatePDF({
+        tipo: 'vm',
+        vms,
+        calculadora,
+        descontos
+      });
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar PDF. Tente novamente.');
+    }
+  };
+
+  const handleExportarExcel = () => {
+    if (vms.length === 0) {
+      alert('Adicione pelo menos uma VM antes de exportar');
+      return;
+    }
+
+    try {
+      const resultado = calculadora.calcularTotalGeral(vms, descontos);
+      const exportData = {
+        vms: resultado.vms,
+        totalGeral: resultado.totalComDesconto,
+        economia: resultado.economia,
+        calculadora
+      };
+      
+      exportToExcel(exportData);
+    } catch (error) {
+      console.error('Erro ao exportar Excel:', error);
+      alert('Erro ao exportar Excel. Tente novamente.');
+    }
+  };
+
+  const handleSalvarConfiguracao = () => {
+    if (vms.length === 0) {
+      alert('Não há configurações para salvar');
+      return;
+    }
+
+    try {
+      const configuracao = {
+        vms,
+        descontos,
+        timestamp: new Date().toISOString(),
+        totalVMs: vms.length
+      };
+      
+      localStorage.setItem('optidata_configuracao', JSON.stringify(configuracao));
+      alert('Configuração salva com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar configuração:', error);
+      alert('Erro ao salvar configuração. Tente novamente.');
+    }
   };
 
   if (vms.length === 0) {
@@ -122,12 +178,18 @@ const ModernSummaryCard = () => {
           Criar Proposta
         </button>
         
-        <button className="premium-btn w-full">
+        <button 
+          onClick={handleExportarExcel}
+          className="premium-btn w-full"
+        >
           <Download className="w-5 h-5" />
           Exportar Excel
         </button>
         
-        <button className="w-full bg-transparent border-2 border-gray-600 hover:border-gold text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md">
+        <button 
+          onClick={handleSalvarConfiguracao}
+          className="w-full bg-transparent border-2 border-gray-600 hover:border-gold text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md"
+        >
           <Save className="w-5 h-5 inline mr-2" />
           Salvar Configuração
         </button>
