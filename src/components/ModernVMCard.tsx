@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { VM } from '@/types';
 import { useCalculadoraStore } from '@/store/calculadora';
@@ -5,7 +6,6 @@ import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { Server, Trash2, Copy, CheckCircle } from 'lucide-react';
 import { todosSistemasOperacionais, todosBancosDados } from '@/data/sistemasOperacionais';
 import ProfessionalIcon from './ProfessionalIcon';
-import { GlassCard } from './glass/GlassCard';
 
 interface ModernVMCardProps {
   vm: VM;
@@ -33,25 +33,32 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
   };
 
   return (
-    <GlassCard
-      variant={isSelected ? 'selected' : 'interactive'}
-      glow={isSelected}
+    <div
       onClick={() => selectVM(vm.id)}
-      className="group cursor-pointer"
+      className={`group relative premium-card transition-all duration-300 cursor-pointer ${
+        isSelected 
+          ? 'border-[#DCAE1D] shadow-[0_0_30px_rgba(220,174,29,0.3)] ring-4 ring-[#DCAE1D]/20' 
+          : 'hover:border-[#DCAE1D]/50'
+      }`}
     >
+      {/* Status Indicator */}
+      <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${
+        isSelected ? 'bg-gradient-to-r from-[#DCAE1D] to-[#F4C430]' : 'bg-gray-700'
+      }`}></div>
+      
       <div className="p-6">
-        {/* Header with enhanced glassmorphism */}
+        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
               isSelected 
-                ? 'bg-gradient-to-br from-[#f5a623] to-[#d68910] shadow-lg shadow-[#f5a623]/30' 
-                : 'glass-card'
+                ? 'bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] shadow-lg' 
+                : 'bg-gray-800'
             }`}>
               <ProfessionalIcon 
                 type={getOSIcon()} 
                 size={24} 
-                className={isSelected ? 'text-black' : 'text-[#f5a623]'} 
+                className={isSelected ? 'text-black' : 'text-gray-400'} 
               />
             </div>
             <div>
@@ -62,8 +69,8 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
           
           <div className="flex items-center gap-2">
             {isSelected && (
-              <div className="glass-card px-3 py-1 text-[#f5a623] rounded-full text-xs font-medium border border-[#f5a623]/30 glow-gold">
-                <CheckCircle className="w-3 h-3 inline mr-1" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-[#DCAE1D]/20 text-gold rounded-full text-xs font-medium border border-[#DCAE1D]/30">
+                <CheckCircle className="w-3 h-3" />
                 Ativo
               </div>
             )}
@@ -73,7 +80,7 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
                   e.stopPropagation();
                   duplicateVM(vm.id);
                 }}
-                className="p-2 glass-button rounded-lg transition-all duration-300"
+                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
               >
                 <Copy className="w-4 h-4 text-gray-400" />
               </button>
@@ -82,7 +89,7 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
                   e.stopPropagation();
                   removeVM(vm.id);
                 }}
-                className="p-2 glass-button rounded-lg transition-all duration-300 hover:border-red-500/30"
+                className="p-2 hover:bg-red-900/50 rounded-lg transition-colors"
               >
                 <Trash2 className="w-4 h-4 text-red-400" />
               </button>
@@ -90,20 +97,26 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
           </div>
         </div>
 
-        {/* Specs Grid with Glass Cards */}
+        {/* Specs Grid */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="text-center glass-card p-3 rounded-lg">
-            <ProfessionalIcon type="cpu" size={20} className="text-[#f5a623] mx-auto mb-2" />
+          <div className="text-center">
+            <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <ProfessionalIcon type="cpu" size={20} className="text-gray-400" />
+            </div>
             <div className="text-2xl font-bold text-white">{vm.vcpu}</div>
             <div className="text-xs text-gray-500 uppercase tracking-wide">vCPU</div>
           </div>
-          <div className="text-center glass-card p-3 rounded-lg">
-            <ProfessionalIcon type="ram" size={20} className="text-[#f5a623] mx-auto mb-2" />
+          <div className="text-center">
+            <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <ProfessionalIcon type="ram" size={20} className="text-gray-400" />
+            </div>
             <div className="text-2xl font-bold text-white">{vm.ram}</div>
             <div className="text-xs text-gray-500 uppercase tracking-wide">GB RAM</div>
           </div>
-          <div className="text-center glass-card p-3 rounded-lg">
-            <ProfessionalIcon type="storage" size={20} className="text-[#f5a623] mx-auto mb-2" />
+          <div className="text-center">
+            <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <ProfessionalIcon type="storage" size={20} className="text-gray-400" />
+            </div>
             <div className="text-2xl font-bold text-white">{vm.discoFCM + vm.discoSSD}</div>
             <div className="text-xs text-gray-500 uppercase tracking-wide">GB Storage</div>
           </div>
@@ -127,26 +140,26 @@ const ModernVMCard = ({ vm, calculadora, isSelected }: ModernVMCardProps) => {
           </div>
         )}
 
-        {/* Enhanced Price Section */}
-        <div className="pt-4 border-t border-[#f5a623]/20">
+        {/* Price */}
+        <div className="pt-4 border-t border-gray-700">
           <div className="flex items-end justify-between">
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Custo Mensal</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-[#f5a623] to-[#d68910] bg-clip-text text-transparent">
+              <p className="text-3xl font-bold text-gold">
                 {formatCurrency(custo.total)}
               </p>
             </div>
-            <div className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+            <div className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isSelected 
-                ? 'bg-gradient-to-r from-[#f5a623] to-[#d68910] text-black shadow-lg shadow-[#f5a623]/30' 
-                : 'glass-button text-gray-300 group-hover:text-white'
+                ? 'bg-gradient-to-r from-[#DCAE1D] to-[#F4C430] text-black' 
+                : 'bg-gray-800 text-gray-300 group-hover:bg-gray-700'
             }`}>
               {isSelected ? 'Configurando' : 'Configurar'}
             </div>
           </div>
         </div>
       </div>
-    </GlassCard>
+    </div>
   );
 };
 

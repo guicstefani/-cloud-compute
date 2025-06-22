@@ -1,12 +1,10 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Design System Optidata Cloud - Versão Oficial */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* Import Glassmorphism Styles */
-@import './styles/glassmorphism.css';
 
 @layer base {
   :root {
@@ -497,125 +495,3 @@
 
 /* Adicione esta linha no FINAL do arquivo index.css */
 @import './styles/visual-upgrade.css';
-
-/* Enhanced Premium App with Glassmorphism */
-.premium-app { 
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
-  min-height: 100vh; 
-  color: white;
-  position: relative;
-}
-
-.premium-app::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(245, 166, 35, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(220, 174, 29, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Replace old premium-card with glassmorphism */
-.premium-card { 
-  background: rgba(26, 26, 26, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(245, 166, 35, 0.2);
-  border-radius: 16px;
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.37),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.premium-card:hover { 
-  border-color: rgba(245, 166, 35, 0.4);
-  box-shadow: 
-    0 12px 40px rgba(245, 166, 35, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-/* Enhanced button with glassmorphism */
-.premium-btn { 
-  background: linear-gradient(135deg, rgba(245, 166, 35, 0.9), rgba(214, 137, 16, 0.9));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #000; 
-  font-weight: 600; 
-  padding: 12px 24px; 
-  border-radius: 12px;
-  border: 1px solid rgba(245, 166, 35, 0.3);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  position: relative;
-  overflow: hidden;
-}
-
-.premium-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s;
-}
-
-.premium-btn:hover::before {
-  transform: translateX(100%);
-}
-
-.premium-btn:hover { 
-  transform: translateY(-2px); 
-  box-shadow: 
-    0 12px 24px rgba(245, 166, 35, 0.4),
-    0 0 20px rgba(245, 166, 35, 0.3);
-  border-color: rgba(245, 166, 35, 0.5);
-}
-
-/* Glass inputs */
-.premium-input {
-  background: rgba(20, 20, 20, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.premium-input:focus {
-  outline: none;
-  background: rgba(20, 20, 20, 0.8);
-  border-color: rgba(245, 166, 35, 0.5);
-  box-shadow: 
-    0 0 0 4px rgba(245, 166, 35, 0.1),
-    0 8px 24px rgba(245, 166, 35, 0.2);
-}
-
-/* Text colors */
-.text-gold { color: #f5a623; }
-.bg-dark { background: rgba(26, 26, 26, 0.8); }
-
-/* Enhanced scrollbar */
-::-webkit-scrollbar { 
-  width: 12px; 
-}
-::-webkit-scrollbar-track { 
-  background: rgba(26, 26, 26, 0.3);
-  border-radius: 6px;
-}
-::-webkit-scrollbar-thumb { 
-  background: linear-gradient(180deg, #f5a623, #d68910);
-  border-radius: 6px;
-  border: 2px solid rgba(26, 26, 26, 0.3);
-}
-::-webkit-scrollbar-thumb:hover { 
-  background: linear-gradient(180deg, #d68910, #f5a623);
-}
