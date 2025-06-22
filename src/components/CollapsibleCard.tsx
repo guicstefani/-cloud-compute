@@ -29,10 +29,12 @@ const CollapsibleCard = ({
     <div 
       className={cn("collapsible-card", className)}
       style={{
-        backgroundColor: '#1e1e1e',
-        border: '1px solid #333333',
+        backgroundColor: '#1e1e1e !important',
+        background: '#1e1e1e !important',
+        border: '1px solid #333333 !important',
         borderRadius: '12px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        boxShadow: 'none !important'
       }}
     >
       <button
@@ -43,33 +45,63 @@ const CollapsibleCard = ({
         )}
         disabled={!isMobile}
         style={{
-          backgroundColor: 'transparent',
-          border: 'none',
+          backgroundColor: 'transparent !important',
+          background: 'transparent !important',
+          border: 'none !important',
           width: '100%',
           padding: '1rem 1.5rem',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          boxShadow: 'none !important'
         }}
       >
-        <div className="flex items-center gap-3">
+        <div 
+          className="flex items-center gap-3"
+          style={{
+            backgroundColor: 'transparent !important',
+            background: 'transparent !important'
+          }}
+        >
           <div 
             className="vm-card-icon"
-            style={{ color: '#DCAE1D' }}
+            style={{ 
+              color: '#DCAE1D !important',
+              backgroundColor: 'transparent !important',
+              background: 'transparent !important'
+            }}
           >
             {icon}
           </div>
-          <div className="text-left">
+          <div 
+            className="text-left"
+            style={{
+              backgroundColor: 'transparent !important',
+              background: 'transparent !important'
+            }}
+          >
             <h3 
               className="font-semibold text-optidata-gray-900"
-              style={{ color: '#ffffff', fontSize: '1.125rem', fontWeight: '600' }}
+              style={{ 
+                color: '#ffffff !important', 
+                fontSize: '1.125rem', 
+                fontWeight: '600',
+                backgroundColor: 'transparent !important',
+                background: 'transparent !important'
+              }}
             >
               {title}
             </h3>
             {subtitle && (
               <p 
                 className="text-sm text-optidata-gray-500"
-                style={{ color: '#9CA3AF', fontSize: '0.875rem', marginTop: '0.25rem' }}
+                style={{ 
+                  color: '#9CA3AF !important', 
+                  fontSize: '0.875rem', 
+                  marginTop: '0.25rem',
+                  backgroundColor: 'transparent !important',
+                  background: 'transparent !important'
+                }}
               >
                 {subtitle}
               </p>
@@ -82,16 +114,20 @@ const CollapsibleCard = ({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem'
+            gap: '0.5rem',
+            backgroundColor: 'transparent !important',
+            background: 'transparent !important'
           }}
         >
           {value && (
             <span 
               className="text-lg font-semibold text-optidata-blue"
               style={{ 
-                color: '#DCAE1D', 
+                color: '#DCAE1D !important', 
                 fontSize: '1.125rem', 
-                fontWeight: '600' 
+                fontWeight: '600',
+                backgroundColor: 'transparent !important',
+                background: 'transparent !important'
               }}
             >
               {value}
@@ -104,8 +140,10 @@ const CollapsibleCard = ({
                 isExpanded && "rotate-180"
               )}
               style={{ 
-                color: '#9CA3AF',
-                transition: 'transform 0.2s ease'
+                color: '#9CA3AF !important',
+                transition: 'transform 0.2s ease',
+                backgroundColor: 'transparent !important',
+                background: 'transparent !important'
               }}
             />
           )}
@@ -116,9 +154,11 @@ const CollapsibleCard = ({
         <div 
           className="collapsible-content animate-slide-down"
           style={{
-            backgroundColor: '#1a1a1a',
+            backgroundColor: '#1a1a1a !important',
+            background: '#1a1a1a !important',
             padding: '1.5rem',
-            borderTop: '1px solid #333333'
+            borderTop: '1px solid #333333',
+            boxShadow: 'none !important'
           }}
         >
           {children}
