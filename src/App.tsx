@@ -1,80 +1,94 @@
 
-import { useEffect } from 'react';
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import LoginV2 from "./components/auth/LoginV2";
-import NotFound from "./pages/NotFound";
-import { forcePremiumColors } from "@/utils/forcePremiumColors";
-import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
-import { ConditionalLayout } from "@/shared/layouts/ConditionalLayout";
-import { safeSupabase } from "@/shared/services/SafeSupabase";
+import React, { useState } from 'react';
 
-// Injeta CSS variables globais
-import { cssVariables } from "@/shared/ui/theme/tokens";
+function App() {
+  const [vcpu, setVcpu] = useState(4);
+  const [ram, setRam] = useState(16);
+  const [storage, setStorage] = useState(200);
 
-const queryClient = new QueryClient();
-
-// Injeta variáveis CSS no DOM
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style');
-  style.textContent = cssVariables;
-  document.head.appendChild(style);
-}
-
-const App = () => {
-  useEffect(() => {
-    try {
-      // Inicializa Supabase de forma segura
-      safeSupabase.initialize();
-      
-      // Mantém funcionalidades premium existentes
-      const cleanup = forcePremiumColors();
-      
-      setTimeout(() => {
-        forcePremiumColors();
-      }, 500);
-      
-      const enhancementsCleanup = initPremiumEnhancements();
-      
-      return () => {
-        cleanup();
-        enhancementsCleanup();
-      };
-    } catch (error) {
-      console.log('Erro ao carregar enhancements:', error);
-    }
-  }, []);
+  const total = (vcpu * 24.98) + (ram * 20.02) + (storage * 0.55);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ConditionalLayout>
-            <Routes>
-              {/* Página principal - sistema de calculadora completo */}
-              <Route path="/" element={<Index />} />
-              
-              {/* Sistema de Login Original */}
-              <Route path="/login" element={<Login />} />
-              
-              {/* LoginV2 - Versão melhorada mantida */}
-              <Route path="/login-novo" element={<LoginV2 />} />
-              
-              {/* 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </ConditionalLayout>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#000',
+      color: '#fff',
+      padding: '40px'
+    }}>
+      <h1 style={{
+        fontSize: '48px',
+        color: '#D4AF37',
+        marginBottom: '40px'
+      }}>
+        OptiData Cloud Calculator
+      </h1>
+
+      <div style={{
+        maxWidth: '800px',
+        backgroundColor: '#1a1a1a',
+        padding: '40px',
+        borderRadius: '16px',
+        border: '1px solid #D4AF37'
+      }}>
+        
+        <div style={{ marginBottom: '30px' }}>
+          <label style={{ display: 'block', marginBottom: '10px', color: '#D4AF37' }}>
+            vCPU: {vcpu} cores
+          </label>
+          <input
+            type="range"
+            min="1"
+            max="128"
+            value={vcpu}
+            onChange={(e) => setVcpu(Number(e.target.value))}
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '30px' }}>
+          <label style={{ display: 'block', marginBottom: '10px', color: '#D4AF37' }}>
+            RAM: {ram} GB
+          </label>
+          <input
+            type="range"
+            min="1"
+            max="512"
+            value={ram}
+            onChange={(e) => setRam(Number(e.target.value))}
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '30px' }}>
+          <label style={{ display: 'block', marginBottom: '10px', color: '#D4AF37' }}>
+            Storage: {storage} GB
+          </label>
+          <input
+            type="range"
+            min="10"
+            max="5000"
+            step="10"
+            value={storage}
+            onChange={(e) => setStorage(Number(e.target.value))}
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div style={{
+          fontSize: '36px',
+          fontWeight: 'bold',
+          color: '#D4AF37',
+          textAlign: 'center',
+          marginTop: '40px',
+          padding: '20px',
+          backgroundColor: '#000',
+          borderRadius: '8px'
+        }}>
+          Total: R$ {total.toFixed(2)}/mês
+        </div>
+      </div>
+    </div>
   );
-};
+}
 
 export default App;
