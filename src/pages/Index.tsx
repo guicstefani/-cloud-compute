@@ -7,7 +7,6 @@ import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
 import ListaPropostas from '@/components/ListaPropostas';
-import { CloudComparatorModule } from '@/components/CloudComparatorModule';
 import { PremiumWrapper } from '@/components/PremiumWrapper';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
@@ -16,15 +15,17 @@ const Index = () => {
   const { vms, selectedVMId, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
-  const [modoCalculo, setModoCalculo] = useState<'vm' | 'comparador' | 'pool' | 'upgrades' | 'propostas'>('vm');
+  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
 
   return (
     <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
-      <div className="min-h-screen bg-black">
-        {modoCalculo === 'comparador' ? (
-          // Novo módulo comparador
-          <CloudComparatorModule />
-        ) : modoCalculo === 'vm' ? (
+      <div 
+        className="min-h-screen bg-black"
+        style={{
+          background: 'radial-gradient(circle at 50% 0%, rgba(255,179,0,0.05) 0%, transparent 50%), black'
+        }}
+      >
+        {modoCalculo === 'vm' ? (
           // Modo VM existente
           <>
             <ModernHero />
