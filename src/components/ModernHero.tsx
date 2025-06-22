@@ -1,93 +1,46 @@
 
 import React from 'react';
-import { Calculator, Cloud, Shield, Zap } from 'lucide-react';
+import { Shield, Award, Zap, Check } from 'lucide-react';
 
 const ModernHero = () => {
   return (
-    <>
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            background: `
-              radial-gradient(circle at 20% 50%, #FFB300 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, #8A2BE2 0%, transparent 50%),
-              radial-gradient(circle at 40% 80%, #FFB300 0%, transparent 50%)
-            `,
-            animation: 'meshFlow 20s ease-in-out infinite'
-          }}
-        />
-      </div>
-
-      {/* Header Section */}
-      <section className="relative min-h-[55vh] flex items-center justify-center overflow-hidden">
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-4 lg:px-6 text-center">
-          {/* Logo/Brand */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#FFB300] to-[#8A2BE2] rounded-2xl flex items-center justify-center shadow-2xl">
-              <Calculator className="w-8 h-8 text-white" />
-            </div>
-          </div>
-
-          {/* Main Title */}
-          <h1 className="text-4xl lg:text-6xl font-light text-gray-900 mb-4 tracking-tight">
-            Calculadora
-            <span className="block font-semibold bg-gradient-to-r from-[#FFB300] to-[#8A2BE2] bg-clip-text text-transparent">
-              Cloud Privada
-            </span>
+    <div className="relative bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,174,29,0.1),transparent_50%)]"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-full filter blur-3xl opacity-10"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-full filter blur-3xl opacity-10"></div>
+      
+      <div className="relative z-10 container mx-auto px-4 py-16">
+        <div className="text-center">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#DCAE1D]">
+            Cloud Computing
           </h1>
-          
-          {/* Subtitle */}
-          <p className="text-lg lg:text-xl text-gray-600 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-            Configure e dimensione sua infraestrutura de nuvem privada com precisão profissional
+          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            Infraestrutura Enterprise de Alta Performance com Transparência Total de Custos
           </p>
           
-          {/* Feature Badges */}
-          <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-            <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm text-gray-800 px-6 py-3 rounded-full shadow-lg border border-gray-200/50">
-              <Shield className="w-5 h-5 text-[#FFB300]" />
-              <span className="text-sm font-medium">Enterprise Security</span>
+          {/* Trust Badges */}
+          <div className="flex flex-wrap gap-4 justify-center">
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-[#DCAE1D]/30">
+              <div className="w-2 h-2 bg-[#DCAE1D] rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-gold">99.99% Uptime</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm text-gray-800 px-6 py-3 rounded-full shadow-lg border border-gray-200/50">
-              <Cloud className="w-5 h-5 text-[#8A2BE2]" />
-              <span className="text-sm font-medium">Multi-Cloud Ready</span>
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-[#DCAE1D]/30">
+              <Shield className="w-4 h-4 text-gold" />
+              <span className="text-sm font-medium">ISO 27001</span>
             </div>
-            <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm text-gray-800 px-6 py-3 rounded-full shadow-lg border border-gray-200/50">
-              <Zap className="w-5 h-5 text-[#FFB300]" />
-              <span className="text-sm font-medium">High Performance</span>
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-[#DCAE1D]/30">
+              <Award className="w-4 h-4 text-gold" />
+              <span className="text-sm font-medium">Tier III</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-[#DCAE1D]/30">
+              <Zap className="w-4 h-4 text-gold" />
+              <span className="text-sm font-medium">Deploy em 5min</span>
             </div>
           </div>
         </div>
-
-        {/* Fade Gradient Overlay */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(249, 250, 251, 0.8) 70%, rgb(249, 250, 251) 100%)'
-          }}
-        />
-      </section>
-
-      {/* CSS Animation */}
-      <style>{`
-        @keyframes meshFlow {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          25% {
-            transform: translate(-10px, -10px) scale(1.05);
-          }
-          50% {
-            transform: translate(10px, 5px) scale(0.98);
-          }
-          75% {
-            transform: translate(-5px, 10px) scale(1.02);
-          }
-        }
-      `}</style>
-    </>
+      </div>
+    </div>
   );
 };
 

@@ -19,58 +19,57 @@ const Index = () => {
 
   return (
     <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
-      <div 
-        className="min-h-screen bg-black"
-        style={{
-          background: 'radial-gradient(circle at 50% 0%, rgba(255,179,0,0.05) 0%, transparent 50%), black'
-        }}
-      >
-        {modoCalculo === 'vm' ? (
-          // Modo VM existente
-          <>
-            <ModernHero />
-            <div className="container mx-auto px-4 py-6">
-              <div className="grid lg:grid-cols-12 gap-8">
-                {/* VM List - Left Column */}
-                <div className="lg:col-span-4">
-                  <ModernVMList />
-                </div>
-                
-                {/* VM Configurator - Center Column */}
-                <div className="lg:col-span-5">
-                  {selectedVM ? (
-                    <div className="premium-card p-8">
-                      <VMConfigurator vm={selectedVM} calculadora={calculadora} />
+      <div className="min-h-screen bg-black">
+        {/* Hero Section */}
+        <ModernHero />
+        
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-6">
+          {modoCalculo === 'vm' ? (
+            // Modo VM por VM (existente)
+            <div className="grid lg:grid-cols-12 gap-8">
+              {/* VM List - Left Column */}
+              <div className="lg:col-span-4">
+                <ModernVMList />
+              </div>
+              
+              {/* VM Configurator - Center Column */}
+              <div className="lg:col-span-5">
+                {selectedVM ? (
+                  <div className="premium-card p-8">
+                    <VMConfigurator vm={selectedVM} calculadora={calculadora} />
+                  </div>
+                ) : (
+                  <div className="premium-card p-12 text-center">
+                    <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">⚙️</span>
                     </div>
-                  ) : (
-                    <div className="premium-card p-12 text-center">
-                      <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-2xl">⚙️</span>
-                      </div>
-                      <h3 className="text-xl font-semibold text-white mb-2">
-                        Selecione uma VM
-                      </h3>
-                      <p className="text-gray-400">
-                        Escolha uma VM da lista para configurar seus recursos
-                      </p>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Summary - Right Column */}
-                <div className="lg:col-span-3">
-                  <ModernSummaryCard />
-                </div>
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      Selecione uma VM
+                    </h3>
+                    <p className="text-gray-400">
+                      Escolha uma VM da lista para configurar seus recursos
+                    </p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Summary - Right Column */}
+              <div className="lg:col-span-3">
+                <ModernSummaryCard />
               </div>
             </div>
-          </>
-        ) : modoCalculo === 'pool' ? (
-          <PoolDeRecursos />
-        ) : modoCalculo === 'upgrades' ? (
-          <UpgradeModule />
-        ) : (
-          <ListaPropostas />
-        )}
+          ) : modoCalculo === 'pool' ? (
+            // Modo Pool (existente)
+            <PoolDeRecursos />
+          ) : modoCalculo === 'upgrades' ? (
+            // Modo Upgrades (existente)
+            <UpgradeModule />
+          ) : (
+            // Nova aba Propostas
+            <ListaPropostas />
+          )}
+        </div>
       </div>
     </PremiumWrapper>
   );
