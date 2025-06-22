@@ -500,3 +500,6 @@
 
 /* FASE 2 - HIERARQUIA VISUAL */
 @import './styles/ux-phase2.css';
+
+/* FASE 3 - MICRO-ANIMAÇÕES */
+@import './styles/ux-phase3.css';
