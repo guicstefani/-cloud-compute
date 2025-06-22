@@ -9,109 +9,13 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
-        Row: {
-          approved_at: string | null
-          approved_by: string | null
-          company_name: string | null
-          created_at: string | null
-          email: string
-          full_name: string | null
-          id: string
-          phone: string | null
-          role: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          approved_at?: string | null
-          approved_by?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email: string
-          full_name?: string | null
-          id: string
-          phone?: string | null
-          role?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          approved_at?: string | null
-          approved_by?: string | null
-          company_name?: string | null
-          created_at?: string | null
-          email?: string
-          full_name?: string | null
-          id?: string
-          phone?: string | null
-          role?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_approved_by_fkey"
-            columns: ["approved_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      saved_quotations: {
-        Row: {
-          created_at: string | null
-          id: string
-          name: string
-          total_monthly: number
-          total_ram: number
-          total_storage: number
-          total_vcpus: number
-          updated_at: string | null
-          user_id: string
-          vms: Json
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          name: string
-          total_monthly: number
-          total_ram: number
-          total_storage: number
-          total_vcpus: number
-          updated_at?: string | null
-          user_id: string
-          vms: Json
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          name?: string
-          total_monthly?: number
-          total_ram?: number
-          total_storage?: number
-          total_vcpus?: number
-          updated_at?: string | null
-          user_id?: string
-          vms?: Json
-        }
-        Relationships: [
-          {
-            foreignKeyName: "saved_quotations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
