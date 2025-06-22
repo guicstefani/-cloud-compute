@@ -7,7 +7,7 @@ import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
 import ListaPropostas from '@/components/ListaPropostas';
-import PremiumWrapper from '@/components/PremiumWrapper';
+import { PremiumWrapper } from '@/components/PremiumWrapper';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
 
@@ -18,7 +18,7 @@ const Index = () => {
   const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
 
   return (
-    <PremiumWrapper>
+    <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
       <div className="min-h-screen bg-black">
         {/* Hero Section */}
         <ModernHero />
