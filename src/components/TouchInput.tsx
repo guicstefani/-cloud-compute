@@ -31,6 +31,12 @@ const TouchInput = ({
   calculatedValue
 }: TouchInputProps) => {
   const [isValid, setIsValid] = React.useState(true);
+  const [inputValue, setInputValue] = React.useState(value.toString());
+
+  // Sincronizar inputValue quando value muda externamente
+  React.useEffect(() => {
+    setInputValue(value.toString());
+  }, [value]);
 
   const handleIncrement = () => {
     const newValue = Math.min(max, value + step);
@@ -45,39 +51,78 @@ const TouchInput = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    if (inputValue === '') {
-      return; // Allow empty input during typing
+    const rawValue = e.target.value;
+    setInputValue(rawValue);
+
+    // Permitir campo vazio durante digitação
+    if (rawValue === '') {
+      setIsValid(true);
+      return;
     }
-    const newValue = parseInt(inputValue) || 0;
-    if (newValue >= min && newValue <= max) {
-      onChange(newValue);
+
+    // Remover zeros à esquerda e caracteres não numéricos
+    const cleanValue = rawValue.replace(/^0+/, '').replace(/[^0-9]/g, '');
+    const numericValue = cleanValue === '' ? 0 : parseInt(cleanValue, 10);
+
+    // Validar limites
+    if (numericValue >= min && numericValue <= max) {
+      onChange(numericValue);
       setIsValid(true);
     } else {
       setIsValid(false);
     }
   };
 
-  const handleInputBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    if (inputValue === '') {
-      onChange(min); // Set to minimum if empty on blur
+  const handleInputBlur = () => {
+    // Ao perder foco, garantir que o valor está nos limites
+    if (inputValue === '' || isNaN(Number(inputValue))) {
+      const safeValue = Math.max(min, Math.min(max, min));
+      onChange(safeValue);
+      setInputValue(safeValue.toString());
       setIsValid(true);
       return;
     }
-    const newValue = parseInt(inputValue) || min;
-    const clampedValue = Math.max(min, Math.min(max, newValue));
+
+    const numericValue = parseInt(inputValue.replace(/^0+/, '') || '0', 10);
+    const clampedValue = Math.max(min, Math.min(max, numericValue));
+    
     onChange(clampedValue);
+    setInputValue(clampedValue.toString());
     setIsValid(true);
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Selecionar todo o texto ao focar
+    e.target.select();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Atalhos de teclado
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (e.shiftKey) {
+        // Shift+Enter: adiciona 10
+        const newValue = Math.min(max, value + (step * 10));
+        onChange(newValue);
+      } else {
+        // Enter: adiciona 1
+        handleIncrement();
+      }
+    }
+  };
+
+  // Determinar cores baseadas no valor e limites
+  const getStatusColor = () => {
+    if (!isValid) return 'border-red-500 focus:border-red-500 focus:ring-red-500/20';
+    if (value >= max * 0.9) return 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-500/20';
+    if (value >= max * 0.7) return 'border-yellow-400 bg-yellow-50 focus:border-yellow-500 focus:ring-yellow-500/20';
+    if (value >= min && value <= max) return 'border-green-500 bg-green-50 focus:border-green-500 focus:ring-green-500/20';
+    return 'border-gray-300 focus:border-[#0066CC] focus:ring-[#0066CC]/20';
   };
 
   const inputClasses = `
     flex-1 text-center text-lg font-semibold h-12 rounded-lg transition-all duration-300 no-autofill
-    ${isValid 
-      ? 'border-2 border-gray-300 focus:border-[#0066CC] focus:ring-2 focus:ring-[#0066CC]/20' 
-      : 'border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
-    }
-    ${value >= min && value <= max ? 'border-green-500 bg-green-50' : ''}
+    ${getStatusColor()}
   `;
 
   return (
@@ -88,9 +133,14 @@ const TouchInput = ({
         {isValid && value >= min && value <= max && (
           <CheckCircle className="w-4 h-4 text-green-500 ml-auto" />
         )}
+        {value >= max * 0.9 && (
+          <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full ml-auto">
+            Próximo ao limite
+          </span>
+        )}
       </Label>
 
-      {/* Mobile Slider - Otimizado */}
+      {/* Slider otimizado para mobile */}
       <div className="px-2 lg:px-0">
         <input
           type="range"
@@ -99,7 +149,8 @@ const TouchInput = ({
           step={step}
           value={value}
           onChange={(e) => {
-            onChange(Number(e.target.value));
+            const newValue = Number(e.target.value);
+            onChange(newValue);
             setIsValid(true);
           }}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mobile-slider"
@@ -111,7 +162,7 @@ const TouchInput = ({
         </div>
       </div>
 
-      {/* Enhanced Input with buttons - Mobile otimizado */}
+      {/* Input com controles melhorados */}
       <div className="flex items-center gap-3">
         <Button
           type="button"
@@ -125,14 +176,15 @@ const TouchInput = ({
         </Button>
 
         <Input
-          type="number"
-          value={value}
+          type="text"
+          value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
-          min={min}
-          max={max}
+          onFocus={handleInputFocus}
+          onKeyDown={handleKeyDown}
           className={inputClasses}
           inputMode="numeric"
+          placeholder={`Ex: ${Math.floor((min + max) / 2)}`}
         />
 
         <Button
@@ -147,7 +199,14 @@ const TouchInput = ({
         </Button>
       </div>
 
-      {/* Enhanced calculation display */}
+      {/* Feedback e informações */}
+      {!isValid && (
+        <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-200 animate-fade-in">
+          Valor deve estar entre {min} e {max}
+        </div>
+      )}
+
+      {/* Display de cálculo melhorado */}
       {(calculation || calculatedValue) && (
         <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
           {calculation && (
@@ -163,6 +222,11 @@ const TouchInput = ({
           )}
         </div>
       )}
+
+      {/* Dicas de atalhos */}
+      <div className="text-xs text-gray-500 text-center">
+        💡 Enter: +{step} | Shift+Enter: +{step * 10} | Clique no valor para editar
+      </div>
     </div>
   );
 };
