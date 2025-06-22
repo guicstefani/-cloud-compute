@@ -5,6 +5,7 @@ import { ObsidianCard } from './ObsidianCard';
 import { MonumentText } from './MonumentText';
 import { GoldButton } from './GoldButton';
 import { formatCurrency } from '@/utils/calculadora';
+import { cn } from '@/lib/utils';
 
 interface PremiumVMCardProps {
   vm: any;

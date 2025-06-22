@@ -7,7 +7,7 @@ import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
 import ListaPropostas from '@/components/ListaPropostas';
-import { PremiumWrapper } from '@/components/PremiumWrapper';
+import PremiumWrapper from '@/components/PremiumWrapper';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
 
