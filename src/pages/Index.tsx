@@ -1,76 +1,41 @@
 
 import React, { useState } from 'react';
-import { FuturisticTabs } from '@/components/ui/FuturisticTabs';
-import { ModernVMCalculator } from '@/components/modern/ModernVMCalculator';
-import PoolDeRecursos from '@/components/PoolDeRecursos';
-import UpgradeModule from '@/components/UpgradeModule';
-import ListaPropostas from '@/components/ListaPropostas';
-import { Server, Database, TrendingUp, FileText } from 'lucide-react';
+import { ModernCalculatorLayout } from '@/components/ModernCalculatorLayout';
+import ImprovedVMConfigurator from '@/components/ImprovedVMConfigurator';
+import { useCalculadoraStore } from '@/store/calculadora';
+import { PremiumWrapper } from "@/components/PremiumWrapper";
 
 const Index = () => {
+  const { selectedVMId, vms } = useCalculadoraStore();
+  const selectedVM = vms.find(vm => vm.id === selectedVMId);
   const [activeTab, setActiveTab] = useState('vm');
 
-  const tabs = [
-    { id: 'vm', label: 'Calculadora VM', icon: Server },
-    { id: 'pool', label: 'Pool de Recursos', icon: Database },
-    { id: 'upgrades', label: 'Upgrades', icon: TrendingUp },
-    { id: 'propostas', label: 'Propostas', icon: FileText }
-  ];
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'vm':
-        return <ModernVMCalculator />;
-      case 'pool':
-        return (
-          <div className="p-8">
-            <PoolDeRecursos />
-          </div>
-        );
-      case 'upgrades':
-        return (
-          <div className="p-8">
-            <UpgradeModule />
-          </div>
-        );
-      case 'propostas':
-        return (
-          <div className="p-8">
-            <ListaPropostas />
-          </div>
-        );
-      default:
-        return <ModernVMCalculator />;
-    }
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
-      {/* Header com navegação */}
-      <div className="sticky top-0 z-50 bg-black/20 backdrop-blur-xl border-b border-gray-800/50">
-        <div className="max-w-7xl mx-auto p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center">
-                <span className="text-black font-bold text-xl">O</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">Optidata Cloud</h1>
-                <p className="text-gray-400 text-sm">Calculadora Premium</p>
-              </div>
-            </div>
+    <div className="w-full">
+      <PremiumWrapper activeTab={activeTab} onTabChange={handleTabChange}>
+        <div className="flex h-screen overflow-hidden">
+          {/* Layout principal da calculadora */}
+          <div className="flex-1">
+            <ModernCalculatorLayout />
           </div>
           
-          <FuturisticTabs 
-            tabs={tabs}
-            activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+          {/* Painel de configuração lateral */}
+          {selectedVM && (
+            <div className="w-1/3 bg-gray-900 border-l border-gray-800 overflow-y-auto">
+              <div className="p-6">
+                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                  ⚙️ Configuração
+                </h2>
+                <ImprovedVMConfigurator vm={selectedVM} />
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Conteúdo */}
-      {renderContent()}
+      </PremiumWrapper>
     </div>
   );
 };
