@@ -10,9 +10,13 @@ const Index = () => {
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
   const [activeTab, setActiveTab] = useState('vm');
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="w-full">
-      <PremiumWrapper activeTab={activeTab} onTabChange={setActiveTab}>
+      <PremiumWrapper activeTab={activeTab} onTabChange={handleTabChange}>
         <div className="flex h-screen overflow-hidden">
           {/* Layout principal da calculadora */}
           <div className="flex-1">
