@@ -5,6 +5,8 @@ import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
 import VMConfigurator from '@/components/VMConfigurator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
+import UpgradeModule from '@/components/UpgradeModule';
+import ListaPropostas from '@/components/ListaPropostas';
 import { PremiumWrapper } from '@/components/PremiumWrapper';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
@@ -13,7 +15,7 @@ const Index = () => {
   const { vms, selectedVMId, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
-  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool'>('vm');
+  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
 
   return (
     <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
@@ -24,7 +26,7 @@ const Index = () => {
         {/* Main Content */}
         <div className="container mx-auto px-4 py-6">
           {modoCalculo === 'vm' ? (
-            // Modo VM por VM (principal)
+            // Modo VM por VM (existente)
             <div className="grid lg:grid-cols-12 gap-8">
               {/* VM List - Left Column */}
               <div className="lg:col-span-4">
@@ -57,9 +59,15 @@ const Index = () => {
                 <ModernSummaryCard />
               </div>
             </div>
-          ) : (
-            // Modo Pool (secundário)
+          ) : modoCalculo === 'pool' ? (
+            // Modo Pool (existente)
             <PoolDeRecursos />
+          ) : modoCalculo === 'upgrades' ? (
+            // Modo Upgrades (existente)
+            <UpgradeModule />
+          ) : (
+            // Nova aba Propostas
+            <ListaPropostas />
           )}
         </div>
       </div>
