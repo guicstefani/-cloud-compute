@@ -1,4 +1,5 @@
 
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FuturisticCard } from "@/components/ui/FuturisticCard";
 import { MoneyDisplay } from "@/components/ui/MoneyDisplay";
@@ -7,7 +8,6 @@ import { FuturisticInput } from "@/components/ui/FuturisticInput";
 import { PageTransition } from "@/components/ui/PageTransition";
 import { useCalculadoraStore } from "@/store/calculadora";
 import { CalculadoraCloud } from "@/utils/calculadora";
-import { useState, useMemo } from "react";
 import { Precos } from "@/types";
 import { ModernVMLoader } from "./ModernVMLoader";
 

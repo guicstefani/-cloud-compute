@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import {
   BrowserRouter,
@@ -5,7 +6,7 @@ import {
   Route,
 } from "react-router-dom";
 import { Toaster } from '@/components/ui/toaster'
-import { LoginV2 } from '@/components/auth/LoginV2'
+import LoginV2 from '@/components/auth/LoginV2'
 import { PremiumWrapper } from '@/components/PremiumWrapper';
 import { ModernVMCalculatorWrapper } from '@/components/modern/ModernVMCalculatorWrapper';
 
