@@ -22,16 +22,26 @@ export const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
 }) => {
   const location = useLocation();
   
-  // Define onde o header deve aparecer
+  // Define onde o header deve aparecer - APENAS na página principal
   const routesWithHeader = [
     '/',
-    '/dashboard', 
-    '/reports',
-    '/settings'
   ];
+  
+  // Rotas onde o header NUNCA deve aparecer
+  const routesWithoutHeader = [
+    '/login',
+    '/login-novo',
+    '/teste-novo'
+  ];
+  
+  // Verifica se é uma rota que não deve ter header
+  const isNoHeaderRoute = routesWithoutHeader.some(route => 
+    location.pathname.startsWith(route)
+  );
   
   const shouldShowHeader = forceHeader || (
     !hideHeader && 
+    !isNoHeaderRoute &&
     routesWithHeader.some(route => location.pathname.startsWith(route))
   );
   
