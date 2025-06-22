@@ -1,0 +1,284 @@
+
+/* 
+ * FASE 2 - HIERARQUIA VISUAL
+ * Tamanhos + Hover states + Ícones visíveis
+ */
+
+/* ===== HIERARQUIA DE TAMANHOS PROGRESSIVOS ===== */
+
+/* Valor total principal - DESTAQUE MÁXIMO */
+.pricing-total,
+.total-price,
+.price-main,
+[class*="text-4xl"],
+[class*="text-5xl"] {
+  font-size: 3rem !important; /* 48px */
+  font-weight: 300 !important; /* Light para elegância */
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Valores secundários - MÉDIO DESTAQUE */
+.pricing-secondary,
+.price-secondary,
+[class*="text-2xl"],
+[class*="text-3xl"]:not(.pricing-total):not(.total-price):not(.price-main) {
+  font-size: 2rem !important; /* 32px */
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+}
+
+/* Labels e textos menores - LEGIBILIDADE MELHORADA */
+.text-sm,
+[class*="text-sm"] {
+  font-size: 0.875rem !important; /* 14px */
+  font-weight: 500 !important; /* Mais peso para melhor contraste */
+  line-height: 1.4 !important;
+}
+
+/* ===== HOVER STATES SUAVES E ELEGANTES ===== */
+
+/* Cards com elevação suave */
+.premium-card,
+.premium-vm-card,
+[class*="bg-gray-800"],
+[class*="bg-dark"],
+.vm-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+}
+
+.premium-card:hover,
+.premium-vm-card:hover,
+[class*="bg-gray-800"]:hover,
+.vm-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+}
+
+/* Botões com transições suaves */
+button,
+[class*="btn"],
+.btn-optidata,
+.premium-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+}
+
+button:hover,
+[class*="btn"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Botões principais com hover dourado */
+.btn-optidata:hover,
+.premium-btn:hover {
+  background: linear-gradient(135deg, var(--gold-elegant-hover), var(--gold-elegant)) !important;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
+}
+
+/* Links e elementos interativos */
+a, 
+[role="button"],
+.cursor-pointer {
+  cursor: pointer !important;
+  transition: color 0.2s ease !important;
+}
+
+a:hover,
+[role="button"]:hover {
+  color: var(--gold-elegant) !important;
+}
+
+/* Inputs com foco suave */
+input:not([type="range"]),
+select,
+textarea {
+  transition: all 0.2s ease !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--gold-elegant) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1) !important;
+  transform: scale(1.01) !important;
+}
+
+/* ===== ÍCONES MAIS VISÍVEIS E DIFERENCIADOS ===== */
+
+/* Tamanhos de ícones hierárquicos */
+.icon-large,
+[class*="w-8"],
+[class*="h-8"] {
+  width: 2.5rem !important; /* 40px */
+  height: 2.5rem !important;
+}
+
+.icon-medium,
+[class*="w-6"],
+[class*="h-6"] {
+  width: 1.75rem !important; /* 28px */
+  height: 1.75rem !important;
+}
+
+.icon-small,
+[class*="w-4"],
+[class*="h-4"] {
+  width: 1.25rem !important; /* 20px */
+  height: 1.25rem !important;
+}
+
+/* Cores diferenciadas por categoria */
+
+/* Ícones de serviços gratuitos - VERDE */
+.icon-free,
+svg[class*="text-green"] {
+  color: #10B981 !important;
+  filter: drop-shadow(0 1px 2px rgba(16, 185, 129, 0.3));
+}
+
+/* Ícones de serviços enterprise - AZUL */
+.icon-enterprise,
+svg[class*="text-blue"] {
+  color: #3B82F6 !important;
+  filter: drop-shadow(0 1px 2px rgba(59, 130, 246, 0.3));
+}
+
+/* Ícones de serviços premium - DOURADO */
+.icon-premium,
+svg[class*="text-yellow"],
+svg[class*="text-gold"] {
+  color: var(--gold-elegant) !important;
+  filter: drop-shadow(0 1px 2px rgba(212, 175, 55, 0.3));
+}
+
+/* Ícones de sistema - CINZA CLARO */
+.icon-system,
+svg[class*="text-gray"] {
+  color: var(--gray-text-primary) !important;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+}
+
+/* ===== MELHORIAS ESPECÍFICAS POR COMPONENTE ===== */
+
+/* Sidebar com ícones mais visíveis */
+.sidebar-item {
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.sidebar-item:hover {
+  background: rgba(212, 175, 55, 0.08) !important;
+  transform: translateX(2px) !important;
+}
+
+.sidebar-item svg {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  transition: color 0.2s ease !important;
+}
+
+.sidebar-item:hover svg {
+  color: var(--gold-elegant) !important;
+}
+
+/* VM Cards com hierarquia visual melhorada */
+.vm-card h3,
+.premium-vm-card h3 {
+  font-size: 1.25rem !important; /* 20px */
+  font-weight: 600 !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.vm-card .price,
+.premium-vm-card .price {
+  font-size: 2.5rem !important; /* 40px */
+  font-weight: 300 !important;
+  color: var(--gold-elegant) !important;
+}
+
+/* Configurador com elementos mais visíveis */
+.configurator-section h4 {
+  font-size: 1.125rem !important; /* 18px */
+  font-weight: 600 !important;
+  color: var(--gray-text-primary) !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Sliders com visual melhorado */
+input[type="range"] {
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+input[type="range"]:hover {
+  transform: scaleY(1.1) !important;
+}
+
+/* Badges e tags com melhor contraste */
+.badge,
+[class*="badge"],
+span[class*="bg-green"],
+span[class*="bg-blue"],
+span[class*="bg-yellow"] {
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  padding: 0.375rem 0.75rem !important;
+  letter-spacing: 0.025em !important;
+  text-transform: uppercase !important;
+}
+
+/* Botões de seleção com feedback visual melhorado */
+.option-card,
+.selection-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.option-card:hover,
+.selection-card:hover {
+  transform: translateY(-1px) scale(1.005) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.option-card.selected,
+.selection-card.selected {
+  transform: scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.2) !important;
+}
+
+/* ===== APLICAÇÃO GLOBAL ===== */
+
+/* Cursor pointer para elementos interativos que faltam */
+[onclick],
+[data-clickable],
+.clickable {
+  cursor: pointer !important;
+}
+
+/* Melhoria geral na legibilidade */
+* {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Scrollbar customizada para combinar com o tema */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-elegant);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-elegant-hover);
+}

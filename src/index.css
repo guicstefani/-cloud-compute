@@ -497,3 +497,6 @@
 
 /* FASE 1 - MELHORIAS SUTIS DE UX */
 @import './styles/ux-phase1.css';
+
+/* FASE 2 - HIERARQUIA VISUAL */
+@import './styles/ux-phase2.css';
