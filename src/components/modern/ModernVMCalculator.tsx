@@ -7,6 +7,40 @@ import { PageTransition } from "@/components/ui/PageTransition";
 import { useCalculadoraStore } from "@/store/calculadora";
 import { CalculadoraCloud } from "@/utils/calculadora";
 import { useState } from "react";
+import { Precos } from "@/types";
+
+// Preços padrão para usar como fallback
+const PRECOS_FALLBACK: Precos = {
+  vcpuHora: 0.0347,
+  ramHora: 0.0278,
+  horasMes: 720,
+  fcmGB: 0.75,
+  ssdGB: 0.55,
+  backupPadrao: 0.30,
+  backupDuplo: 0.25,
+  backupTriplo: 0.20,
+  monitoramento: 100,
+  antivirus: 55,
+  tsplus: {
+    3: 140,
+    5: 180,
+    10: 310,
+    15: 390,
+    25: 550,
+    35: 730,
+    49: 990,
+    ilimitado: 1190
+  },
+  tsplusAdvSec: 140,
+  tsplus2FA: 165,
+  thinprint: 850,
+  ipAdicional: 70,
+  waf: {
+    pro: 200,
+    business: 1600,
+    enterprise: 15600
+  }
+};
 
 export const ModernVMCalculator = () => {
   console.log('ModernVMCalculator: Iniciando componente...');
@@ -22,19 +56,22 @@ export const ModernVMCalculator = () => {
       selectVM = () => {}, 
       updateVM = () => {}, 
       addVM = () => {}, 
-      precos = {} 
+      precos 
     } = storeData || {};
+    
+    // Usar preços do store ou fallback se não estiverem disponíveis
+    const precosValidos = precos && Object.keys(precos).length > 0 ? precos : PRECOS_FALLBACK;
     
     console.log('ModernVMCalculator: Dados extraídos:', { 
       vmsCount: vms?.length, 
       selectedVMId, 
-      precosKeys: Object.keys(precos || {}) 
+      precosKeys: Object.keys(precosValidos) 
     });
     
     // Verificar se calculadora pode ser criada
     let calculadora;
     try {
-      calculadora = new CalculadoraCloud(precos);
+      calculadora = new CalculadoraCloud(precosValidos);
       console.log('ModernVMCalculator: Calculadora criada com sucesso');
     } catch (error) {
       console.error('ModernVMCalculator: Erro ao criar calculadora:', error);
