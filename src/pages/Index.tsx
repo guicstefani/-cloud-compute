@@ -1,77 +1,77 @@
 
 import React, { useState } from 'react';
-import ModernHero from '@/components/ModernHero';
-import ModernVMList from '@/components/ModernVMList';
-import ModernSummaryCard from '@/components/ModernSummaryCard';
-import VMConfigurator from '@/components/VMConfigurator';
+import { FuturisticTabs } from '@/components/ui/FuturisticTabs';
+import { ModernVMCalculator } from '@/components/modern/ModernVMCalculator';
 import PoolDeRecursos from '@/components/PoolDeRecursos';
 import UpgradeModule from '@/components/UpgradeModule';
 import ListaPropostas from '@/components/ListaPropostas';
-import { PremiumWrapper } from '@/components/PremiumWrapper';
-import { useCalculadoraStore } from '@/store/calculadora';
-import { CalculadoraCloud } from '@/utils/calculadora';
+import { Server, Database, TrendingUp, FileText } from 'lucide-react';
 
 const Index = () => {
-  const { vms, selectedVMId, precos } = useCalculadoraStore();
-  const calculadora = new CalculadoraCloud(precos);
-  const selectedVM = vms.find(vm => vm.id === selectedVMId);
-  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
+  const [activeTab, setActiveTab] = useState('vm');
+
+  const tabs = [
+    { id: 'vm', label: 'Calculadora VM', icon: Server },
+    { id: 'pool', label: 'Pool de Recursos', icon: Database },
+    { id: 'upgrades', label: 'Upgrades', icon: TrendingUp },
+    { id: 'propostas', label: 'Propostas', icon: FileText }
+  ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'vm':
+        return <ModernVMCalculator />;
+      case 'pool':
+        return (
+          <div className="p-8">
+            <PoolDeRecursos />
+          </div>
+        );
+      case 'upgrades':
+        return (
+          <div className="p-8">
+            <UpgradeModule />
+          </div>
+        );
+      case 'propostas':
+        return (
+          <div className="p-8">
+            <ListaPropostas />
+          </div>
+        );
+      default:
+        return <ModernVMCalculator />;
+    }
+  };
 
   return (
-    <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
-      <div className="min-h-screen bg-black">
-        {/* Hero Section */}
-        <ModernHero />
-        
-        {/* Main Content */}
-        <div className="container mx-auto px-4 py-6">
-          {modoCalculo === 'vm' ? (
-            // Modo VM por VM (existente)
-            <div className="grid lg:grid-cols-12 gap-8">
-              {/* VM List - Left Column */}
-              <div className="lg:col-span-4">
-                <ModernVMList />
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
+      {/* Header com navegação */}
+      <div className="sticky top-0 z-50 bg-black/20 backdrop-blur-xl border-b border-gray-800/50">
+        <div className="max-w-7xl mx-auto p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center">
+                <span className="text-black font-bold text-xl">O</span>
               </div>
-              
-              {/* VM Configurator - Center Column */}
-              <div className="lg:col-span-5">
-                {selectedVM ? (
-                  <div className="premium-card p-8">
-                    <VMConfigurator vm={selectedVM} calculadora={calculadora} />
-                  </div>
-                ) : (
-                  <div className="premium-card p-12 text-center">
-                    <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">⚙️</span>
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">
-                      Selecione uma VM
-                    </h3>
-                    <p className="text-gray-400">
-                      Escolha uma VM da lista para configurar seus recursos
-                    </p>
-                  </div>
-                )}
-              </div>
-              
-              {/* Summary - Right Column */}
-              <div className="lg:col-span-3">
-                <ModernSummaryCard />
+              <div>
+                <h1 className="text-2xl font-bold text-white">Optidata Cloud</h1>
+                <p className="text-gray-400 text-sm">Calculadora Premium</p>
               </div>
             </div>
-          ) : modoCalculo === 'pool' ? (
-            // Modo Pool (existente)
-            <PoolDeRecursos />
-          ) : modoCalculo === 'upgrades' ? (
-            // Modo Upgrades (existente)
-            <UpgradeModule />
-          ) : (
-            // Nova aba Propostas
-            <ListaPropostas />
-          )}
+          </div>
+          
+          <FuturisticTabs 
+            tabs={tabs}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+          />
         </div>
       </div>
-    </PremiumWrapper>
+
+      {/* Conteúdo */}
+      {renderContent()}
+    </div>
   );
 };
 
