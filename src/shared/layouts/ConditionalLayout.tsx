@@ -25,13 +25,23 @@ export const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
   // Define onde o header deve aparecer
   const routesWithHeader = [
     '/',
-    '/dashboard', 
     '/reports',
     '/settings'
   ];
   
+  // Define onde o header NÃO deve aparecer
+  const routesWithoutHeader = [
+    '/login',
+    '/login-novo'
+  ];
+  
+  const shouldHideHeader = routesWithoutHeader.some(route => 
+    location.pathname.startsWith(route)
+  );
+  
   const shouldShowHeader = forceHeader || (
     !hideHeader && 
+    !shouldHideHeader &&
     routesWithHeader.some(route => location.pathname.startsWith(route))
   );
   

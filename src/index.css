@@ -492,3 +492,6 @@
 ::selection {
   @apply bg-blue-500/20 text-gray-900;
 }
+
+/* Adicione esta linha no FINAL do arquivo index.css */
+@import './styles/visual-upgrade.css';

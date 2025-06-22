@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -11,9 +12,7 @@ import NotFound from "./pages/NotFound";
 import { forcePremiumColors } from "@/utils/forcePremiumColors";
 import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
 import { ConditionalLayout } from "@/shared/layouts/ConditionalLayout";
-import { CleanDashboard } from "@/modules/clean-dashboard";
 import { safeSupabase } from "@/shared/services/SafeSupabase";
-import { TesteNovoSistema } from "./test-novo-sistema";
 
 // Injeta CSS variables globais
 import { cssVariables } from "@/shared/ui/theme/tokens";
@@ -59,20 +58,14 @@ const App = () => {
         <BrowserRouter>
           <ConditionalLayout>
             <Routes>
-              {/* Página principal - código legado com layout condicional */}
+              {/* Página principal - sistema de calculadora completo */}
               <Route path="/" element={<Index />} />
               
-              {/* Sistema de Login Premium */}
+              {/* Sistema de Login Original */}
               <Route path="/login" element={<Login />} />
               
-              {/* NOVO: Login V2 para teste (rota temporária) */}
+              {/* LoginV2 - Versão melhorada mantida */}
               <Route path="/login-novo" element={<LoginV2 />} />
-              
-              {/* Novo dashboard limpo */}
-              <Route path="/dashboard" element={<CleanDashboard />} />
-              
-              {/* Rota de teste isolado - NOVO */}
-              <Route path="/teste-novo" element={<TesteNovoSistema />} />
               
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
