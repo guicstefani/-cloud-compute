@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import { forcePremiumColors } from "@/utils/forcePremiumColors";
 import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
@@ -60,6 +61,9 @@ const App = () => {
             <Routes>
               {/* Página principal - código legado com layout condicional */}
               <Route path="/" element={<Index />} />
+              
+              {/* Sistema de Login Premium */}
+              <Route path="/login" element={<Login />} />
               
               {/* Novo dashboard limpo */}
               <Route path="/dashboard" element={<CleanDashboard />} />
