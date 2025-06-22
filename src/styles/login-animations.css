@@ -1,6 +1,23 @@
 
 /* Animações específicas para o sistema de login premium */
 
+@keyframes float {
+  0% {
+    transform: translateY(100vh) translateX(0px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.2;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-100px) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -74,6 +91,10 @@
 }
 
 /* Classes utilitárias */
+.animate-float {
+  animation: float linear infinite;
+}
+
 .animate-shimmer {
   animation: shimmer 2s infinite;
 }
