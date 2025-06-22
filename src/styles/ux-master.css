@@ -1,0 +1,96 @@
+
+/* 
+ * UX MASTER - APLICAÇÃO UNIVERSAL DAS MELHORIAS
+ * Este arquivo garante que TODAS as melhorias sejam aplicadas
+ */
+
+/* IMPORTAÇÃO DE TODAS AS FASES */
+@import './ux-phase1.css';
+@import './ux-phase2.css';
+@import './ux-phase3.css';
+@import './ux-phase4.css';
+
+/* ===== APLICAÇÃO UNIVERSAL ===== */
+
+/* Força aplicação em qualquer elemento que possa ser um card */
+div:not([class*="lucide"]):not([class*="icon"]) {
+  /* Se tem background escuro, aplica melhorias */
+  &[style*="background"],
+  &[class*="bg-gray"],
+  &[class*="bg-black"],
+  &[class*="bg-dark"] {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+    border: 1px solid rgba(212, 175, 55, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3) !important;
+      border-color: rgba(212, 175, 55, 0.5) !important;
+    }
+  }
+}
+
+/* Força tipografia dourada em valores */
+span:not([class*="lucide"]):not([class*="icon"]) {
+  /* Se parece ser um valor monetário ou importante */
+  &[style*="font-size: 2"],
+  &[style*="font-size: 3"],
+  &[style*="font-weight: bold"] {
+    color: #D4AF37 !important;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.5) !important;
+    font-weight: 300 !important;
+  }
+}
+
+/* Força melhorias em botões sem classe específica */
+button:not([class*="lucide"]):not([aria-label*="Close"]) {
+  background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%) !important;
+  color: #000000 !important;
+  border: 2px solid rgba(212, 175, 55, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  
+  &:hover {
+    background: linear-gradient(135deg, #F4C430 0%, #D4AF37 100%) !important;
+    transform: translateY(-1px) scale(1.02) !important;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4) !important;
+  }
+}
+
+/* ===== DEBUG - APLICAÇÃO VISUAL ===== */
+
+/* Marca elementos que receberam as melhorias (apenas em desenvolvimento) */
+[class*="card"]:not(.ux-applied)::after,
+[class*="premium"]:not(.ux-applied)::after,
+[class*="vm-"]:not(.ux-applied)::after {
+  content: '✨ UX Enhanced' !important;
+  position: absolute !important;
+  top: 4px !important;
+  right: 4px !important;
+  background: rgba(212, 175, 55, 0.8) !important;
+  color: #000 !important;
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-weight: bold !important;
+  z-index: 1000 !important;
+  pointer-events: none !important;
+}
+
+/* Remove debug após 3 segundos */
+@keyframes removeDebug {
+  0% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+[class*="card"]::after,
+[class*="premium"]::after,
+[class*="vm-"]::after {
+  animation: removeDebug 3s forwards !important;
+}

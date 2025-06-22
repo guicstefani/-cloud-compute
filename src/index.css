@@ -48,6 +48,13 @@
     --optidata-warning: 245 158 11;
     --optidata-error: 239 68 68;
     --optidata-info: 59 130 246;
+
+    /* UX Evolution - Elegant Gold */
+    --gold-elegant: #D4AF37;
+    --gold-elegant-hover: #F4C430;
+    --gold-elegant-muted: rgba(212, 175, 55, 0.3);
+    --gray-text-primary: #E5E7EB;
+    --gray-text-secondary: #9CA3AF;
   }
 
   body {
@@ -492,14 +499,5 @@
   @apply bg-blue-500/20 text-gray-900;
 }
 
-/* Adicione esta linha no FINAL do arquivo index.css */
-@import './styles/visual-upgrade.css';
-
-/* FASE 1 - MELHORIAS SUTIS DE UX */
-@import './styles/ux-phase1.css';
-
-/* FASE 2 - HIERARQUIA VISUAL */
-@import './styles/ux-phase2.css';
-
-/* FASE 3 - MICRO-ANIMAÇÕES */
-@import './styles/ux-phase3.css';
+/* APLICAÇÃO MASTER DAS MELHORIAS UX */
+@import './styles/ux-master.css';
