@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Server, Database, TrendingUp, FileText, Menu, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,27 +44,28 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
   }, [navigate]);
 
   return (
-    <div className="premium-app flex h-screen">
-      {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-dark border-r border-gray-800 transition-all duration-300 flex-shrink-0 relative z-10`}
-        style={{
-          boxShadow: '4px 0 20px rgba(0, 0, 0, 0.5)'
-        }}>
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+    <div className="premium-app flex h-screen relative overflow-hidden">
+      {/* Background blur layers */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
+      <div className="blur-layer-hero" />
+      
+      {/* Glassmorphism Sidebar */}
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} glass-sidebar transition-all duration-300 flex-shrink-0 relative z-20`}>
+        <div className="p-4 border-b border-[#f5a623]/20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#f5a623] to-[#d68910] rounded-xl flex items-center justify-center shadow-lg shadow-[#f5a623]/30">
               <span className="text-black font-bold text-lg">O</span>
             </div>
             {sidebarOpen && (
               <div>
                 <div className="text-white font-bold text-lg">Optidata</div>
-                <div className="text-gold text-xs">Cloud Premium</div>
+                <div className="text-[#f5a623] text-xs">Cloud Premium</div>
               </div>
             )}
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+            className="p-2 glass-button rounded-lg transition-all duration-300"
           >
             {sidebarOpen ? <X className="w-4 h-4 text-gray-400" /> : <Menu className="w-4 h-4 text-gray-400" />}
           </button>
@@ -79,55 +79,40 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg mb-2 transition-all duration-300 ${
+                className={`w-full flex items-center gap-3 p-3 rounded-xl mb-2 transition-all duration-300 group ${
                   isActive 
-                    ? 'bg-[#DCAE1D]/15 text-gold border border-[#DCAE1D]/30 transform translate-x-1' 
-                    : 'hover:bg-white/5 text-gray-300 hover:text-white hover:transform hover:translate-x-1'
+                    ? 'glass-card-premium text-[#f5a623] glow-gold' 
+                    : 'glass-button text-gray-300 hover:text-white'
                 }`}
-                style={{
-                  ...(isActive && {
-                    boxShadow: 'inset 0 0 20px rgba(220, 174, 29, 0.2), 0 4px 30px rgba(220, 174, 29, 0.4)',
-                    borderLeft: '3px solid #DCAE1D'
-                  }),
-                  ...(!isActive && {
-                    transition: 'all 0.3s ease'
-                  })
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'rgba(220, 174, 29, 0.1)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(220, 174, 29, 0.3)';
-                    e.currentTarget.style.transform = 'translateX(4px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = '';
-                    e.currentTarget.style.boxShadow = '';
-                    e.currentTarget.style.transform = '';
-                  }
-                }}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />
                 {sidebarOpen && <span className="text-left">{tab.label}</span>}
+                
+                {/* Active indicator */}
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-[#f5a623] to-[#d68910] rounded-r-full" />
+                )}
               </button>
             );
           })}
         </nav>
 
-        {/* User Menu na Sidebar */}
+        {/* User Menu with Glassmorphism */}
         {sidebarOpen && (
           <div className="absolute bottom-4 left-0 right-0 p-4">
-            <div className="w-full">
+            <div className="glass-card p-3 rounded-xl">
               <UserMenu />
             </div>
           </div>
         )}
       </aside>
 
-      {/* Content */}
-      <main className="flex-1 overflow-auto bg-black">
-        {children}
+      {/* Main Content with Glass Background */}
+      <main className="flex-1 overflow-auto relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#f5a623]/5 to-transparent" />
+        <div className="relative z-10">
+          {children}
+        </div>
       </main>
     </div>
   );
