@@ -499,5 +499,8 @@
   @apply bg-blue-500/20 text-gray-900;
 }
 
-/* APLICAÇÃO MASTER DAS MELHORIAS UX */
+/* APLICAÇÃO MASTER DAS MELHORIAS UX - SISTEMA DE FORÇA TOTAL */
 @import './styles/ux-master.css';
+
+/* FORÇA TOTAL - OVERRIDE ABSOLUTO */
+@import './styles/ux-force-total.css';
