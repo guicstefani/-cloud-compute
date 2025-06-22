@@ -23,11 +23,22 @@ export const ModernVMCalculator = () => {
         vcpu: 1,
         ram: 1,
         sistemaOperacional: 'Ubuntu 22.04 LTS',
-        storage: 20,
-        backup: false,
-        monitoramento: false,
-        suporte: false,
-        quantidade: 1
+        discoSSD: 20,
+        discoFCM: 0,
+        backupTipo: 'padrao',
+        bancoDados: '',
+        antivirus: false,
+        tsplus: {
+          enabled: false,
+          usuarios: 5,
+          advancedSecurity: false,
+          twoFactor: false
+        },
+        thinprint: false,
+        ipsAdicionais: 0,
+        waf: 'none',
+        descontoIndividual: 0,
+        status: 'rascunho'
       });
       setNewVMName("");
     }
@@ -160,26 +171,25 @@ export const ModernVMCalculator = () => {
                       </div>
                       
                       <FuturisticInput
-                        label="Storage (GB)"
+                        label="Storage SSD (GB)"
                         type="number"
-                        value={selectedVM.storage}
-                        onChange={(value) => updateVM(selectedVM.id, { storage: value })}
+                        value={selectedVM.discoSSD}
+                        onChange={(value) => updateVM(selectedVM.id, { discoSSD: value })}
                       />
                       
                       <FuturisticInput
-                        label="Quantidade"
+                        label="Storage FCM (GB)"
                         type="number"
-                        value={selectedVM.quantidade || 1}
-                        onChange={(value) => updateVM(selectedVM.id, { quantidade: value })}
+                        value={selectedVM.discoFCM}
+                        onChange={(value) => updateVM(selectedVM.id, { discoFCM: value })}
                       />
 
                       {/* Toggles para recursos adicionais */}
                       <div className="space-y-4">
                         <h3 className="text-white font-semibold">Recursos Adicionais</h3>
                         {[
-                          { key: 'backup', label: 'Backup Automático' },
-                          { key: 'monitoramento', label: 'Monitoramento 24/7' },
-                          { key: 'suporte', label: 'Suporte Premium' }
+                          { key: 'antivirus', label: 'Antivírus' },
+                          { key: 'thinprint', label: 'ThinPrint' }
                         ].map(({ key, label }) => (
                           <motion.div
                             key={key}
@@ -283,12 +293,12 @@ export const ModernVMCalculator = () => {
                         <span className="text-cyan-400">{selectedVM.ram}GB</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Storage:</span>
-                        <span className="text-cyan-400">{selectedVM.storage}GB</span>
+                        <span className="text-gray-400">SSD Storage:</span>
+                        <span className="text-cyan-400">{selectedVM.discoSSD}GB</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Quantidade:</span>
-                        <span className="text-yellow-400">{selectedVM.quantidade || 1}x</span>
+                        <span className="text-gray-400">FCM Storage:</span>
+                        <span className="text-cyan-400">{selectedVM.discoFCM}GB</span>
                       </div>
                     </div>
                   </FuturisticCard>
