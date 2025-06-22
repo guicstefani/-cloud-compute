@@ -81,7 +81,7 @@ const SistemaOperacionalButton = ({
         {/* Preço com melhor hierarquia visual */}
         <div className="text-right ml-6 flex-shrink-0">
           {preco === 0 ? (
-            <div className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
+            <div className="px-3 py-1 bg-gray-700 border border-green-500/20 text-green-400 text-sm font-semibold rounded-full transition-all duration-200 hover:bg-green-500/10 hover:border-green-400 hover:shadow-[0_0_10px_rgba(16,185,129,0.3)]">
               GRATUITO
             </div>
           ) : (
