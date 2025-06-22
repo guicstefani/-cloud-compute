@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
-import { Target, TrendingUp, Zap, Trophy, Fire, DollarSign } from 'lucide-react';
+import { Target, TrendingUp, Zap, Trophy, Flame, DollarSign } from 'lucide-react';
 
 const UpgradeModule = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
@@ -102,7 +101,7 @@ const UpgradeModule = () => {
             
             <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
               <div className="flex items-center gap-2 mb-2">
-                <Fire className="w-4 h-4 text-orange-400" />
+                <Flame className="w-4 h-4 text-orange-400" />
                 <span className="text-xs text-gray-400 uppercase tracking-wide">Dias</span>
               </div>
               <div className="text-lg font-bold text-white">{diasRestantes} restantes</div>
