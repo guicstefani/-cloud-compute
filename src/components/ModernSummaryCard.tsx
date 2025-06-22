@@ -4,10 +4,8 @@ import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { LegacyBridge } from '@/shared/services/LegacyBridge';
 import { exportToExcel } from '@/utils/exportUtils';
-import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, FileText } from 'lucide-react';
+import { Calculator, TrendingUp, Download, Save, FileText } from 'lucide-react';
 import CriarPropostaModal from '@/components/CriarPropostaModal';
-import { CloudComparisonButton } from '@/components/CloudComparisonButton';
-import { QuickComparisonCard } from '@/components/QuickComparisonCard';
 
 const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
@@ -56,28 +54,6 @@ const ModernSummaryCard = () => {
     }
   };
 
-  const handleSalvarConfiguracao = () => {
-    if (vms.length === 0) {
-      alert('Não há configurações para salvar');
-      return;
-    }
-
-    try {
-      const configuracao = {
-        vms,
-        descontos,
-        timestamp: new Date().toISOString(),
-        totalVMs: vms.length
-      };
-      
-      localStorage.setItem('optidata_configuracao', JSON.stringify(configuracao));
-      alert('Configuração salva com sucesso!');
-    } catch (error) {
-      console.error('Erro ao salvar configuração:', error);
-      alert('Erro ao salvar configuração. Tente novamente.');
-    }
-  };
-
   if (vms.length === 0) {
     return (
       <div className="sticky top-6">
@@ -87,10 +63,10 @@ const ModernSummaryCard = () => {
               <Calculator className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Configure sua infraestrutura
+              Total do Investimento
             </h3>
             <p className="text-gray-400 mb-6">
-              Comece criando sua primeira VM para ver os custos
+              Configure suas VMs para ver os custos
             </p>
           </div>
         </div>
@@ -138,88 +114,32 @@ const ModernSummaryCard = () => {
         </div>
       </div>
 
-      {/* Market Intelligence Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-          📊 Market Intelligence
-        </h3>
-        
-        {/* Quick comparison preview */}
-        <QuickComparisonCard 
-          optidataCost={totalComDesconto}
-          vms={vms}
-        />
-        
-        {/* Cloud comparison button */}
-        <CloudComparisonButton 
-          optidataCost={totalComDesconto}
-          vms={vms}
-          size="lg"
-          variant="outline"
-          className="w-full"
-        />
-      </div>
-
       {/* Action Buttons */}
       <div className="space-y-3">
         <button 
-          onClick={handleGerarPDF}
-          className="premium-btn w-full"
+          onClick={() => setModalPropostaAberto(true)}
+          className="w-full bg-gradient-to-r from-[#DCAE1D] to-[#F4C430] text-black font-bold py-4 px-6 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
         >
           <FileText className="w-5 h-5" />
-          Gerar PDF da Proposta
+          Gerar Proposta
         </button>
         
-        <button 
-          onClick={() => setModalPropostaAberto(true)}
-          className="premium-btn w-full"
-        >
-          <Save className="w-5 h-5" />
-          Criar Proposta
-        </button>
-        
-        <button 
-          onClick={handleExportarExcel}
-          className="premium-btn w-full"
-        >
-          <Download className="w-5 h-5" />
-          Exportar Excel
-        </button>
-        
-        <button 
-          onClick={handleSalvarConfiguracao}
-          className="w-full bg-transparent border-2 border-gray-600 hover:border-gold text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md"
-        >
-          <Save className="w-5 h-5 inline mr-2" />
-          Salvar Configuração
-        </button>
-      </div>
-
-      {/* Trust Indicators */}
-      <div className="premium-card p-6">
-        <h4 className="font-semibold text-white mb-4 text-center">Por que Optidata?</h4>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className="w-10 h-10 bg-green-900/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Shield className="w-5 h-5 text-green-400" />
-            </div>
-            <p className="text-xs text-gray-300 font-medium">Segurança</p>
-            <p className="text-xs text-gray-500">Enterprise</p>
-          </div>
-          <div className="text-center">
-            <div className="w-10 h-10 bg-blue-900/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Zap className="w-5 h-5 text-blue-400" />
-            </div>
-            <p className="text-xs text-gray-300 font-medium">Performance</p>
-            <p className="text-xs text-gray-500">Otimizada</p>
-          </div>
-          <div className="text-center">
-            <div className="w-10 h-10 bg-purple-900/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Headphones className="w-5 h-5 text-purple-400" />
-            </div>
-            <p className="text-xs text-gray-300 font-medium">Suporte</p>
-            <p className="text-xs text-gray-500">24/7</p>
-          </div>
+        <div className="grid grid-cols-2 gap-3">
+          <button 
+            onClick={handleGerarPDF}
+            className="bg-transparent border-2 border-gray-600 hover:border-gold text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 hover:shadow-md flex items-center justify-center gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            PDF
+          </button>
+          
+          <button 
+            onClick={handleExportarExcel}
+            className="bg-transparent border-2 border-gray-600 hover:border-gold text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 hover:shadow-md flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Excel
+          </button>
         </div>
       </div>
 

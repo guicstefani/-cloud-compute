@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import ModernHero from '@/components/ModernHero';
 import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
 import VMConfigurator from '@/components/VMConfigurator';
@@ -10,6 +9,7 @@ import ListaPropostas from '@/components/ListaPropostas';
 import { PremiumWrapper } from '@/components/PremiumWrapper';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
+import CleanHeader from '@/components/CleanHeader';
 
 const Index = () => {
   const { vms, selectedVMId, precos } = useCalculadoraStore();
@@ -20,14 +20,14 @@ const Index = () => {
   return (
     <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
       <div className="min-h-screen bg-black">
-        {/* Hero Section */}
-        <ModernHero />
+        {/* Clean Header */}
+        <CleanHeader />
         
         {/* Main Content */}
         <div className="container mx-auto px-4 py-6">
           {modoCalculo === 'vm' ? (
-            // Modo VM por VM (existente)
-            <div className="grid lg:grid-cols-12 gap-8">
+            // Modo VM limpo - 3 colunas
+            <div className="grid lg:grid-cols-12 gap-6">
               {/* VM List - Left Column */}
               <div className="lg:col-span-4">
                 <ModernVMList />
@@ -36,9 +36,7 @@ const Index = () => {
               {/* VM Configurator - Center Column */}
               <div className="lg:col-span-5">
                 {selectedVM ? (
-                  <div className="premium-card p-8">
-                    <VMConfigurator vm={selectedVM} calculadora={calculadora} />
-                  </div>
+                  <VMConfigurator vm={selectedVM} calculadora={calculadora} />
                 ) : (
                   <div className="premium-card p-12 text-center">
                     <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -60,13 +58,10 @@ const Index = () => {
               </div>
             </div>
           ) : modoCalculo === 'pool' ? (
-            // Modo Pool (existente)
             <PoolDeRecursos />
           ) : modoCalculo === 'upgrades' ? (
-            // Modo Upgrades (existente)
             <UpgradeModule />
           ) : (
-            // Nova aba Propostas
             <ListaPropostas />
           )}
         </div>
