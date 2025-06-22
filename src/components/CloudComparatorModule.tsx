@@ -10,7 +10,8 @@ import {
   Trophy,
   Zap,
   Shield,
-  Clock
+  Clock,
+  AlertCircle
 } from 'lucide-react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud } from '@/utils/calculadora';
@@ -18,14 +19,56 @@ import { useCloudComparison } from '@/hooks/useCloudComparison';
 
 export const CloudComparatorModule: React.FC = () => {
   const { vms, precos, descontos } = useCalculadoraStore();
-  const calculadora = new CalculadoraCloud(precos);
-  const totalOptidata = calculadora.calcularTotalGeral(vms, descontos).totalComDesconto;
+  
+  // Debug logs
+  console.log('CloudComparatorModule render:', { 
+    vmsCount: vms.length, 
+    descontosType: typeof descontos,
+    descontosValue: descontos 
+  });
 
-  const { results, loading, canCompare } = useCloudComparison({
+  const calculadora = new CalculadoraCloud(precos);
+  
+  // Garantir que descontos seja um array
+  const descontosArray = Array.isArray(descontos) ? descontos : [];
+  const totalOptidata = calculadora.calcularTotalGeral(vms, descontosArray).totalComDesconto;
+
+  console.log('Total Optidata calculated:', totalOptidata);
+
+  const { results, loading, canCompare, error } = useCloudComparison({
     optidataCost: totalOptidata,
     vms,
     enabledProviders: ['aws', 'azure', 'gcp']
   });
+
+  console.log('Hook state:', { results: results.length, loading, canCompare, error });
+
+  // Mostrar erro se houver
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center py-20">
+            <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertCircle className="w-10 h-10 text-red-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Erro na Comparação
+            </h2>
+            <p className="text-gray-400 max-w-md mx-auto">
+              {error}
+            </p>
+            <Button 
+              className="mt-6 bg-orange-500 hover:bg-orange-600"
+              onClick={() => window.location.reload()}
+            >
+              Tentar Novamente
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!canCompare) {
     return (
@@ -41,6 +84,10 @@ export const CloudComparatorModule: React.FC = () => {
             <p className="text-gray-400 max-w-md mx-auto">
               Adicione pelo menos uma VM com recursos configurados para visualizar 
               a comparação multi-cloud em tempo real.
+              <br />
+              <span className="text-sm mt-2 block">
+                VMs: {vms.length} | Total: R$ {totalOptidata.toFixed(2)}
+              </span>
             </p>
           </div>
         </div>
@@ -59,6 +106,9 @@ export const CloudComparatorModule: React.FC = () => {
             </h2>
             <p className="text-gray-400">
               Comparando com AWS, Azure e Google Cloud...
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Total OptiData: R$ {totalOptidata.toFixed(2)}
             </p>
           </div>
         </div>

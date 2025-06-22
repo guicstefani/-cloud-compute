@@ -12,25 +12,29 @@ interface UseCloudComparisonProps {
 export const useCloudComparison = ({
   optidataCost,
   vms,
-  enabledProviders = ['aws', 'azure', 'gcp', 'oracle'] // Removido Magalu
+  enabledProviders = ['aws', 'azure', 'gcp', 'oracle']
 }: UseCloudComparisonProps) => {
   const [results, setResults] = useState<ComparisonResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canCompare = useMemo(() => 
-    CloudCalculator.canCompare(vms), 
-    [vms]
-  );
+  const canCompare = useMemo(() => {
+    console.log('Checking canCompare:', { vms, optidataCost });
+    return CloudCalculator.canCompare(vms) && optidataCost > 0;
+  }, [vms, optidataCost]);
 
-  const vmSpecs = useMemo(() => 
-    CloudCalculator.convertOptidataVMs(vms),
-    [vms]
-  );
+  const vmSpecs = useMemo(() => {
+    console.log('Converting VMs:', vms);
+    return CloudCalculator.convertOptidataVMs(vms);
+  }, [vms]);
 
   useEffect(() => {
+    console.log('useCloudComparison effect:', { canCompare, optidataCost, vmsLength: vms.length });
+    
     if (!canCompare || optidataCost <= 0) {
+      console.log('Cannot compare - clearing results');
       setResults([]);
+      setLoading(false);
       return;
     }
 
@@ -38,21 +42,35 @@ export const useCloudComparison = ({
     setError(null);
 
     try {
+      console.log('Starting comparison calculation...');
+      
       // Simula delay para UX mais realística
-      setTimeout(() => {
-        const calculator = new CloudCalculator(optidataCost, vmSpecs);
-        const allResults = calculator.calculateAllProviders();
-        
-        // Filtra apenas providers habilitados
-        const filteredResults = allResults.filter(result => 
-          enabledProviders.includes(result.provider)
-        );
+      const timer = setTimeout(() => {
+        try {
+          const calculator = new CloudCalculator(optidataCost, vmSpecs);
+          const allResults = calculator.calculateAllProviders();
+          
+          console.log('Calculation results:', allResults);
+          
+          // Filtra apenas providers habilitados
+          const filteredResults = allResults.filter(result => 
+            enabledProviders.includes(result.provider)
+          );
 
-        setResults(filteredResults);
-        setLoading(false);
+          console.log('Filtered results:', filteredResults);
+          setResults(filteredResults);
+          setLoading(false);
+        } catch (calcError) {
+          console.error('Calculation error:', calcError);
+          setError('Erro ao calcular comparação');
+          setLoading(false);
+        }
       }, 1200);
+
+      return () => clearTimeout(timer);
       
     } catch (err) {
+      console.error('Hook error:', err);
       setError('Erro ao calcular comparação');
       setLoading(false);
     }
@@ -85,6 +103,7 @@ export const useCloudComparison = ({
     refresh: () => {
       if (canCompare) {
         setResults([]);
+        setLoading(true);
       }
     }
   };
