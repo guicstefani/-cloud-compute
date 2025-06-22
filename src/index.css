@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,6 +48,13 @@
     --optidata-warning: 245 158 11;
     --optidata-error: 239 68 68;
     --optidata-info: 59 130 246;
+
+    /* UX Evolution - Elegant Gold */
+    --gold-elegant: #D4AF37;
+    --gold-elegant-hover: #F4C430;
+    --gold-elegant-muted: rgba(212, 175, 55, 0.3);
+    --gray-text-primary: #E5E7EB;
+    --gray-text-secondary: #9CA3AF;
   }
 
   body {
@@ -493,5 +499,8 @@
   @apply bg-blue-500/20 text-gray-900;
 }
 
-/* Adicione esta linha no FINAL do arquivo index.css */
-@import './styles/visual-upgrade.css';
+/* APLICAÇÃO MASTER DAS MELHORIAS UX - SISTEMA DE FORÇA TOTAL */
+@import './styles/ux-master.css';
+
+/* FORÇA TOTAL - OVERRIDE ABSOLUTO */
+@import './styles/ux-force-total.css';

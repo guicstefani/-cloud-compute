@@ -1,11 +1,12 @@
 
 /**
- * ConditionalLayout - Layout inteligente simplificado
- * Removido header antigo - agora usa CleanHeader diretamente
+ * ConditionalLayout - Layout inteligente que resolve o problema do header
+ * O header só aparece onde faz sentido
  */
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import Header from '@/components/Header';
 import { cn } from '@/lib/utils';
 
 interface ConditionalLayoutProps {
@@ -21,6 +22,13 @@ export const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
 }) => {
   const location = useLocation();
   
+  // Define onde o header deve aparecer
+  const routesWithHeader = [
+    '/',
+    '/reports',
+    '/settings'
+  ];
+  
   // Define onde o header NÃO deve aparecer
   const routesWithoutHeader = [
     '/login',
@@ -31,9 +39,21 @@ export const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({
     location.pathname.startsWith(route)
   );
   
+  const shouldShowHeader = forceHeader || (
+    !hideHeader && 
+    !shouldHideHeader &&
+    routesWithHeader.some(route => location.pathname.startsWith(route))
+  );
+  
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <main className="flex-1">
+      {shouldShowHeader && <Header />}
+      <main className={cn(
+        'flex-1',
+        {
+          'pt-0': !shouldShowHeader,  // Remove padding se não tem header
+        }
+      )}>
         {children}
       </main>
     </div>

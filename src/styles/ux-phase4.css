@@ -1,0 +1,357 @@
+
+/* 
+ * FASE 4 - LAYOUT REFINADO + APLICAÇÃO FORÇADA
+ * Sidebar melhorada + Cards com profundidade + FORÇA aplicação das melhorias
+ */
+
+/* ===== APLICAÇÃO FORÇADA DAS MELHORIAS ===== */
+
+/* FORÇA aplicação em TODOS os elementos que podem ser cards */
+[class*="card"],
+[class*="Card"],
+[class*="premium"],
+[class*="vm-"],
+[class*="bg-gray-800"],
+[class*="bg-gray-900"],
+[class*="bg-black"],
+.sidebar-item,
+.configurator,
+.pricing-summary,
+div[style*="background"] {
+  /* FASE 1 - Cores e espaçamentos FORÇADOS */
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 16px 8px !important;
+  
+  /* FASE 2 - Hierarquia FORÇADA */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  /* FASE 4 - Profundidade FORÇADA */
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(212, 175, 55, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* HOVER FORÇADO para todos os cards */
+[class*="card"]:hover,
+[class*="Card"]:hover,
+[class*="premium"]:hover,
+[class*="vm-"]:hover,
+[class*="bg-gray-800"]:hover,
+[class*="bg-gray-900"]:hover,
+[class*="bg-black"]:hover,
+.sidebar-item:hover,
+div[style*="background"]:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(212, 175, 55, 0.6) !important;
+}
+
+/* ===== SIDEBAR MELHORADA ===== */
+
+/* Sidebar container com nova estética */
+aside,
+[class*="sidebar"],
+.sidebar,
+nav {
+  background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%) !important;
+  border-right: 2px solid rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Itens da sidebar com indicador visual mais óbvio */
+.sidebar-item,
+nav button,
+aside button {
+  position: relative !important;
+  margin: 8px 12px !important;
+  padding: 16px 20px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Indicador ativo da sidebar MUITO mais visível */
+.sidebar-item.active,
+nav button[class*="active"],
+aside button[class*="active"],
+button[style*="background"] {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%) !important;
+  border-left: 4px solid #D4AF37 !important;
+  box-shadow: 
+    0 0 20px rgba(212, 175, 55, 0.3),
+    inset 0 0 20px rgba(212, 175, 55, 0.1) !important;
+  transform: translateX(8px) !important;
+}
+
+/* Hover da sidebar com destaque dourado */
+.sidebar-item:hover,
+nav button:hover,
+aside button:hover {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.03) 100%) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2) !important;
+}
+
+/* Ícones da sidebar maiores e mais claros */
+.sidebar-item svg,
+nav button svg,
+aside button svg {
+  width: 24px !important;
+  height: 24px !important;
+  color: #D4AF37 !important;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5)) !important;
+}
+
+/* ===== CARDS COM PROFUNDIDADE EXTREMA ===== */
+
+/* Gradientes de borda muito sutis mas visíveis */
+[class*="card"]::before,
+[class*="premium"]::before,
+[class*="vm-"]::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border-radius: 12px !important;
+  padding: 1px !important;
+  background: linear-gradient(45deg, 
+    rgba(212, 175, 55, 0.3) 0%,
+    rgba(212, 175, 55, 0.1) 50%,
+    rgba(212, 175, 55, 0.3) 100%
+  ) !important;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  mask-composite: exclude !important;
+  -webkit-mask-composite: xor !important;
+  pointer-events: none !important;
+}
+
+/* Separação visual entre seções */
+.section-separator,
+hr,
+[class*="separator"] {
+  height: 2px !important;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(212, 175, 55, 0.3) 20%,
+    rgba(212, 175, 55, 0.6) 50%,
+    rgba(212, 175, 55, 0.3) 80%,
+    transparent 100%
+  ) !important;
+  border: none !important;
+  margin: 32px 0 !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3) !important;
+}
+
+/* ===== APLICAÇÃO FORÇADA DE TIPOGRAFIA ===== */
+
+/* Valores principais GIGANTES e dourados */
+[class*="text-4xl"],
+[class*="text-3xl"],
+.pricing-total,
+.total-price,
+.price-main,
+span[style*="font-size: 2"],
+span[style*="font-size: 3"] {
+  font-size: 3.5rem !important;
+  font-weight: 300 !important;
+  color: #D4AF37 !important;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5) !important;
+  background: linear-gradient(135deg, #D4AF37 0%, #F4C430 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Valores secundários maiores */
+[class*="text-2xl"],
+[class*="text-xl"],
+.pricing-secondary,
+.price-secondary {
+  font-size: 2.25rem !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Labels com melhor contraste */
+.text-sm,
+[class*="text-sm"],
+small,
+label {
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  color: #E5E7EB !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ===== BOTÕES COM IMPACTO VISUAL ===== */
+
+/* Todos os botões com nova estética */
+button,
+[class*="btn"],
+input[type="submit"],
+input[type="button"] {
+  background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%) !important;
+  border: 2px solid rgba(212, 175, 55, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  text-shadow: none !important;
+  box-shadow: 
+    0 4px 15px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+}
+
+button:hover,
+[class*="btn"]:hover {
+  background: linear-gradient(135deg, #F4C430 0%, #D4AF37 100%) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 
+    0 8px 25px rgba(212, 175, 55, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(212, 175, 55, 0.8) !important;
+}
+
+button:active,
+[class*="btn"]:active {
+  transform: translateY(0) scale(0.98) !important;
+  box-shadow: 
+    0 2px 10px rgba(212, 175, 55, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ===== INPUTS COM NOVA APARÊNCIA ===== */
+
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 2px solid rgba(212, 175, 55, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  transition: all 0.2s ease !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #D4AF37 !important;
+  background: rgba(212, 175, 55, 0.1) !important;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.3) !important;
+  outline: none !important;
+}
+
+/* ===== ANIMAÇÕES MAIS AGRESSIVAS ===== */
+
+/* Animação de entrada mais dramática */
+@keyframes dramaticFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Aplicar animação dramática a todos os cards */
+[class*="card"],
+[class*="premium"],
+[class*="vm-"],
+.sidebar-item {
+  animation: dramaticFadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Delay em cascata para efeito visual */
+[class*="card"]:nth-child(1) { animation-delay: 0ms !important; }
+[class*="card"]:nth-child(2) { animation-delay: 150ms !important; }
+[class*="card"]:nth-child(3) { animation-delay: 300ms !important; }
+[class*="card"]:nth-child(4) { animation-delay: 450ms !important; }
+
+/* ===== EFEITOS ESPECIAIS ===== */
+
+/* Glow effect para elementos ativos */
+.active,
+[class*="selected"],
+[aria-selected="true"] {
+  box-shadow: 
+    0 0 30px rgba(212, 175, 55, 0.4),
+    0 0 60px rgba(212, 175, 55, 0.2),
+    inset 0 0 20px rgba(212, 175, 55, 0.1) !important;
+}
+
+/* Pulse para elementos importantes */
+@keyframes goldenPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+  }
+}
+
+.pulse-gold,
+[class*="total"],
+[class*="main-price"] {
+  animation: goldenPulse 2s infinite !important;
+}
+
+/* ===== MOBILE ESPECÍFICO ===== */
+
+@media (max-width: 768px) {
+  /* Ajustes para mobile */
+  [class*="card"],
+  [class*="premium"] {
+    margin: 8px 4px !important;
+    padding: 16px !important;
+  }
+  
+  .sidebar-item {
+    margin: 4px 8px !important;
+    padding: 12px 16px !important;
+  }
+  
+  button {
+    padding: 14px 20px !important;
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ===== OVERRIDE FINAL ===== */
+
+/* Força aplicação mesmo com estilos inline */
+* {
+  box-sizing: border-box !important;
+}
+
+/* Remove qualquer background amarelo/branco antigo */
+[style*="background-color: yellow"],
+[style*="background-color: #FF"],
+[style*="background: yellow"],
+[style*="background: #FF"] {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%) !important;
+}

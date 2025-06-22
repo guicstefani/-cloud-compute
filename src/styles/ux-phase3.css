@@ -1,0 +1,395 @@
+
+/* 
+ * FASE 3 - MICRO-ANIMAÇÕES
+ * Transições + Feedback Visual + Loading States
+ */
+
+/* ===== TRANSIÇÕES BÁSICAS ===== */
+
+/* Fade-in ao carregar cards */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Aplicar fade-in aos cards */
+.premium-card,
+.premium-vm-card,
+.vm-card,
+[class*="bg-gray-800"] {
+  animation: fadeInUp 0.3s ease-out !important;
+}
+
+/* Fade-in com delay para criar efeito cascata */
+.premium-card:nth-child(1) { animation-delay: 0ms !important; }
+.premium-card:nth-child(2) { animation-delay: 100ms !important; }
+.premium-card:nth-child(3) { animation-delay: 200ms !important; }
+.premium-card:nth-child(4) { animation-delay: 300ms !important; }
+
+/* Fade-in para elementos da sidebar */
+.sidebar-item {
+  animation: fadeIn 0.3s ease-out !important;
+}
+
+.sidebar-item:nth-child(1) { animation-delay: 0ms !important; }
+.sidebar-item:nth-child(2) { animation-delay: 50ms !important; }
+.sidebar-item:nth-child(3) { animation-delay: 100ms !important; }
+.sidebar-item:nth-child(4) { animation-delay: 150ms !important; }
+.sidebar-item:nth-child(5) { animation-delay: 200ms !important; }
+
+/* ===== SMOOTH TRANSITIONS EM HOVERS ===== */
+
+/* Transições suaves melhoradas */
+* {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Transições específicas para elementos críticos */
+button,
+[class*="btn"],
+.premium-btn,
+.btn-optidata {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.premium-card,
+.premium-vm-card,
+.vm-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+input,
+select,
+textarea {
+  transition: all 0.2s ease !important;
+}
+
+/* ===== FEEDBACK VISUAL ===== */
+
+/* Botão "pulsa" levemente ao clicar */
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+button:active,
+[class*="btn"]:active {
+  animation: buttonPulse 0.15s ease-out !important;
+}
+
+/* Pulse especial para botões principais */
+.btn-optidata:active,
+.premium-btn:active {
+  animation: buttonPulse 0.15s ease-out !important;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6) !important;
+}
+
+/* ===== SLIDERS COM TRANSIÇÃO SUAVE ===== */
+
+/* Slider track animado */
+input[type="range"] {
+  transition: all 0.3s ease !important;
+}
+
+input[type="range"]:hover {
+  transform: scaleY(1.2) !important;
+}
+
+/* Thumb do slider com animação */
+input[type="range"]::-webkit-slider-thumb {
+  transition: all 0.2s ease !important;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5) !important;
+}
+
+input[type="range"]::-moz-range-thumb {
+  transition: all 0.2s ease !important;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.3) !important;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5) !important;
+}
+
+/* ===== LOADING STATES COM SHIMMER ===== */
+
+/* Shimmer effect melhorado */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes shimmerGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  background: linear-gradient(
+    90deg,
+    rgba(55, 65, 81, 0.2) 25%,
+    rgba(212, 175, 55, 0.1) 50%,
+    rgba(55, 65, 81, 0.2) 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.5s infinite, shimmerGlow 2s infinite !important;
+}
+
+/* Loading específico para cards */
+.loading-card {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 30, 30, 0.8) 25%,
+    rgba(212, 175, 55, 0.1) 50%,
+    rgba(30, 30, 30, 0.8) 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.2s infinite !important;
+}
+
+/* ===== NÚMEROS ANIMADOS ===== */
+
+/* Contador de valores monetários */
+@keyframes countUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Aplicar animação aos valores principais */
+.text-2xl.font-bold,
+.text-3xl.font-bold,
+.text-4xl.font-bold,
+.pricing-total,
+.total-price,
+.price-main {
+  animation: countUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* ===== FEEDBACK VISUAL AVANÇADO ===== */
+
+/* Ripple effect para cliques */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Hover glow para elementos importantes */
+.premium-card:hover,
+.premium-vm-card:hover {
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(212, 175, 55, 0.1) !important;
+}
+
+/* ===== ESTADOS DE SELEÇÃO ANIMADOS ===== */
+
+/* Checkbox animado */
+@keyframes checkmark {
+  0% {
+    transform: scale(0) rotate(-45deg);
+  }
+  50% {
+    transform: scale(0.8) rotate(-45deg);
+  }
+  100% {
+    transform: scale(1) rotate(-45deg);
+  }
+}
+
+.option-card.selected::before,
+.checkbox-container.checked::before {
+  animation: checkmark 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* ===== SIDEBAR ANIMADA ===== */
+
+/* Indicador ativo com slide */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--gold-elegant);
+  animation: slideIn 0.3s ease-out !important;
+}
+
+/* ===== FLOATING LABELS ANIMADOS ===== */
+
+/* Labels que "flutuam" nos inputs */
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    font-size: 1rem;
+    color: #9CA3AF;
+  }
+  to {
+    transform: translateY(-1.5rem);
+    font-size: 0.75rem;
+    color: var(--gold-elegant);
+  }
+}
+
+/* Input focus com label animado */
+.premium-input:focus + label,
+.input-field:focus + label {
+  animation: floatUp 0.2s ease-out forwards !important;
+}
+
+/* ===== PROGRESS INDICATORS ===== */
+
+/* Barra de progresso animada */
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width, 0%);
+  }
+}
+
+.progress-bar {
+  animation: progressFill 1s ease-out !important;
+}
+
+/* ===== TOASTS E NOTIFICAÇÕES ===== */
+
+/* Slide-in para notificações */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.toast-enter {
+  animation: slideInFromRight 0.3s ease-out !important;
+}
+
+.toast-exit {
+  animation: slideOutToRight 0.3s ease-out !important;
+}
+
+/* ===== PERFORMANCE OPTIMIZATION ===== */
+
+/* GPU acceleration para elementos animados */
+.premium-card,
+.premium-vm-card,
+button,
+[class*="btn"],
+input[type="range"] {
+  will-change: transform, opacity, box-shadow !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+/* Reduzir animações para usuários que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== APLICAÇÃO GLOBAL ===== */
+
+/* Suavizar todas as transformações */
+* {
+  transform-style: preserve-3d !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Cursor personalizado para elementos interativos */
+button,
+[class*="btn"],
+a,
+[role="button"],
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+button:hover,
+[class*="btn"]:hover {
+  cursor: pointer !important;
+}
+
+/* Estados de focus com animação */
+*:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3) !important;
+  transition: box-shadow 0.2s ease !important;
+}
