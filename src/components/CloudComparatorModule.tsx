@@ -17,9 +17,9 @@ import { CalculadoraCloud } from '@/utils/calculadora';
 import { useCloudComparison } from '@/hooks/useCloudComparison';
 
 export const CloudComparatorModule: React.FC = () => {
-  const { vms, precos } = useCalculadoraStore();
+  const { vms, precos, descontos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
-  const totalOptidata = calculadora.calcularTotalGeral(vms, {}).totalComDesconto;
+  const totalOptidata = calculadora.calcularTotalGeral(vms, descontos).totalComDesconto;
 
   const { results, loading, canCompare } = useCloudComparison({
     optidataCost: totalOptidata,
