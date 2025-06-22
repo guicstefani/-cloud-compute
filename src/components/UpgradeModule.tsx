@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Cpu, Database, HardDrive, Shield, Globe, Windows, Plus, Minus, ShoppingCart, FileText, Copy } from 'lucide-react';
+import { Cpu, Database, HardDrive, Shield, Globe, Monitor, Plus, Minus, ShoppingCart, FileText, Copy } from 'lucide-react';
 import { formatCurrency } from '@/utils/calculadora';
 
 interface UpgradeItem {
@@ -105,7 +104,7 @@ const UpgradeModule = () => {
       preco: 220.00,
       unidade: '/mês por licença',
       categoria: 'licenca',
-      icon: <Windows className="w-5 h-5" />,
+      icon: <Monitor className="w-5 h-5" />,
       minimo: 1,
       maximo: 16
     }
