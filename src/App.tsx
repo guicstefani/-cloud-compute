@@ -12,6 +12,7 @@ import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
 import { ConditionalLayout } from "@/shared/layouts/ConditionalLayout";
 import { CleanDashboard } from "@/modules/clean-dashboard";
 import { safeSupabase } from "@/shared/services/SafeSupabase";
+import { TesteNovoSistema } from "./test-novo-sistema";
 
 // Injeta CSS variables globais
 import { cssVariables } from "@/shared/ui/theme/tokens";
@@ -62,6 +63,9 @@ const App = () => {
               
               {/* Novo dashboard limpo */}
               <Route path="/dashboard" element={<CleanDashboard />} />
+              
+              {/* Rota de teste isolado - NOVO */}
+              <Route path="/teste-novo" element={<TesteNovoSistema />} />
               
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
