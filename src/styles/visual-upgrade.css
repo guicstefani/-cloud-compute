@@ -1,356 +1,443 @@
 
 /* =====================================================
-   VISUAL-UPGRADE.CSS - MELHORIAS VISUAIS SEGURAS
+   VISUAL-UPGRADE-V2.CSS - TRANSFORMAÇÃO DRAMÁTICA
    
-   IMPORTANTE PARA O LOVABLE:
-   - Este arquivo NÃO modifica estrutura
-   - Este arquivo NÃO remove nada existente  
-   - Este arquivo APENAS adiciona melhorias visuais
-   - Se algo quebrar, é só deletar este arquivo
+   Desta vez vamos fazer mudanças que você VAI sentir
    ===================================================== */
 
 /* =====================================================
-   PARTE 1: FAZER OS VALORES EM DINHEIRO FICAREM GIGANTES
-   
-   Problema atual: R$ 2.571,95 está pequeno e se perde no meio do cinza
-   Solução: Fazer esses valores terem 56 pixels de altura
+   RESET AGRESSIVO - PREPARAR O TERRENO
    ===================================================== */
 
-/* Pega TODOS os elementos que mostram valores grandes de dinheiro */
-.text-4xl, .text-3xl, .text-2xl {
-    /* Faz o texto ficar GIGANTE - 56 pixels de altura */
-    font-size: 56px !important;
-    
-    /* Faz o texto ficar GROSSO - peso 800 é bem negrito */
-    font-weight: 800 !important;
-    
-    /* Aproxima as letras para ficar mais compacto e profissional */
-    letter-spacing: -2px !important;
-    
-    /* Remove qualquer margem que possa estar sobrando */
-    margin-top: 0 !important;
-    margin-bottom: 8px !important;
+* {
+    /* Remove transições antigas para aplicar as novas */
+    transition: none !important;
 }
 
-/* Valores secundários (um pouco menores mas ainda grandes) */
-.text-xl {
-    font-size: 32px !important;
-    font-weight: 600 !important;
-    letter-spacing: -1px !important;
-}
-
-/* Labels e textos pequenos ficam mais transparentes para não competir */
-.text-sm, .text-xs {
-    /* 70% de opacidade = 30% transparente */
-    opacity: 0.7 !important;
-    
-    /* Garante que sejam menores que 14 pixels */
-    font-size: 14px !important;
+/* Agora reaplica transições onde queremos */
+.border, button, input, a, div[class*="hover:"] {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
 }
 
 /* =====================================================
-   PARTE 2: ADICIONAR ESPAÇO PARA RESPIRAR
-   
-   Problema atual: Tudo está grudado, parece claustrofóbico
-   Solução: Adicionar 32 pixels de espaço interno em cada card
+   VALORES MONUMENTAIS - IMPOSSÍVEL DE IGNORAR
    ===================================================== */
 
-/* Todos os cards da aplicação */
-.border.rounded-lg, .border.rounded {
-    /* Espaço interno de 32 pixels em todos os lados */
-    padding: 32px !important;
+/* Valor principal - VAI dominar a tela */
+h1[class*="text-"], div[class*="text-4xl"], span[class*="text-4xl"] {
+    font-size: 72px !important;
+    font-weight: 900 !important;
+    letter-spacing: -3px !important;
+    line-height: 0.9 !important;
     
-    /* Espaço de 24 pixels ABAIXO de cada card */
-    margin-bottom: 24px !important;
+    /* Efeito de texto metálico dourado */
+    background: linear-gradient(
+        180deg,
+        #FFFFFF 0%,
+        #F4E4BA 40%,
+        #D4AF37 60%,
+        #B8941F 80%,
+        #9A7A0A 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
     
-    /* Garante que o card use todo o espaço disponível */
-    width: 100% !important;
+    /* Sombra dramática */
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+    
+    /* Brilho pulsante */
+    animation: goldPulse 3s ease-in-out infinite;
 }
 
-/* Espaço entre elementos dentro dos cards */
-.space-y-2 > * + * {
-    margin-top: 16px !important;
+@keyframes goldPulse {
+    0%, 100% { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)) brightness(1); }
+    50% { filter: drop-shadow(0 4px 20px rgba(212,175,55,0.6)) brightness(1.2); }
 }
 
-.space-y-4 > * + * {
-    margin-top: 24px !important;
-}
-
-.space-y-6 > * + * {
-    margin-top: 32px !important;
+/* Valores secundários também grandes */
+div[class*="text-2xl"], span[class*="text-2xl"] {
+    font-size: 36px !important;
+    font-weight: 700 !important;
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 /* =====================================================
-   PARTE 3: FAZER OS CARDS REAGIREM AO MOUSE
-   
-   Problema atual: Cards são estáticos, parecem mortos
-   Solução: Adicionar elevação e brilho quando passar o mouse
+   CARDS 3D COM PRESENÇA FÍSICA
    ===================================================== */
 
-/* Prepara todos os cards para animação */
-.bg-gray-900, .bg-zinc-900, .bg-gray-800, .bg-zinc-800 {
-    /* Diz ao navegador para animar todas as mudanças em 0.3 segundos */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+/* Todos os cards ganham profundidade real */
+.border.rounded-lg, .border.rounded, div[class*="bg-gray-9"], div[class*="bg-zinc-9"] {
+    /* Espaçamento generoso */
+    padding: 40px !important;
+    margin-bottom: 32px !important;
     
-    /* Necessário para as animações funcionarem */
-    position: relative !important;
-    
-    /* Remove qualquer overflow que corte as sombras */
-    overflow: visible !important;
-}
-
-/* Quando passar o mouse em cima dos cards */
-.bg-gray-900:hover, .bg-zinc-900:hover, .bg-gray-800:hover, .bg-zinc-800:hover {
-    /* Move o card 4 pixels para cima */
-    transform: translateY(-4px) !important;
-    
-    /* Adiciona sombra preta embaixo e brilho dourado ao redor */
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(212, 175, 55, 0.1) !important;
-    
-    /* Muda a cor da borda para dourado transparente */
-    border-color: rgba(212, 175, 55, 0.3) !important;
-}
-
-/* =====================================================
-   PARTE 4: BOTÕES DOURADOS COM PRESENÇA
-   
-   Problema atual: Botões parecem flat e sem vida
-   Solução: Adicionar sombra dourada e movimento
-   ===================================================== */
-
-/* Todos os botões dourados/amarelos */
-.bg-yellow-600, .bg-yellow-500, .bg-gradient-to-r, button {
-    /* Prepara para animações */
-    position: relative !important;
-    overflow: hidden !important;
-    transition: all 0.3s ease !important;
-    
-    /* Adiciona sombra dourada sutil */
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2) !important;
-    
-    /* Garante que o texto fique visível */
-    z-index: 1 !important;
-}
-
-/* Quando passar o mouse nos botões */
-.bg-yellow-600:hover, .bg-yellow-500:hover, .bg-gradient-to-r:hover, button:hover {
-    /* Move o botão 2 pixels para cima */
-    transform: translateY(-2px) !important;
-    
-    /* Aumenta a sombra dourada */
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4) !important;
-}
-
-/* Quando clicar nos botões */
-.bg-yellow-600:active, .bg-yellow-500:active, .bg-gradient-to-r:active, button:active {
-    /* Volta o botão para posição original (efeito de pressionar) */
-    transform: translateY(0) !important;
-}
-
-/* =====================================================
-   PARTE 5: INPUTS COM FEEDBACK VISUAL
-   
-   Problema atual: Inputs não mostram quando estão selecionados
-   Solução: Adicionar borda dourada no foco
-   ===================================================== */
-
-/* Todos os campos de input */
-input[type="text"], 
-input[type="email"], 
-input[type="password"], 
-input[type="number"],
-input[type="search"],
-textarea,
-select {
-    /* Prepara para animação */
-    transition: all 0.3s ease !important;
-    
-    /* Garante que tenha pelo menos uma borda inferior */
-    border-bottom-width: 2px !important;
-}
-
-/* Quando clicar/focar nos inputs */
-input:focus, textarea:focus, select:focus {
-    /* Remove a borda azul padrão do navegador */
-    outline: none !important;
-    
-    /* Adiciona borda dourada embaixo */
-    border-bottom-color: #d4af37 !important;
-    
-    /* Adiciona um brilho dourado sutil */
-    box-shadow: 0 2px 0 0 #d4af37 !important;
-}
-
-/* =====================================================
-   PARTE 6: MELHORAR A SIDEBAR LATERAL
-   
-   Problema atual: Sidebar sem destaque no item ativo
-   Solução: Adicionar indicadores visuais
-   ===================================================== */
-
-/* Items da sidebar */
-nav a, nav button, .sidebar-item {
-    /* Prepara para animação */
-    transition: all 0.2s ease !important;
-    
-    /* Adiciona um pouco de padding */
-    padding: 12px 16px !important;
-    
-    /* Arredonda os cantos */
-    border-radius: 8px !important;
-    
-    /* Margem entre items */
-    margin: 4px 8px !important;
-}
-
-/* Quando passar o mouse nos items da sidebar */
-nav a:hover, nav button:hover, .sidebar-item:hover {
-    /* Move o texto 8 pixels para direita */
-    padding-left: 24px !important;
-    
-    /* Adiciona fundo dourado bem transparente */
-    background: rgba(212, 175, 55, 0.05) !important;
-}
-
-/* Item ativo da sidebar (página atual) */
-nav a.active, nav button.active, .sidebar-item.active {
-    /* Fundo dourado mais visível */
-    background: rgba(212, 175, 55, 0.1) !important;
-    
-    /* Borda dourada na esquerda */
-    border-left: 3px solid #d4af37 !important;
-}
-
-/* =====================================================
-   PARTE 7: ANIMAÇÕES DE ENTRADA SUAVES
-   
-   Problema atual: Elementos aparecem de repente
-   Solução: Fazer aparecerem com fade suave
-   ===================================================== */
-
-/* Anima a entrada de todos os cards */
-.border.rounded-lg, .border.rounded {
-    /* Aplica a animação fadeInUp que dura 0.5 segundos */
-    animation: fadeInUp 0.5s ease-out !important;
-    
-    /* Mantém o estado final da animação */
-    animation-fill-mode: both !important;
-}
-
-/* Define a animação fadeInUp */
-@keyframes fadeInUp {
-    /* Estado inicial: invisível e 20 pixels abaixo */
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    
-    /* Estado final: visível e na posição normal */
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Delay progressivo para cards em lista */
-.border.rounded-lg:nth-child(1) { animation-delay: 0.1s !important; }
-.border.rounded-lg:nth-child(2) { animation-delay: 0.2s !important; }
-.border.rounded-lg:nth-child(3) { animation-delay: 0.3s !important; }
-.border.rounded-lg:nth-child(4) { animation-delay: 0.4s !important; }
-
-/* =====================================================
-   PARTE 8: FUNDO PREMIUM DA APLICAÇÃO
-   
-   Problema atual: Fundo preto chapado sem vida
-   Solução: Adicionar gradiente radial sutil
-   ===================================================== */
-
-/* Fundo de toda a aplicação */
-body, #root, .min-h-screen {
-    /* Gradiente radial do centro (cinza escuro) para as bordas (preto) */
-    background: radial-gradient(
-        ellipse at center, 
-        #0a0a0a 0%,     /* Cinza muito escuro no centro */
-        #000000 100%    /* Preto puro nas bordas */
+    /* Fundo com gradiente sutil */
+    background: linear-gradient(
+        135deg,
+        rgba(20, 20, 20, 0.95) 0%,
+        rgba(15, 15, 15, 0.95) 100%
     ) !important;
     
-    /* Garante que cubra toda a tela */
-    min-height: 100vh !important;
+    /* Borda com gradiente dourado */
+    border: 2px solid transparent !important;
+    background-image: 
+        linear-gradient(135deg, #141414 0%, #0f0f0f 100%),
+        linear-gradient(135deg, #d4af37 0%, #9a7a0a 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    
+    /* Sombra 3D profunda */
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+    
+    /* Perspectiva 3D */
+    transform: perspective(1000px) rotateX(2deg);
+    transform-style: preserve-3d;
+}
+
+/* Hover DRAMÁTICO nos cards */
+.border.rounded-lg:hover, .border.rounded:hover, div[class*="bg-gray-9"]:hover {
+    /* Levanta o card significativamente */
+    transform: perspective(1000px) rotateX(0deg) translateY(-8px) scale(1.02) !important;
+    
+    /* Explosão de luz dourada */
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.9),
+        0 0 80px rgba(212, 175, 55, 0.3),
+        inset 0 1px 0 rgba(212, 175, 55, 0.3) !important;
+    
+    /* Borda brilha */
+    border-color: rgba(212, 175, 55, 0.8) !important;
 }
 
 /* =====================================================
-   PARTE 9: MELHORAR LEGIBILIDADE DOS TEXTOS
-   
-   Problema atual: Textos cinzas muito apagados
-   Solução: Ajustar as cores para melhor contraste
+   BOTÕES QUE PARECEM JOIAS
    ===================================================== */
 
-/* Textos cinzas claros */
-.text-gray-400 {
-    /* Muda para um cinza mais claro e legível */
-    color: #9CA3AF !important;
+button, .bg-yellow-600, .bg-yellow-500, a[class*="bg-yellow"] {
+    /* Remove fundo antigo */
+    background-image: none !important;
+    
+    /* Gradiente metálico dourado */
+    background: linear-gradient(
+        135deg,
+        #F4E4BA 0%,
+        #D4AF37 50%,
+        #B8941F 100%
+    ) !important;
+    
+    /* Texto escuro para contraste */
+    color: #000000 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    
+    /* Tamanho maior */
+    padding: 16px 32px !important;
+    font-size: 14px !important;
+    
+    /* Borda metálica */
+    border: 2px solid #9A7A0A !important;
+    
+    /* Sombra 3D */
+    box-shadow: 
+        0 4px 0 #7A5A0A,
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+    
+    /* Brilho interno */
+    position: relative !important;
+    overflow: hidden !important;
 }
 
-/* Textos cinzas médios */
-.text-gray-500 {
-    /* Muda para um cinza médio mais legível */
-    color: #6B7280 !important;
+/* Efeito de luz percorrendo o botão */
+button::before, .bg-yellow-600::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 0.6s;
 }
 
-/* Textos brancos importantes */
-.text-white {
-    /* Garante branco puro para máximo contraste */
+button:hover::before {
+    transform: rotate(45deg) translateX(100%);
+}
+
+/* Hover épico nos botões */
+button:hover, .bg-yellow-600:hover {
+    /* Levanta o botão */
+    transform: translateY(-4px) !important;
+    
+    /* Ajusta a sombra 3D */
+    box-shadow: 
+        0 8px 0 #7A5A0A,
+        0 12px 24px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(212, 175, 55, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.6) !important;
+    
+    /* Brilha mais */
+    filter: brightness(1.2);
+}
+
+/* Click satisfatório */
+button:active {
+    transform: translateY(0) !important;
+    box-shadow: 
+        0 2px 0 #7A5A0A,
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* =====================================================
+   INPUTS FUTURISTAS
+   ===================================================== */
+
+input, textarea, select {
+    /* Remove estilos antigos */
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 2px solid #333 !important;
+    border-radius: 0 !important;
+    
+    /* Padding generoso */
+    padding: 16px !important;
+    
+    /* Texto branco brilhante */
     color: #FFFFFF !important;
+    font-size: 16px !important;
+    
+    /* Transição suave */
+    transition: all 0.3s ease !important;
+}
+
+/* Focus transformador */
+input:focus, textarea:focus, select:focus {
+    outline: none !important;
+    
+    /* Borda dourada brilhante */
+    border-color: #D4AF37 !important;
+    
+    /* Glow dourado */
+    box-shadow: 
+        0 0 0 3px rgba(212, 175, 55, 0.2),
+        0 0 20px rgba(212, 175, 55, 0.1),
+        inset 0 1px 2px rgba(212, 175, 55, 0.1) !important;
+    
+    /* Fundo levemente mais claro */
+    background: rgba(0, 0, 0, 0.7) !important;
 }
 
 /* =====================================================
-   PARTE 10: SCROLLBAR CUSTOMIZADA
-   
-   Problema atual: Scrollbar padrão feia
-   Solução: Scrollbar fina e dourada
+   SIDEBAR COMPLETAMENTE RENOVADA
    ===================================================== */
 
-/* Scrollbar no Chrome/Edge/Safari */
+/* Container da sidebar */
+aside, nav, div[class*="w-64"], div[class*="w-56"] {
+    /* Fundo com blur e gradiente */
+    background: linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.95) 0%,
+        rgba(0, 0, 0, 0.95) 100%
+    ) !important;
+    backdrop-filter: blur(20px) !important;
+    
+    /* Borda direita dourada sutil */
+    border-right: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+/* Items da sidebar transformados */
+aside a, nav a, aside button, nav button {
+    /* Reset e padding */
+    display: block !important;
+    padding: 20px 24px !important;
+    margin: 8px 16px !important;
+    
+    /* Cantos arredondados */
+    border-radius: 12px !important;
+    
+    /* Transição elástica */
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+    
+    /* Texto mais visível */
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    
+    /* Remove decorações */
+    text-decoration: none !important;
+    
+    /* Prepara para efeitos */
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Hover explosivo na sidebar */
+aside a:hover, nav a:hover {
+    /* Move para direita */
+    transform: translateX(8px) !important;
+    padding-left: 32px !important;
+    
+    /* Fundo dourado transparente */
+    background: linear-gradient(
+        90deg,
+        rgba(212, 175, 55, 0.2) 0%,
+        rgba(212, 175, 55, 0.05) 100%
+    ) !important;
+    
+    /* Texto branco puro */
+    color: #FFFFFF !important;
+    
+    /* Borda esquerda dourada */
+    border-left: 4px solid #D4AF37 !important;
+}
+
+/* Item ativo ÓBVIO */
+aside a.active, nav a.active, aside button.active, nav button.active {
+    /* Fundo dourado sólido */
+    background: linear-gradient(
+        135deg,
+        rgba(212, 175, 55, 0.3) 0%,
+        rgba(212, 175, 55, 0.1) 100%
+    ) !important;
+    
+    /* Borda dourada grossa */
+    border-left: 5px solid #D4AF37 !important;
+    
+    /* Texto dourado */
+    color: #D4AF37 !important;
+    
+    /* Sombra interna */
+    box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.1) !important;
+}
+
+/* =====================================================
+   ANIMAÇÕES DE ENTRADA ÉPICAS
+   ===================================================== */
+
+/* Cada card entra de forma diferente */
+.border.rounded-lg:nth-child(odd) {
+    animation: slideInLeft 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+
+.border.rounded-lg:nth-child(even) {
+    animation: slideInRight 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* =====================================================
+   FUNDO VIVO E DINÂMICO
+   ===================================================== */
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(212, 175, 55, 0.02) 0%, transparent 50%);
+    animation: floatingGradient 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes floatingGradient {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(180deg); }
+}
+
+/* =====================================================
+   SCROLLBAR LUXUOSA
+   ===================================================== */
+
 ::-webkit-scrollbar {
-    width: 8px !important;
-    height: 8px !important;
+    width: 12px !important;
 }
 
 ::-webkit-scrollbar-track {
-    background: #1a1a1a !important;
+    background: #0A0A0A !important;
+    border: 1px solid #1A1A1A !important;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333 !important;
-    border-radius: 4px !important;
+    background: linear-gradient(
+        180deg,
+        #3A3A3A 0%,
+        #2A2A2A 100%
+    ) !important;
+    border-radius: 6px !important;
+    border: 1px solid #4A4A4A !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #d4af37 !important;
+    background: linear-gradient(
+        180deg,
+        #D4AF37 0%,
+        #9A7A0A 100%
+    ) !important;
+    border-color: #D4AF37 !important;
 }
 
 /* =====================================================
-   PARTE 11: LOADING STATES BONITOS
-   
-   Problema atual: Loading genérico
-   Solução: Shimmer dourado
+   DETALHES FINAIS DE LUXO
    ===================================================== */
 
-/* Efeito shimmer para loading */
-.loading, .skeleton {
-    background: linear-gradient(
-        90deg,
-        #1a1a1a 0%,
-        #2a2a2a 50%,
-        #1a1a1a 100%
-    ) !important;
-    background-size: 200% 100% !important;
-    animation: shimmer 1.5s infinite !important;
+/* Seleção de texto dourada */
+::selection {
+    background: rgba(212, 175, 55, 0.3);
+    color: #FFFFFF;
 }
 
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+/* Links com transição suave */
+a {
+    color: #D4AF37 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+a:hover {
+    color: #F4E4BA !important;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Qualquer coisa com hover ganha cursor pointer */
+[class*="hover:"]:hover {
+    cursor: pointer !important;
 }
