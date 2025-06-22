@@ -1,6 +1,6 @@
 
 /**
- * LegacyBridge - Ponte segura entre código novo e antigo
+ * LegacyBridge - Ponte segura between código novo e antigo
  * Este arquivo é a ÚNICA conexão permitida com código legado
  */
 

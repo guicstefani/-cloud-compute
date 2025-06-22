@@ -38,7 +38,7 @@ const App = () => {
         forcePremiumColors();
       }, 500);
       
-      const enhancementsCleanup = initPremiumEn
+      const enhancementsCleanup = initPremiumEnhancements();
       
       return () => {
         cleanup();
