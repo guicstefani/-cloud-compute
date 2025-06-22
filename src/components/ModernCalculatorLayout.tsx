@@ -49,7 +49,7 @@ export const ModernCalculatorLayout = () => {
                 Configure os recursos necessários para sua aplicação
               </p>
               <Button
-                onClick={addVM}
+                onClick={() => addVM()}
                 className="bg-gradient-to-r from-[#DCAE1D] to-[#F4C430] text-black font-bold px-8 py-4 text-lg hover:from-[#B8941A] hover:to-[#D4AC2D] transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl shadow-[#DCAE1D]/30"
               >
                 <Plus className="w-5 h-5 mr-2" />
@@ -63,7 +63,7 @@ export const ModernCalculatorLayout = () => {
                   Seus Servidores ({vms.length})
                 </h2>
                 <Button
-                  onClick={addVM}
+                  onClick={() => addVM()}
                   className="bg-gradient-to-r from-[#DCAE1D] to-[#F4C430] text-black font-bold hover:from-[#B8941A] hover:to-[#D4AC2D] transition-all duration-300 hover:scale-105"
                 >
                   <Plus className="w-4 h-4 mr-2" />
