@@ -36,8 +36,10 @@ export class LegacyBridge {
   async generatePDF(data: any): Promise<Blob | null> {
     try {
       const { gerarPDFProposta } = await import('../../utils/pdfGenerator');
-      const result = await gerarPDFProposta(data);
-      return result || null;
+      // gerarPDFProposta não retorna um blob, apenas faz download do PDF
+      gerarPDFProposta(data);
+      // Retorna null pois a função legacy apenas faz download
+      return null;
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
       return null;
