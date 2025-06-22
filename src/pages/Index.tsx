@@ -18,7 +18,7 @@ const Index = () => {
   const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
 
   return (
-    <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
+    <PremiumWrapper>
       <div className="min-h-screen bg-black">
         {/* Hero Section */}
         <ModernHero />
