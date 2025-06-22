@@ -4,7 +4,7 @@ import { Shield, Award, Zap, Check } from 'lucide-react';
 
 const ModernHero = () => {
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white overflow-hidden">
+    <div className="hero-animated-bg relative bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,174,29,0.1),transparent_50%)]"></div>
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-full filter blur-3xl opacity-10"></div>
