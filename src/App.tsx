@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -7,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import LoginV2 from "./components/auth/LoginV2";
 import NotFound from "./pages/NotFound";
 import { forcePremiumColors } from "@/utils/forcePremiumColors";
 import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
@@ -64,6 +64,9 @@ const App = () => {
               
               {/* Sistema de Login Premium */}
               <Route path="/login" element={<Login />} />
+              
+              {/* NOVO: Login V2 para teste (rota temporária) */}
+              <Route path="/login-novo" element={<LoginV2 />} />
               
               {/* Novo dashboard limpo */}
               <Route path="/dashboard" element={<CleanDashboard />} />
