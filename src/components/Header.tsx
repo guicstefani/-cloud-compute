@@ -79,6 +79,13 @@ const Header = () => {
             
             <div className="flex items-center space-x-3">
               <UserMenu />
+              <Button 
+                className="bg-[#0066CC] hover:bg-[#0052A3] text-white"
+                onClick={handleExportPDF}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Exportar PDF
+              </Button>
             </div>
           </div>
         </div>
@@ -120,6 +127,16 @@ const Header = () => {
               <div className="flex justify-center">
                 <UserMenu />
               </div>
+              <Button 
+                className="w-full bg-[#0066CC] hover:bg-[#0052A3] text-white"
+                onClick={() => {
+                  handleExportPDF();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Exportar PDF
+              </Button>
               <Button 
                 variant="outline"
                 className="w-full justify-start border-gray-300"

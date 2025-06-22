@@ -25,6 +25,7 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
   ];
 
   useEffect(() => {
+    // Verifica se há usuário logado
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
@@ -32,6 +33,7 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
 
     getUser();
 
+    // Escuta mudanças na autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setUser(session?.user ?? null);
@@ -47,10 +49,7 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
   return (
     <div className="premium-app flex h-screen">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-dark border-r border-gray-800 transition-all duration-300 flex-shrink-0 relative z-10`}
-        style={{
-          boxShadow: '4px 0 20px rgba(0, 0, 0, 0.5)'
-        }}>
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-dark border-r border-gray-800 transition-all duration-300 flex-shrink-0`}>
         <div className="p-4 border-b border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-lg flex items-center justify-center">
@@ -79,34 +78,11 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg mb-2 transition-all duration-300 ${
+                className={`w-full flex items-center gap-3 p-3 rounded-lg mb-2 transition-all ${
                   isActive 
-                    ? 'bg-[#DCAE1D]/15 text-gold border border-[#DCAE1D]/30 transform translate-x-1' 
-                    : 'hover:bg-white/5 text-gray-300 hover:text-white hover:transform hover:translate-x-1'
+                    ? 'bg-[#DCAE1D]/20 text-gold border border-[#DCAE1D]/30' 
+                    : 'hover:bg-white/5 text-gray-300 hover:text-white'
                 }`}
-                style={{
-                  ...(isActive && {
-                    boxShadow: 'inset 0 0 20px rgba(220, 174, 29, 0.2), 0 4px 30px rgba(220, 174, 29, 0.4)',
-                    borderLeft: '3px solid #DCAE1D'
-                  }),
-                  ...(!isActive && {
-                    transition: 'all 0.3s ease'
-                  })
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'rgba(220, 174, 29, 0.1)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(220, 174, 29, 0.3)';
-                    e.currentTarget.style.transform = 'translateX(4px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = '';
-                    e.currentTarget.style.boxShadow = '';
-                    e.currentTarget.style.transform = '';
-                  }
-                }}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" />
                 {sidebarOpen && <span className="text-left">{tab.label}</span>}
@@ -117,9 +93,21 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
 
         {/* User Menu na Sidebar */}
         {sidebarOpen && (
-          <div className="absolute bottom-4 left-0 right-0 p-4">
+          <div className="absolute bottom-16 left-0 right-0 p-4">
             <div className="w-full">
               <UserMenu />
+            </div>
+          </div>
+        )}
+
+        {/* Footer da Sidebar */}
+        {sidebarOpen && (
+          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
+            <div className="text-xs text-gray-500 text-center">
+              Optidata Cloud Calculator
+            </div>
+            <div className="text-xs text-gold text-center font-medium">
+              Premium Edition
             </div>
           </div>
         )}
