@@ -93,21 +93,9 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
 
         {/* User Menu na Sidebar */}
         {sidebarOpen && (
-          <div className="absolute bottom-16 left-0 right-0 p-4">
+          <div className="absolute bottom-4 left-0 right-0 p-4">
             <div className="w-full">
               <UserMenu />
-            </div>
-          </div>
-        )}
-
-        {/* Footer da Sidebar */}
-        {sidebarOpen && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
-            <div className="text-xs text-gray-500 text-center">
-              Optidata Cloud Calculator
-            </div>
-            <div className="text-xs text-gold text-center font-medium">
-              Premium Edition
             </div>
           </div>
         )}
