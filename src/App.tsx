@@ -14,17 +14,7 @@ import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
 import { ConditionalLayout } from "@/shared/layouts/ConditionalLayout";
 import { safeSupabase } from "@/shared/services/SafeSupabase";
 
-// Injeta CSS variables globais
-import { cssVariables } from "@/shared/ui/theme/tokens";
-
 const queryClient = new QueryClient();
-
-// Injeta variáveis CSS no DOM
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style');
-  style.textContent = cssVariables;
-  document.head.appendChild(style);
-}
 
 const App = () => {
   useEffect(() => {
@@ -32,7 +22,7 @@ const App = () => {
       // Inicializa Supabase de forma segura
       safeSupabase.initialize();
       
-      // Mantém funcionalidades premium existentes
+      // Aplica cores premium
       const cleanup = forcePremiumColors();
       
       setTimeout(() => {
@@ -58,16 +48,9 @@ const App = () => {
         <BrowserRouter>
           <ConditionalLayout>
             <Routes>
-              {/* Página principal - sistema de calculadora completo */}
               <Route path="/" element={<Index />} />
-              
-              {/* Sistema de Login Original */}
               <Route path="/login" element={<Login />} />
-              
-              {/* LoginV2 - Versão melhorada mantida */}
               <Route path="/login-novo" element={<LoginV2 />} />
-              
-              {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </ConditionalLayout>

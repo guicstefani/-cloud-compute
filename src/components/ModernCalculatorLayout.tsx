@@ -3,34 +3,19 @@ import React from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { AnimatedValueCard } from './AnimatedValueCard';
 import { FluidVMCard } from './FluidVMCard';
-import { DiagnosticCSS } from './DiagnosticCSS';
 import { useOptimizedCalculation } from '@/hooks/useOptimizedCalculation';
 import { Button } from '@/components/ui/button';
 import { Plus, Sparkles } from 'lucide-react';
 
 export const ModernCalculatorLayout = () => {
-  console.log('🚀 ModernCalculatorLayout iniciando...');
-  
   const { vms, selectedVMId, precos, selectVM, addVM } = useCalculadoraStore();
   const { calculadora } = useOptimizedCalculation(vms, precos, []);
-  
-  console.log('📊 Estado atual:', { 
-    vmsCount: vms.length, 
-    selectedVMId, 
-    precosLoaded: !!precos,
-    calculadoraLoaded: !!calculadora 
-  });
   
   const totalGeral = calculadora.calcularTotalGeral(vms, []).totalComDesconto;
   const totalInfraestrutura = vms.reduce((sum, vm) => sum + calculadora.calcularVM(vm).subtotalInfra, 0);
 
-  console.log('💰 Valores calculados:', { totalGeral, totalInfraestrutura });
-
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Diagnostic component - debug ativo */}
-      <DiagnosticCSS />
-      
       {/* Fundo com gradiente premium dourado */}
       <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,_rgba(220,174,29,0.1)_0%,_transparent_50%)] animate-pulse" />
@@ -64,10 +49,7 @@ export const ModernCalculatorLayout = () => {
                 Configure os recursos necessários para sua aplicação
               </p>
               <Button
-                onClick={() => {
-                  console.log('🔧 Adicionando nova VM...');
-                  addVM();
-                }}
+                onClick={addVM}
                 className="bg-gradient-to-r from-[#DCAE1D] to-[#F4C430] text-black font-bold px-8 py-4 text-lg hover:from-[#B8941A] hover:to-[#D4AC2D] transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl shadow-[#DCAE1D]/30"
               >
                 <Plus className="w-5 h-5 mr-2" />
@@ -81,10 +63,7 @@ export const ModernCalculatorLayout = () => {
                   Seus Servidores ({vms.length})
                 </h2>
                 <Button
-                  onClick={() => {
-                    console.log('➕ Adicionando VM adicional...');
-                    addVM();
-                  }}
+                  onClick={addVM}
                   className="bg-gradient-to-r from-[#DCAE1D] to-[#F4C430] text-black font-bold hover:from-[#B8941A] hover:to-[#D4AC2D] transition-all duration-300 hover:scale-105"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -92,20 +71,14 @@ export const ModernCalculatorLayout = () => {
                 </Button>
               </div>
               
-              {vms.map(vm => {
-                console.log(`🖥️ Renderizando VM: ${vm.nome} (${vm.id})`);
-                return (
-                  <FluidVMCard
-                    key={vm.id}
-                    vm={vm}
-                    isSelected={vm.id === selectedVMId}
-                    onSelect={() => {
-                      console.log(`🎯 Selecionando VM: ${vm.id}`);
-                      selectVM(vm.id);
-                    }}
-                  />
-                );
-              })}
+              {vms.map(vm => (
+                <FluidVMCard
+                  key={vm.id}
+                  vm={vm}
+                  isSelected={vm.id === selectedVMId}
+                  onSelect={() => selectVM(vm.id)}
+                />
+              ))}
             </div>
           )}
         </div>
@@ -142,10 +115,7 @@ export const ModernCalculatorLayout = () => {
                           ? 'bg-[#DCAE1D]/20 border-[#DCAE1D]/50 shadow-lg shadow-[#DCAE1D]/20' 
                           : 'bg-gray-800/30 border-gray-700/50 hover:border-[#DCAE1D]/30'
                       }`}
-                      onClick={() => {
-                        console.log(`🎯 Selecionando VM via resumo: ${vm.id}`);
-                        selectVM(vm.id);
-                      }}
+                      onClick={() => selectVM(vm.id)}
                     >
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-300">{vm.nome}</span>
