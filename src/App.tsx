@@ -9,22 +9,36 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { forcePremiumColors } from "@/utils/forcePremiumColors";
 import { initPremiumEnhancements } from "@/utils/premiumEnhancements";
+import { ConditionalLayout } from "@/shared/layouts/ConditionalLayout";
+import { CleanDashboard } from "@/modules/clean-dashboard";
+import { safeSupabase } from "@/shared/services/SafeSupabase";
+
+// Injeta CSS variables globais
+import { cssVariables } from "@/shared/ui/theme/tokens";
 
 const queryClient = new QueryClient();
+
+// Injeta variáveis CSS no DOM
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = cssVariables;
+  document.head.appendChild(style);
+}
 
 const App = () => {
   useEffect(() => {
     try {
-      // Forçar cores premium quando o app carregar
+      // Inicializa Supabase de forma segura
+      safeSupabase.initialize();
+      
+      // Mantém funcionalidades premium existentes
       const cleanup = forcePremiumColors();
       
-      // Aplicar também após um pequeno delay para garantir que tudo carregou
       setTimeout(() => {
         forcePremiumColors();
       }, 500);
       
-      // Inicializar enhancements visuais simples
-      const enhancementsCleanup = initPremiumEnhancements();
+      const enhancementsCleanup = initPremiumEn
       
       return () => {
         cleanup();
@@ -41,10 +55,18 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <ConditionalLayout>
+            <Routes>
+              {/* Página principal - código legado com layout condicional */}
+              <Route path="/" element={<Index />} />
+              
+              {/* Novo dashboard limpo */}
+              <Route path="/dashboard" element={<CleanDashboard />} />
+              
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ConditionalLayout>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
