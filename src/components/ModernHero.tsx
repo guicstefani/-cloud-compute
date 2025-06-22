@@ -71,7 +71,7 @@ const ModernHero = () => {
       </section>
 
       {/* CSS Animation */}
-      <style jsx>{`
+      <style>{`
         @keyframes meshFlow {
           0%, 100% {
             transform: translate(0, 0) scale(1);
