@@ -1,3 +1,4 @@
+
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
 import { VM } from '@/types';
@@ -636,10 +637,17 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
         </div>
       </CollapsibleCard>
 
-      {/* Desconto Exclusivo - VERSÃO CORRIGIDA */}
-      <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-        <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
-          <Tag className="w-5 h-5 mr-2" />
+      {/* Desconto Exclusivo - CORRIGIDO SEM AMARELO */}
+      <div 
+        className="rounded-lg p-6 border"
+        style={{
+          backgroundColor: '#1a1a1a',
+          borderColor: '#333333',
+          color: '#ffffff'
+        }}
+      >
+        <h4 className="text-lg font-semibold mb-4 flex items-center text-white">
+          <Tag className="w-5 h-5 mr-2 text-orange-500" />
           Desconto Exclusivo para esta VM
         </h4>
         
@@ -647,10 +655,10 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
           {/* Slider de Desconto */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-300">
                 Percentual de Desconto
               </span>
-              <span className="text-2xl font-bold text-blue-600">
+              <span className="text-2xl font-bold text-orange-500">
                 {vm.descontoIndividual || 0}%
               </span>
             </div>
@@ -661,14 +669,14 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
               max="50"
               value={vm.descontoIndividual || 0}
               onChange={(e) => handleUpdate({ descontoIndividual: parseInt(e.target.value) })}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
               style={{
-                background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB ${(vm.descontoIndividual || 0) * 2}%, #E5E7EB 100%)`
+                background: `linear-gradient(to right, #f97316 0%, #f97316 ${(vm.descontoIndividual || 0) * 2}%, #374151 ${(vm.descontoIndividual || 0) * 2}%, #374151 100%)`
               }}
             />
             
             {/* Labels do slider */}
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
               <span>0%</span>
               <span>25%</span>
               <span>50%</span>
@@ -676,8 +684,15 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
           </div>
 
           {/* Aviso sobre aplicação do desconto */}
-          <div className="bg-blue-100 rounded-lg p-3">
-            <p className="text-sm text-blue-800 flex items-start">
+          <div 
+            className="rounded-lg p-3"
+            style={{
+              backgroundColor: '#0f1419',
+              borderColor: '#374151',
+              border: '1px solid'
+            }}
+          >
+            <p className="text-sm text-orange-300 flex items-start">
               <Info className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
               Aplicado apenas em infraestrutura. Licenças não têm desconto.
             </p>
@@ -685,25 +700,31 @@ const VMConfigurator = ({ vm, calculadora }: VMConfiguratorProps) => {
 
           {/* Breakdown de valores */}
           {(vm.descontoIndividual || 0) > 0 && (
-            <div className="space-y-3 bg-white rounded-lg p-4 border">
+            <div 
+              className="space-y-3 rounded-lg p-4 border"
+              style={{
+                backgroundColor: '#111827',
+                borderColor: '#374151'
+              }}
+            >
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Infraestrutura original:</span>
-                <span className="font-medium">{formatCurrency(custo.subtotalInfraOriginal)}</span>
+                <span className="text-gray-400">Infraestrutura original:</span>
+                <span className="font-medium text-white">{formatCurrency(custo.subtotalInfraOriginal)}</span>
               </div>
               
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Com desconto ({vm.descontoIndividual}%):</span>
-                <span className="font-medium text-blue-600">
+                <span className="text-gray-400">Com desconto ({vm.descontoIndividual}%):</span>
+                <span className="font-medium text-orange-400">
                   {formatCurrency(custo.subtotalInfra)}
                 </span>
               </div>
               
-              <div className="flex justify-between text-sm font-semibold text-green-600 pt-2 border-t">
+              <div className="flex justify-between text-sm font-semibold text-green-400 pt-2 border-t border-gray-600">
                 <span>Economia mensal:</span>
                 <span>{formatCurrency(custo.descontoIndividual)}</span>
               </div>
               
-              <div className="flex justify-between text-sm text-green-600">
+              <div className="flex justify-between text-sm text-green-400">
                 <span>Economia anual:</span>
                 <span>{formatCurrency(custo.descontoIndividual * 12)}</span>
               </div>
