@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Server, Database, TrendingUp, FileText, Menu, X } from 'lucide-react';
+import { Server, Database, TrendingUp, FileText, Menu, X, DollarSign } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import UserMenu from './UserMenu';
@@ -21,7 +21,8 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
     { id: 'vm', label: 'Calculadora VM', icon: Server },
     { id: 'pool', label: 'Pool de Recursos', icon: Database },
     { id: 'upgrades', label: 'Upgrades', icon: TrendingUp },
-    { id: 'propostas', label: 'Propostas', icon: FileText }
+    { id: 'propostas', label: 'Propostas', icon: FileText },
+    { id: 'contratos', label: 'Gestão MRR', icon: DollarSign }
   ];
 
   useEffect(() => {

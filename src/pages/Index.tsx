@@ -15,7 +15,7 @@ const Index = () => {
   const { vms, selectedVMId, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const selectedVM = vms.find(vm => vm.id === selectedVMId);
-  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas'>('vm');
+  const [modoCalculo, setModoCalculo] = useState<'vm' | 'pool' | 'upgrades' | 'propostas' | 'contratos'>('vm');
 
   return (
     <PremiumWrapper activeTab={modoCalculo} onTabChange={(tab) => setModoCalculo(tab as any)}>
@@ -65,9 +65,12 @@ const Index = () => {
           ) : modoCalculo === 'upgrades' ? (
             // Modo Upgrades (existente)
             <UpgradeModule />
-          ) : (
-            // Nova aba Propostas
+          ) : modoCalculo === 'propostas' ? (
+            // Aba Propostas (existente)
             <ListaPropostas />
+          ) : (
+            // Nova aba Gestão de Contratos/MRR
+            <GestaoContratos />
           )}
         </div>
       </div>
