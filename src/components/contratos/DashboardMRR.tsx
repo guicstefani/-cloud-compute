@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useContratosStore } from '@/store/contratos';
 import { formatCurrency } from '@/utils/calculadora';
-import { TrendingUp, TrendingDown, Users, DollarSign, Calendar, AlertTriangle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, Calendar, AlertTriangle, Plus } from 'lucide-react';
+import ModalNovoContrato from './ModalNovoContrato';
 
 const DashboardMRR = () => {
   const { calcularMRR, contratos } = useContratosStore();
+  const [showModal, setShowModal] = useState(false);
   const metricas = calcularMRR();
   
   const formatPercentage = (value: number) => `${value.toFixed(1)}%`;
@@ -30,11 +32,20 @@ const DashboardMRR = () => {
           <h1 className="text-3xl font-bold text-white">Dashboard MRR</h1>
           <p className="text-gray-400 mt-1">Gestão de Contratos e Receita Recorrente</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg">
-          <Calendar className="w-4 h-4 text-gray-400" />
-          <span className="text-sm text-gray-300">
-            {new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
-          </span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg">
+            <Calendar className="w-4 h-4 text-gray-400" />
+            <span className="text-sm text-gray-300">
+              {new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+            </span>
+          </div>
+          <button 
+            onClick={() => setShowModal(true)}
+            className="premium-btn"
+          >
+            <Plus className="w-5 h-5" />
+            Novo Contrato
+          </button>
         </div>
       </div>
 
@@ -199,12 +210,21 @@ const DashboardMRR = () => {
           <p className="text-gray-400 mb-6 max-w-md mx-auto">
             Cadastre seus primeiros contratos para começar a visualizar métricas de receita recorrente em tempo real.
           </p>
-          <button className="premium-btn">
+          <button 
+            onClick={() => setShowModal(true)}
+            className="premium-btn"
+          >
             <DollarSign className="w-5 h-5" />
             Cadastrar Primeiro Contrato
           </button>
         </div>
       )}
+
+      {/* Modal */}
+      <ModalNovoContrato 
+        open={showModal} 
+        onClose={() => setShowModal(false)} 
+      />
     </div>
   );
 };

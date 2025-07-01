@@ -4,12 +4,13 @@ import { useContratosStore } from '@/store/contratos';
 import { formatCurrency } from '@/utils/calculadora';
 import { Search, Filter, Plus, Eye, Edit, Trash2, Calendar, User, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ModalNovoContrato from './ModalNovoContrato';
 
 const ListaContratos = () => {
   const { contratos, clientes, selectContrato, cancelarContrato } = useContratosStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'todos' | 'ativo' | 'cancelado' | 'pausado'>('todos');
-  const [showCadastro, setShowCadastro] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   // Filtrar contratos
   const contratosFiltrados = contratos.filter(contrato => {
@@ -37,12 +38,6 @@ const ListaContratos = () => {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  const calcularDescontoTotal = (contrato: any) => {
-    const valorOriginal = contrato.valor_base;
-    const valorFinal = contrato.valor_final;
-    return ((valorOriginal - valorFinal) / valorOriginal) * 100;
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -52,7 +47,7 @@ const ListaContratos = () => {
           <p className="text-gray-400 mt-1">{contratosFiltrados.length} contratos encontrados</p>
         </div>
         <button 
-          onClick={() => setShowCadastro(true)}
+          onClick={() => setShowModal(true)}
           className="premium-btn"
         >
           <Plus className="w-5 h-5" />
@@ -104,12 +99,21 @@ const ListaContratos = () => {
             <h3 className="text-xl font-semibold text-white mb-2">
               Nenhum contrato encontrado
             </h3>
-            <p className="text-gray-400">
+            <p className="text-gray-400 mb-6">
               {contratos.length === 0 
                 ? 'Cadastre seu primeiro contrato para começar.'
                 : 'Tente ajustar os filtros de busca.'
               }
             </p>
+            {contratos.length === 0 && (
+              <button 
+                onClick={() => setShowModal(true)}
+                className="premium-btn"
+              >
+                <Plus className="w-5 h-5" />
+                Cadastrar Primeiro Contrato
+              </button>
+            )}
           </div>
         ) : (
           contratosFiltrados.map(contrato => {
@@ -215,6 +219,12 @@ const ListaContratos = () => {
           })
         )}
       </div>
+
+      {/* Modal */}
+      <ModalNovoContrato 
+        open={showModal} 
+        onClose={() => setShowModal(false)} 
+      />
     </div>
   );
 };
