@@ -4,6 +4,10 @@ import { useContratosStore } from '@/store/contratos';
 import { formatCurrency } from '@/utils/calculadora';
 import { TrendingUp, TrendingDown, Users, DollarSign, Calendar, AlertTriangle, Plus } from 'lucide-react';
 import ModalNovoContrato from './ModalNovoContrato';
+import EpicBackground from '@/components/ui/EpicBackground';
+import GlassCard from '@/components/ui/GlassCard';
+import GoldButton from '@/components/ui/GoldButton';
+import MetricCard from '@/components/ui/MetricCard';
 
 const DashboardMRR = () => {
   const { calcularMRR, contratos } = useContratosStore();
@@ -25,206 +29,154 @@ const DashboardMRR = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Dashboard MRR</h1>
-          <p className="text-gray-400 mt-1">Gestão de Contratos e Receita Recorrente</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg">
-            <Calendar className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-300">
-              {new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
-            </span>
-          </div>
-          <button 
-            onClick={() => setShowModal(true)}
-            className="premium-btn"
-          >
-            <Plus className="w-5 h-5" />
-            Novo Contrato
-          </button>
-        </div>
-      </div>
-
-      {/* Métricas Principais */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* MRR Atual */}
-        <div className="premium-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xs text-gray-400 uppercase tracking-wider">MRR Atual</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">
-            {formatCurrency(metricas.mrrAtual)}
-          </div>
-          <div className="flex items-center gap-2">
-            {getGrowthIcon(metricas.netMRRGrowth)}
-            <span className={`text-sm font-medium ${getGrowthColor(metricas.netMRRGrowth)}`}>
-              {metricas.netMRRGrowth >= 0 ? '+' : ''}{formatCurrency(metricas.netMRRGrowth)}
-            </span>
-            <span className="text-xs text-gray-500">vs mês anterior</span>
-          </div>
-        </div>
-
-        {/* MRR Novo */}
-        <div className="premium-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xs text-gray-400 uppercase tracking-wider">MRR Novo</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">
-            {formatCurrency(metricas.mrrNovo)}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">
-              {contratos.filter(c => {
-                const inicioMes = new Date();
-                inicioMes.setDate(1);
-                return new Date(c.data_fechamento) >= inicioMes && c.status === 'ativo';
-              }).length} novos contratos
-            </span>
-          </div>
-        </div>
-
-        {/* Churn */}
-        <div className="premium-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
-              <AlertTriangle className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xs text-gray-400 uppercase tracking-wider">Churn</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">
-            {formatCurrency(metricas.churn)}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">
-              {contratos.filter(c => {
-                const inicioMes = new Date();
-                inicioMes.setDate(1);
-                return new Date(c.updated_at) >= inicioMes && c.status === 'cancelado';
-              }).length} cancelamentos
-            </span>
-          </div>
-        </div>
-
-        {/* Ticket Médio */}
-        <div className="premium-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl flex items-center justify-center">
-              <Users className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xs text-gray-400 uppercase tracking-wider">Ticket Médio</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-2">
-            {formatCurrency(metricas.ticketMedio)}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">
-              {metricas.contratosAtivos} contratos ativos
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Análise de Descontos */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="premium-card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Análise de Descontos</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Desconto Médio Total</span>
-              <span className="text-white font-semibold">{formatPercentage(metricas.descontoMedio)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Software</span>
-              <span className="text-blue-400 font-semibold">{formatPercentage(metricas.descontoSoftware)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Infraestrutura</span>
-              <span className="text-green-400 font-semibold">{formatPercentage(metricas.descontoInfra)}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="premium-card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Resumo Geral</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Total de Contratos</span>
-              <span className="text-white font-semibold">{metricas.totalContratos}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Contratos Ativos</span>
-              <span className="text-green-400 font-semibold">{metricas.contratosAtivos}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Taxa Ativação</span>
-              <span className="text-white font-semibold">
-                {metricas.totalContratos > 0 
-                  ? formatPercentage((metricas.contratosAtivos / metricas.totalContratos) * 100)
-                  : '0%'
-                }
+    <div className="min-h-screen bg-black text-white">
+      <EpicBackground />
+      
+      <div className="relative z-10 p-8">
+        {/* Header */}
+        <header className="text-center mb-12">
+          <h1 className="epic-title">Dashboard MRR</h1>
+          <p className="epic-subtitle">Gestão Premium de Contratos</p>
+          
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <Calendar className="w-4 h-4 text-gold" />
+              <span className="text-sm text-white/80">
+                {new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
               </span>
             </div>
+            <GoldButton onClick={() => setShowModal(true)}>
+              <Plus className="w-5 h-5" />
+              Novo Contrato
+            </GoldButton>
           </div>
+        </header>
+
+        {/* Métricas Principais */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <MetricCard
+            number={formatCurrency(metricas.mrrAtual)}
+            label="MRR Atual"
+            value={`${metricas.netMRRGrowth >= 0 ? '+' : ''}${formatCurrency(metricas.netMRRGrowth)} vs mês anterior`}
+            icon={<DollarSign className="w-6 h-6 text-black" />}
+          />
+          <MetricCard
+            number={formatCurrency(metricas.mrrNovo)}
+            label="MRR Novo"
+            value={`${contratos.filter(c => {
+              const inicioMes = new Date();
+              inicioMes.setDate(1);
+              return new Date(c.data_fechamento) >= inicioMes && c.status === 'ativo';
+            }).length} novos contratos`}
+            icon={<TrendingUp className="w-6 h-6 text-black" />}
+          />
+          <MetricCard
+            number={formatCurrency(metricas.churn)}
+            label="Churn"
+            value={`${contratos.filter(c => {
+              const inicioMes = new Date();
+              inicioMes.setDate(1);
+              return new Date(c.updated_at) >= inicioMes && c.status === 'cancelado';
+            }).length} cancelamentos`}
+            icon={<AlertTriangle className="w-6 h-6 text-black" />}
+          />
+          <MetricCard
+            number={formatCurrency(metricas.ticketMedio)}
+            label="Ticket Médio"
+            value={`${metricas.contratosAtivos} contratos ativos`}
+            icon={<Users className="w-6 h-6 text-black" />}
+          />
         </div>
 
-        <div className="premium-card p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Crescimento</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Net MRR Growth</span>
-              <span className={`font-semibold ${getGrowthColor(metricas.netMRRGrowth)}`}>
-                {formatCurrency(metricas.netMRRGrowth)}
-              </span>
+        {/* Análise Detalhada */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          <GlassCard>
+            <h3 className="section-title">Análise de Descontos</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Desconto Médio Total</span>
+                <span className="text-gold font-semibold text-lg">{formatPercentage(metricas.descontoMedio)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Software</span>
+                <span className="text-blue-400 font-semibold text-lg">{formatPercentage(metricas.descontoSoftware)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Infraestrutura</span>
+                <span className="text-green-400 font-semibold text-lg">{formatPercentage(metricas.descontoInfra)}</span>
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Novos + Upgrades</span>
-              <span className="text-green-400 font-semibold">{formatCurrency(metricas.mrrNovo)}</span>
+          </GlassCard>
+
+          <GlassCard>
+            <h3 className="section-title">Resumo Geral</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Total de Contratos</span>
+                <span className="text-white font-semibold text-lg">{metricas.totalContratos}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Contratos Ativos</span>
+                <span className="text-green-400 font-semibold text-lg">{metricas.contratosAtivos}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Taxa Ativação</span>
+                <span className="text-gold font-semibold text-lg">
+                  {metricas.totalContratos > 0 
+                    ? formatPercentage((metricas.contratosAtivos / metricas.totalContratos) * 100)
+                    : '0%'
+                  }
+                </span>
+              </div>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Churn + Downgrades</span>
-              <span className="text-red-400 font-semibold">{formatCurrency(metricas.churn)}</span>
+          </GlassCard>
+
+          <GlassCard>
+            <h3 className="section-title">Crescimento</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Net MRR Growth</span>
+                <span className={`font-semibold text-lg ${getGrowthColor(metricas.netMRRGrowth)}`}>
+                  {formatCurrency(metricas.netMRRGrowth)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Novos + Upgrades</span>
+                <span className="text-green-400 font-semibold text-lg">{formatCurrency(metricas.mrrNovo)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Churn + Downgrades</span>
+                <span className="text-red-400 font-semibold text-lg">{formatCurrency(metricas.churn)}</span>
+              </div>
             </div>
-          </div>
+          </GlassCard>
         </div>
+
+        {/* Call to Action se não há contratos */}
+        {metricas.totalContratos === 0 && (
+          <GlassCard className="max-w-2xl mx-auto text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center mx-auto mb-6">
+              <DollarSign className="w-10 h-10 text-black" />
+            </div>
+            <h3 className="text-2xl font-bold text-gold mb-3">
+              Comece a Acompanhar seu MRR
+            </h3>
+            <p className="text-white/70 mb-8 text-lg leading-relaxed max-w-md mx-auto">
+              Cadastre seus primeiros contratos para começar a visualizar métricas de receita recorrente em tempo real.
+            </p>
+            <GoldButton onClick={() => setShowModal(true)} className="text-lg px-8 py-4">
+              <DollarSign className="w-6 h-6" />
+              Cadastrar Primeiro Contrato
+            </GoldButton>
+          </GlassCard>
+        )}
+
+        {/* Modal */}
+        <ModalNovoContrato 
+          open={showModal} 
+          onClose={() => setShowModal(false)} 
+        />
       </div>
-
-      {/* Call to Action se não há contratos */}
-      {metricas.totalContratos === 0 && (
-        <div className="premium-card p-12 text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-gold to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <DollarSign className="w-8 h-8 text-black" />
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Comece a Acompanhar seu MRR
-          </h3>
-          <p className="text-gray-400 mb-6 max-w-md mx-auto">
-            Cadastre seus primeiros contratos para começar a visualizar métricas de receita recorrente em tempo real.
-          </p>
-          <button 
-            onClick={() => setShowModal(true)}
-            className="premium-btn"
-          >
-            <DollarSign className="w-5 h-5" />
-            Cadastrar Primeiro Contrato
-          </button>
-        </div>
-      )}
-
-      {/* Modal */}
-      <ModalNovoContrato 
-        open={showModal} 
-        onClose={() => setShowModal(false)} 
-      />
     </div>
   );
 };

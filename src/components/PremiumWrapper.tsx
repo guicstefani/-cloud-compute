@@ -4,6 +4,7 @@ import { Server, Database, TrendingUp, FileText, Menu, X, DollarSign } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import UserMenu from './UserMenu';
+import EpicBackground from './ui/EpicBackground';
 import type { User } from '@supabase/supabase-js';
 
 interface PremiumWrapperProps {
@@ -46,15 +47,14 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
   }, [navigate]);
 
   return (
-    <div className="premium-app flex h-screen">
+    <div className="min-h-screen bg-black text-white flex">
+      <EpicBackground />
+      
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-dark border-r border-gray-800 transition-all duration-300 flex-shrink-0 relative z-10`}
-        style={{
-          boxShadow: '4px 0 20px rgba(0, 0, 0, 0.5)'
-        }}>
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-white/[0.03] backdrop-blur-xl border-r border-white/[0.08] transition-all duration-300 flex-shrink-0 relative z-20`}>
+        <div className="p-4 border-b border-white/[0.08] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-gold to-gold-dark rounded-xl flex items-center justify-center">
               <span className="text-black font-bold text-lg">O</span>
             </div>
             {sidebarOpen && (
@@ -68,7 +68,7 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 hover:bg-white/5 rounded-lg transition-colors"
           >
-            {sidebarOpen ? <X className="w-4 h-4 text-gray-400" /> : <Menu className="w-4 h-4 text-gray-400" />}
+            {sidebarOpen ? <X className="w-4 h-4 text-white/60" /> : <Menu className="w-4 h-4 text-white/60" />}
           </button>
         </div>
         
@@ -80,37 +80,16 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg mb-2 transition-all duration-300 ${
+                className={`group w-full flex items-center gap-3 p-4 rounded-xl mb-3 transition-all duration-300 ${
                   isActive 
-                    ? 'bg-[#DCAE1D]/15 text-gold border border-[#DCAE1D]/30 transform translate-x-1' 
-                    : 'hover:bg-white/5 text-gray-300 hover:text-white hover:transform hover:translate-x-1'
+                    ? 'bg-gradient-to-r from-gold/20 to-gold/10 text-gold border border-gold/30 shadow-lg shadow-gold/20' 
+                    : 'hover:bg-white/5 text-white/70 hover:text-white'
                 }`}
-                style={{
-                  ...(isActive && {
-                    boxShadow: 'inset 0 0 20px rgba(220, 174, 29, 0.2), 0 4px 30px rgba(220, 174, 29, 0.4)',
-                    borderLeft: '3px solid #DCAE1D'
-                  }),
-                  ...(!isActive && {
-                    transition: 'all 0.3s ease'
-                  })
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'rgba(220, 174, 29, 0.1)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(220, 174, 29, 0.3)';
-                    e.currentTarget.style.transform = 'translateX(4px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = '';
-                    e.currentTarget.style.boxShadow = '';
-                    e.currentTarget.style.transform = '';
-                  }
-                }}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" />
-                {sidebarOpen && <span className="text-left">{tab.label}</span>}
+                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-gold' : 'group-hover:text-gold'} transition-colors`} />
+                {sidebarOpen && (
+                  <span className="text-left font-medium">{tab.label}</span>
+                )}
               </button>
             );
           })}
@@ -127,7 +106,7 @@ export function PremiumWrapper({ children, activeTab, onTabChange }: PremiumWrap
       </aside>
 
       {/* Content */}
-      <main className="flex-1 overflow-auto bg-black">
+      <main className="flex-1 overflow-auto relative z-10">
         {children}
       </main>
     </div>

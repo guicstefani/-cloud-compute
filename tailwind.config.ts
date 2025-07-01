@@ -60,26 +60,24 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Cores da marca Optidata
-				optidata: {
-					blue: '#0066CC',
-					'blue-light': '#00A1E4',
-					success: '#10B981',
-					warning: '#F59E0B',
-					error: '#EF4444',
-					gray: {
-						50: '#F8F9FA',
-						100: '#F1F5F9',
-						200: '#E2E8F0',
-						300: '#CBD5E1',
-						400: '#94A3B8',
-						500: '#64748B',
-						600: '#475569',
-						700: '#334155',
-						800: '#1E293B',
-						900: '#0F172A'
-					}
+				// CORES PREMIUM OPTICLOUD
+				gold: {
+					DEFAULT: '#DCAE1D',
+					light: '#F4D03F',
+					dark: '#B8941A',
+				},
+				glass: {
+					DEFAULT: 'rgba(255, 255, 255, 0.03)',
+					hover: 'rgba(255, 255, 255, 0.05)',
+					border: 'rgba(255, 255, 255, 0.08)',
 				}
+			},
+			backgroundColor: {
+				glass: 'rgba(255, 255, 255, 0.03)',
+				'glass-hover': 'rgba(255, 255, 255, 0.05)',
+			},
+			borderColor: {
+				'glass-border': 'rgba(255, 255, 255, 0.08)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
