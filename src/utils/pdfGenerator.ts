@@ -70,169 +70,6 @@ export const gerarPDFProposta = (data: PDFData) => {
   pdf.save(nomeArquivo);
 };
 
-// Função específica para upgrades melhorada
-const gerarSecaoUpgrades = (pdf: jsPDF, upgrades: any[], total: number, margin: number, startY: number) => {
-  let yPos = startY;
-  const pageWidth = pdf.internal.pageSize.width;
-
-  // Calcular desconto
-  const calcularDesconto = (valor: number) => {
-    if (valor > 10000) return 0.10;
-    if (valor > 5000) return 0.05;
-    if (valor > 2000) return 0.03;
-    return 0;
-  };
-
-  const desconto = calcularDesconto(total);
-  const valorDesconto = total * desconto;
-  const totalFinal = total - valorDesconto;
-
-  // Resumo geral
-  pdf.setFontSize(14);
-  pdf.setTextColor(0, 102, 204);
-  pdf.text('RESUMO EXECUTIVO', margin, yPos);
-  yPos += 15;
-
-  // Box do total com melhor design
-  pdf.setFillColor(240, 248, 255);
-  pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 35, 3, 3, 'F');
-  
-  pdf.setFontSize(12);
-  pdf.setTextColor(0, 0, 0);
-  pdf.text(`Total de Itens: ${upgrades.length}`, margin + 10, yPos + 12);
-  pdf.text(`Subtotal: ${formatCurrency(total)}`, margin + 10, yPos + 22);
-  
-  if (desconto > 0) {
-    pdf.setTextColor(0, 150, 0);
-    pdf.text(`Desconto (${(desconto * 100).toFixed(0)}%): -${formatCurrency(valorDesconto)}`, margin + 10, yPos + 32);
-    pdf.setFontSize(14);
-    pdf.setTextColor(220, 174, 29);
-    pdf.text(`TOTAL FINAL: ${formatCurrency(totalFinal)}`, pageWidth - margin - 100, yPos + 25);
-  } else {
-    pdf.setFontSize(14);
-    pdf.setTextColor(220, 174, 29);
-    pdf.text(`TOTAL: ${formatCurrency(total)}`, pageWidth - margin - 80, yPos + 20);
-  }
-
-  yPos += 45;
-
-  // Detalhamento por categoria
-  const categoriaMap: Record<string, string> = {
-    computacional: '💻 Recursos Computacionais',
-    storage: '💾 Armazenamento',
-    rede: '🌐 Rede & Conectividade',
-    seguranca: '🛡️ Segurança',
-    licenca: '🪟 Licenças'
-  };
-
-  const categorias = [...new Set(upgrades.map(item => item.categoria))];
-
-  categorias.forEach(categoria => {
-    const itensCategoria = upgrades.filter(item => item.categoria === categoria);
-    
-    if (itensCategoria.length > 0) {
-      if (yPos > pdf.internal.pageSize.height - 80) {
-        pdf.addPage();
-        yPos = 30;
-      }
-
-      pdf.setFontSize(14);
-      pdf.setTextColor(0, 102, 204);
-      pdf.text(categoriaMap[categoria] || categoria.toUpperCase(), margin, yPos);
-      yPos += 12;
-
-      itensCategoria.forEach((item) => {
-        if (yPos > pdf.internal.pageSize.height - 40) {
-          pdf.addPage();
-          yPos = 30;
-        }
-
-        // Nome do item
-        pdf.setFontSize(11);
-        pdf.setTextColor(0, 0, 0);
-        pdf.text(`• ${item.nome}`, margin + 5, yPos);
-        yPos += 6;
-
-        // Descrição
-        pdf.setFontSize(9);
-        pdf.setTextColor(80, 80, 80);
-        const descricaoLines = pdf.splitTextToSize(`  ${item.descricao}`, pageWidth - margin * 2 - 10);
-        pdf.text(descricaoLines, margin + 10, yPos);
-        yPos += descricaoLines.length * 4;
-
-        // Detalhes comerciais
-        pdf.setFontSize(10);
-        pdf.setTextColor(0, 102, 204);
-        pdf.text(`  Quantidade: ${item.quantidade} | Preço unitário: ${formatCurrency(item.preco)}`, margin + 10, yPos);
-        pdf.setTextColor(220, 174, 29);
-        pdf.text(`Subtotal: ${formatCurrency(item.preco * item.quantidade)}`, pageWidth - margin - 80, yPos);
-        
-        yPos += 10;
-      });
-
-      yPos += 5;
-    }
-  });
-
-  // Projeção de contrato
-  yPos += 10;
-  if (yPos > pdf.internal.pageSize.height - 80) {
-    pdf.addPage();
-    yPos = 30;
-  }
-
-  pdf.setFontSize(14);
-  pdf.setTextColor(0, 102, 204);
-  pdf.text('PROJEÇÃO DE INVESTIMENTO', margin, yPos);
-  yPos += 15;
-
-  const projecoes = [
-    { periodo: '12 meses', valor: totalFinal * 12, economia: desconto > 0 ? valorDesconto * 12 : 0 },
-    { periodo: '24 meses', valor: totalFinal * 24, economia: desconto > 0 ? valorDesconto * 24 : 0 },
-    { periodo: '36 meses', valor: totalFinal * 36, economia: desconto > 0 ? valorDesconto * 36 : 0 }
-  ];
-
-  projecoes.forEach(projecao => {
-    pdf.setFontSize(11);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text(`${projecao.periodo}: ${formatCurrency(projecao.valor)}`, margin + 10, yPos);
-    
-    if (projecao.economia > 0) {
-      pdf.setTextColor(0, 150, 0);
-      pdf.text(`(Economia: ${formatCurrency(projecao.economia)})`, margin + 100, yPos);
-    }
-    
-    yPos += 8;
-  });
-
-  // Observações comerciais
-  yPos += 15;
-  if (yPos > pdf.internal.pageSize.height - 60) {
-    pdf.addPage();
-    yPos = 30;
-  }
-
-  pdf.setFontSize(12);
-  pdf.setTextColor(0, 102, 204);
-  pdf.text('OBSERVAÇÕES COMERCIAIS', margin, yPos);
-  yPos += 12;
-
-  const observacoes = [
-    '• Valores expressos em reais (BRL), válidos por 15 dias',
-    '• Implementação sem custo adicional para pedidos acima de R$ 2.000',
-    '• Suporte técnico 24x7 incluso em todos os serviços',
-    '• Desconto progressivo para contratos anuais',
-    '• Migração assistida sem interrupção de serviços'
-  ];
-
-  pdf.setFontSize(10);
-  pdf.setTextColor(60, 60, 60);
-  observacoes.forEach(obs => {
-    pdf.text(obs, margin + 5, yPos);
-    yPos += 6;
-  });
-};
-
 const gerarSecaoVMs = (pdf: jsPDF, vms: VM[], calculadora: CalculadoraCloud, descontos: any[], margin: number, startY: number) => {
   let yPos = startY;
   const pageWidth = pdf.internal.pageSize.width;
@@ -403,6 +240,85 @@ const gerarSecaoPool = (pdf: jsPDF, pool: any, margin: number, startY: number) =
     pdf.text(`${item.item}: ${formatCurrency(Math.abs(item.valor))}${item.valor < 0 ? ' (desconto)' : ''}`, margin + 10, yPos);
     yPos += 8;
   });
+};
+
+const gerarSecaoUpgrades = (pdf: jsPDF, upgrades: any[], total: number, margin: number, startY: number) => {
+  let yPos = startY;
+  const pageWidth = pdf.internal.pageSize.width;
+
+  // Resumo geral
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 102, 204);
+  pdf.text('RESUMO DOS UPGRADES', margin, yPos);
+  yPos += 15;
+
+  // Box do total
+  pdf.setFillColor(240, 248, 255);
+  pdf.rect(margin, yPos, pageWidth - 2 * margin, 25, 'F');
+  
+  pdf.setFontSize(12);
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(`Total de Itens: ${upgrades.length}`, margin + 10, yPos + 10);
+  pdf.text(`Valor Total Mensal: ${formatCurrency(total)}`, margin + 10, yPos + 20);
+
+  yPos += 35;
+
+  // Detalhamento por categoria
+  const categorias = {
+    recursos: 'Recursos Computacionais',
+    licencas: 'Licenças Avulsas',
+    servicos: 'Serviços Adicionais'
+  };
+
+  Object.entries(categorias).forEach(([key, titulo]) => {
+    const itensCategoria = upgrades.filter(item => item.categoria === key);
+    
+    if (itensCategoria.length > 0) {
+      if (yPos > pdf.internal.pageSize.height - 80) {
+        pdf.addPage();
+        yPos = 30;
+      }
+
+      pdf.setFontSize(14);
+      pdf.setTextColor(0, 102, 204);
+      pdf.text(titulo, margin, yPos);
+      yPos += 12;
+
+      itensCategoria.forEach((item) => {
+        if (yPos > pdf.internal.pageSize.height - 40) {
+          pdf.addPage();
+          yPos = 30;
+        }
+
+        pdf.setFontSize(11);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(`• ${item.nome}`, margin + 5, yPos);
+        pdf.text(`Qtd: ${item.quantidade}`, margin + 100, yPos);
+        pdf.text(`Subtotal: ${formatCurrency(item.preco * item.quantidade)}`, margin + 140, yPos);
+        yPos += 7;
+      });
+
+      yPos += 5;
+    }
+  });
+
+  // Projeção anual
+  yPos += 10;
+  if (yPos > pdf.internal.pageSize.height - 60) {
+    pdf.addPage();
+    yPos = 30;
+  }
+
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 102, 204);
+  pdf.text('PROJEÇÃO ANUAL', margin, yPos);
+  yPos += 15;
+
+  pdf.setFontSize(11);
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(`Valor Mensal: ${formatCurrency(total)}`, margin + 10, yPos);
+  yPos += 8;
+  pdf.text(`Valor Anual: ${formatCurrency(total * 12)}`, margin + 10, yPos);
 };
 
 const calcularCustosPool = (pool: any) => {

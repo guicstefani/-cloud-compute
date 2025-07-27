@@ -1,8 +1,5 @@
-
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency, formatNumber } from '@/utils/calculadora';
-import { LegacyBridge } from '@/shared/services/LegacyBridge';
-import { exportToExcel } from '@/utils/exportUtils';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,13 +12,10 @@ import {
   Cpu,
   MemoryStick,
   HardDrive,
-  Shield,
-  BarChart3
+  Shield
 } from 'lucide-react';
 import { useState } from 'react';
 import CriarPropostaModal from '@/components/CriarPropostaModal';
-import { CloudComparisonButton } from '@/components/CloudComparisonButton';
-import { QuickComparisonCard } from '@/components/QuickComparisonCard';
 
 interface PricingSummaryProps {
   calculadora: CalculadoraCloud;
@@ -29,94 +23,6 @@ interface PricingSummaryProps {
 
 const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
   const { vms, descontos } = useCalculadoraStore();
-  const legacyBridge = LegacyBridge.getInstance();
-  
-  const handleExportPDF = async () => {
-    if (vms.length === 0) {
-      alert('Adicione pelo menos uma VM antes de exportar');
-      return;
-    }
-
-    try {
-      await legacyBridge.generatePDF({
-        tipo: 'vm',
-        vms,
-        calculadora,
-        descontos
-      });
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-      alert('Erro ao gerar PDF. Tente novamente.');
-    }
-  };
-
-  const handleExportExcel = () => {
-    if (vms.length === 0) {
-      alert('Adicione pelo menos uma VM antes de exportar');
-      return;
-    }
-
-    try {
-      const resultado = calculadora.calcularTotalGeral(vms, descontos);
-      const exportData = {
-        vms: resultado.vms,
-        totalGeral: resultado.totalComDesconto,
-        economia: resultado.economia,
-        calculadora
-      };
-      
-      exportToExcel(exportData);
-    } catch (error) {
-      console.error('Erro ao exportar Excel:', error);
-      alert('Erro ao exportar Excel. Tente novamente.');
-    }
-  };
-
-  const handleSolicitarProposta = () => {
-    if (vms.length === 0) {
-      alert('Configure pelo menos uma VM antes de solicitar proposta');
-      return;
-    }
-
-    // Simular abertura de email ou formulário
-    const resultado = calculadora.calcularTotalGeral(vms, descontos);
-    const emailBody = `Olá, gostaria de solicitar uma proposta para ${vms.length} VM(s) com valor total de ${formatCurrency(resultado.totalComDesconto)} por mês.`;
-    
-    if (navigator.userAgent.includes('Mobile')) {
-      // Em mobile, tentar abrir WhatsApp ou email
-      window.open(`mailto:comercial@optidata.com.br?subject=Solicitação de Proposta Cloud&body=${encodeURIComponent(emailBody)}`);
-    } else {
-      // Em desktop, copiar para área de transferência
-      navigator.clipboard.writeText(emailBody).then(() => {
-        alert('Informações copiadas! Cole no seu email para enviar para comercial@optidata.com.br');
-      }).catch(() => {
-        alert('Entre em contato conosco: comercial@optidata.com.br');
-      });
-    }
-  };
-
-  const handleCompartilhar = () => {
-    if (vms.length === 0) {
-      alert('Configure pelo menos uma VM antes de compartilhar');
-      return;
-    }
-
-    const resultado = calculadora.calcularTotalGeral(vms, descontos);
-    const shareText = `Configurei ${vms.length} VM(s) na Optidata por ${formatCurrency(resultado.totalComDesconto)}/mês. Confira a calculadora: ${window.location.href}`;
-    
-    if (navigator.share) {
-      navigator.share({
-        title: 'Calculadora Cloud Optidata',
-        text: shareText
-      });
-    } else {
-      navigator.clipboard.writeText(shareText).then(() => {
-        alert('Link copiado para área de transferência!');
-      }).catch(() => {
-        alert('Compartilhe este link: ' + window.location.href);
-      });
-    }
-  };
   
   if (vms.length === 0) {
     return (
@@ -213,28 +119,6 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Market Intelligence Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-purple-600" />
-          Market Intelligence
-        </h3>
-        
-        {/* Quick comparison preview */}
-        <QuickComparisonCard 
-          optidataCost={totalComDesconto}
-          vms={vms}
-        />
-        
-        {/* Cloud comparison button */}
-        <CloudComparisonButton 
-          optidataCost={totalComDesconto}
-          vms={vms}
-          size="lg"
-          variant="default"
-        />
       </div>
 
       {/* Breakdown por Categoria */}
@@ -388,33 +272,18 @@ const PricingSummary = ({ calculadora }: PricingSummaryProps) => {
         <h3 className="text-lg font-semibold mb-4 text-gray-900">Próximos Passos</h3>
         
         <div className="flex flex-wrap gap-3">
-          <Button 
-            className="bg-[#0066CC] hover:bg-[#0052A3] text-white"
-            onClick={handleExportPDF}
-          >
+          <Button className="bg-[#0066CC] hover:bg-[#0052A3] text-white">
             <Download className="w-4 h-4 mr-2" />
             Exportar PDF
           </Button>
-          <Button 
-            variant="outline" 
-            className="border-gray-300 text-gray-700 hover:bg-gray-50"
-            onClick={handleExportExcel}
-          >
+          <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
             <Download className="w-4 h-4 mr-2" />
             Exportar Excel
           </Button>
-          <Button 
-            variant="outline" 
-            className="border-gray-300 text-gray-700 hover:bg-gray-50"
-            onClick={handleSolicitarProposta}
-          >
+          <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
             📧 Solicitar Proposta
           </Button>
-          <Button 
-            variant="outline" 
-            className="border-gray-300 text-gray-700 hover:bg-gray-50"
-            onClick={handleCompartilhar}
-          >
+          <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
             🔗 Compartilhar
           </Button>
         </div>

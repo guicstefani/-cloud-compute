@@ -80,17 +80,7 @@
 }
 
 @layer components {
-  /* FORÇAR FUNDO BRANCO - SOLUÇÃO UNIVERSAL */
-  .force-white-bg {
-    background-color: #ffffff !important;
-    background-image: none !important;
-  }
-
-  .container-white {
-    background-color: #ffffff !important;
-  }
-
-  /* REMOVE ALL YELLOW/AMBER COLORS - FORÇA BRANCO */
+  /* REMOVE ALL YELLOW/AMBER COLORS */
   [class*="yellow"],
   [class*="amber"],
   [style*="yellow"],
@@ -99,34 +89,8 @@
   [style*="#FC"],
   [style*="#FB"],
   [style*="#FA"] {
-    background-color: #FFFFFF !important;
+    background-color: #F5F5F5 !important;
     color: #333333 !important;
-  }
-
-  /* Cards e containers - FORÇA BRANCO */
-  .vm-card,
-  .pricing-summary,
-  .configurator-panel,
-  [class*="card"],
-  [class*="panel"] {
-    background-color: #ffffff !important;
-  }
-
-  /* Inputs e campos - FORÇA BRANCO */
-  input[type="text"],
-  input[type="number"],
-  select,
-  textarea {
-    background-color: #ffffff !important;
-  }
-
-  /* Remove autocomplete yellow */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-    -webkit-text-fill-color: #111827 !important;
-    background-color: #ffffff !important;
   }
 
   /* Premium Card Design - Optidata Style */
@@ -134,7 +98,6 @@
     @apply bg-white rounded-lg shadow-sm hover:shadow-lg overflow-hidden;
     border: 1px solid #E5E7EB;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: #ffffff !important;
   }
   
   .premium-card:hover {
@@ -147,7 +110,6 @@
     @apply bg-white rounded-lg overflow-hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid #E5E7EB;
-    background-color: #ffffff !important;
   }
 
   .premium-vm-card:hover {
@@ -162,11 +124,11 @@
     transform: scale(1.02);
   }
 
-  /* Enhanced Input Styles - FORÇA BRANCO */
+  /* Enhanced Input Styles - Optidata */
   .premium-input, .input-field {
     @apply border-2 rounded-lg px-4 py-3 text-base transition-all duration-300;
     border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
     font-size: 16px; /* Previne zoom no iOS */
   }
 
@@ -174,7 +136,6 @@
     outline: none;
     border-color: #0066CC;
     box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-    background-color: #ffffff !important;
   }
 
   .premium-input.success, .input-field.success {
@@ -217,17 +178,17 @@
   .option-card {
     @apply relative p-4 rounded-lg cursor-pointer transition-all duration-300;
     border: 2px solid #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
   }
 
   .option-card:hover {
     border-color: #0066CC;
-    background: #EFF6FF !important;
+    background: #EFF6FF;
   }
 
   .option-card.selected {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
     transform: scale(1.02);
   }
@@ -246,17 +207,17 @@
   .os-option {
     @apply w-full p-4 rounded-lg border-2 text-left transition-all duration-300;
     border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
   }
 
   .os-option:hover {
     border-color: #0066CC;
-    background: #EFF6FF !important;
+    background: #EFF6FF;
   }
 
   .os-option.selected {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
     box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
     transform: scale(1.02);
   }
@@ -265,17 +226,17 @@
   .checkbox-container {
     @apply flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-300;
     border-color: #E5E7EB;
-    background: #FFFFFF !important;
+    background: #FFFFFF;
   }
 
   .checkbox-container:hover {
     border-color: #0066CC;
-    background: #EFF6FF !important;
+    background: #EFF6FF;
   }
 
   .checkbox-container.checked {
     border-color: #22C55E;
-    background: #D1FAE5 !important;
+    background: #D1FAE5;
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
   }
 
@@ -323,7 +284,6 @@
   .mobile-bottom-bar {
     @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-bottom;
     box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff !important;
   }
 
   /* Touch targets para mobile */
@@ -331,6 +291,22 @@
     @apply min-h-12 min-w-12;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Remove autofill amarelo */
+  .no-autofill:-webkit-autofill,
+  .no-autofill:-webkit-autofill:hover,
+  .no-autofill:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+
+  /* Remove QUALQUER amarelo de autofill */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #111827 !important;
   }
 
   /* Container responsivo */
@@ -344,7 +320,7 @@
     }
   }
 
-  /* Mobile specific - FORÇA BRANCO */
+  /* Mobile specific */
   @media (max-width: 768px) {
     .mobile-hide {
       @apply hidden;
@@ -354,25 +330,14 @@
       @apply block;
     }
 
-    /* Mobile card optimizations - FORÇA BRANCO */
+    /* Mobile card optimizations */
     .premium-vm-card {
       @apply rounded-lg text-sm;
-      background-color: #ffffff !important;
-    }
-
-    /* Fixes específicos para mobile - FORÇA BRANCO */
-    .vm-card,
-    .pricing-summary,
-    .configurator {
-      background-color: #ffffff !important;
-      -webkit-appearance: none;
-      appearance: none;
     }
 
     /* Larger touch targets on mobile */
     button, input, select, textarea {
       @apply touch-target;
-      background-color: #ffffff !important;
     }
   }
 
@@ -492,6 +457,3 @@
 ::selection {
   @apply bg-blue-500/20 text-gray-900;
 }
-
-/* Adicione esta linha no FINAL do arquivo index.css */
-@import './styles/visual-upgrade.css';

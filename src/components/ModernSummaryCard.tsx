@@ -1,95 +1,36 @@
-
 import React, { useState } from 'react';
 import { useCalculadoraStore } from '@/store/calculadora';
 import { CalculadoraCloud, formatCurrency } from '@/utils/calculadora';
-import { LegacyBridge } from '@/shared/services/LegacyBridge';
-import { exportToExcel } from '@/utils/exportUtils';
+import { gerarPDFProposta } from '@/utils/pdfGenerator';
 import { Calculator, TrendingUp, Download, Save, Zap, Shield, Headphones, FileText } from 'lucide-react';
 import CriarPropostaModal from '@/components/CriarPropostaModal';
-import { CloudComparisonButton } from '@/components/CloudComparisonButton';
-import { QuickComparisonCard } from '@/components/QuickComparisonCard';
 
 const ModernSummaryCard = () => {
   const { vms, descontos, precos } = useCalculadoraStore();
   const calculadora = new CalculadoraCloud(precos);
   const [modalPropostaAberto, setModalPropostaAberto] = useState(false);
-  const legacyBridge = LegacyBridge.getInstance();
   
-  const handleGerarPDF = async () => {
-    if (vms.length === 0) {
-      alert('Adicione pelo menos uma VM antes de gerar o PDF');
-      return;
-    }
-
-    try {
-      await legacyBridge.generatePDF({
-        tipo: 'vm',
-        vms,
-        calculadora,
-        descontos
-      });
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-      alert('Erro ao gerar PDF. Tente novamente.');
-    }
-  };
-
-  const handleExportarExcel = () => {
-    if (vms.length === 0) {
-      alert('Adicione pelo menos uma VM antes de exportar');
-      return;
-    }
-
-    try {
-      const resultado = calculadora.calcularTotalGeral(vms, descontos);
-      const exportData = {
-        vms: resultado.vms,
-        totalGeral: resultado.totalComDesconto,
-        economia: resultado.economia,
-        calculadora
-      };
-      
-      exportToExcel(exportData);
-    } catch (error) {
-      console.error('Erro ao exportar Excel:', error);
-      alert('Erro ao exportar Excel. Tente novamente.');
-    }
-  };
-
-  const handleSalvarConfiguracao = () => {
-    if (vms.length === 0) {
-      alert('Não há configurações para salvar');
-      return;
-    }
-
-    try {
-      const configuracao = {
-        vms,
-        descontos,
-        timestamp: new Date().toISOString(),
-        totalVMs: vms.length
-      };
-      
-      localStorage.setItem('optidata_configuracao', JSON.stringify(configuracao));
-      alert('Configuração salva com sucesso!');
-    } catch (error) {
-      console.error('Erro ao salvar configuração:', error);
-      alert('Erro ao salvar configuração. Tente novamente.');
-    }
+  const handleGerarPDF = () => {
+    gerarPDFProposta({
+      tipo: 'vm',
+      vms,
+      calculadora,
+      descontos
+    });
   };
 
   if (vms.length === 0) {
     return (
       <div className="sticky top-6">
-        <div className="premium-card p-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
           <div className="text-center">
-            <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Calculator className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Configure sua infraestrutura
             </h3>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-500 mb-6">
               Comece criando sua primeira VM para ver os custos
             </p>
           </div>
@@ -104,19 +45,19 @@ const ModernSummaryCard = () => {
   return (
     <div className="sticky top-6 space-y-6">
       {/* Main Total Card */}
-      <div className="bg-gradient-to-br from-gray-900 via-[#1a1a1a] to-black text-white rounded-2xl shadow-2xl p-8 overflow-hidden relative border border-[#DCAE1D]/20">
+      <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white rounded-2xl shadow-2xl p-8 overflow-hidden relative">
         {/* Background Effect */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#DCAE1D] to-[#F4C430] rounded-full filter blur-2xl opacity-20"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full filter blur-2xl opacity-20"></div>
         
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-gray-300 text-sm font-medium uppercase tracking-wide">Total Mensal</span>
-            <Calculator className="w-5 h-5 text-gold" />
+            <span className="text-blue-200 text-sm font-medium uppercase tracking-wide">Total Mensal</span>
+            <Calculator className="w-5 h-5 text-blue-300" />
           </div>
-          <div className="text-4xl font-bold mb-1 text-gold">
+          <div className="text-4xl font-bold mb-1">
             {formatCurrency(totalComDesconto)}
           </div>
-          <div className="text-gray-300 text-sm">
+          <div className="text-blue-200 text-sm">
             {vms.length} VM{vms.length !== 1 ? 's' : ''} configurada{vms.length !== 1 ? 's' : ''}
           </div>
 
@@ -138,106 +79,77 @@ const ModernSummaryCard = () => {
         </div>
       </div>
 
-      {/* Market Intelligence Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-          📊 Market Intelligence
-        </h3>
-        
-        {/* Quick comparison preview */}
-        <QuickComparisonCard 
-          optidataCost={totalComDesconto}
-          vms={vms}
-        />
-        
-        {/* Cloud comparison button */}
-        <CloudComparisonButton 
-          optidataCost={totalComDesconto}
-          vms={vms}
-          size="lg"
-          variant="outline"
-          className="w-full"
-        />
-      </div>
-
       {/* Action Buttons */}
       <div className="space-y-3">
         <button 
           onClick={handleGerarPDF}
-          className="premium-btn w-full"
+          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
         >
-          <FileText className="w-5 h-5" />
+          <FileText className="w-5 h-5 inline mr-2" />
           Gerar PDF da Proposta
         </button>
         
         <button 
           onClick={() => setModalPropostaAberto(true)}
-          className="premium-btn w-full"
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
         >
-          <Save className="w-5 h-5" />
+          <Save className="w-5 h-5 inline mr-2" />
           Criar Proposta
         </button>
         
-        <button 
-          onClick={handleExportarExcel}
-          className="premium-btn w-full"
-        >
-          <Download className="w-5 h-5" />
+        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl">
+          <Download className="w-5 h-5 inline mr-2" />
           Exportar Excel
         </button>
-        
-        <button 
-          onClick={handleSalvarConfiguracao}
-          className="w-full bg-transparent border-2 border-gray-600 hover:border-gold text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md"
-        >
+        <button className="w-full bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:shadow-md">
           <Save className="w-5 h-5 inline mr-2" />
           Salvar Configuração
         </button>
       </div>
 
       {/* Trust Indicators */}
-      <div className="premium-card p-6">
-        <h4 className="font-semibold text-white mb-4 text-center">Por que Optidata?</h4>
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h4 className="font-semibold text-gray-900 mb-4 text-center">Por que Optidata?</h4>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="w-10 h-10 bg-green-900/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Shield className="w-5 h-5 text-green-400" />
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <Shield className="w-5 h-5 text-green-600" />
             </div>
-            <p className="text-xs text-gray-300 font-medium">Segurança</p>
+            <p className="text-xs text-gray-600 font-medium">Segurança</p>
             <p className="text-xs text-gray-500">Enterprise</p>
           </div>
           <div className="text-center">
-            <div className="w-10 h-10 bg-blue-900/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Zap className="w-5 h-5 text-blue-400" />
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <Zap className="w-5 h-5 text-blue-600" />
             </div>
-            <p className="text-xs text-gray-300 font-medium">Performance</p>
+            <p className="text-xs text-gray-600 font-medium">Performance</p>
             <p className="text-xs text-gray-500">Otimizada</p>
           </div>
           <div className="text-center">
-            <div className="w-10 h-10 bg-purple-900/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-              <Headphones className="w-5 h-5 text-purple-400" />
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+              <Headphones className="w-5 h-5 text-purple-600" />
             </div>
-            <p className="text-xs text-gray-300 font-medium">Suporte</p>
+            <p className="text-xs text-gray-600 font-medium">Suporte</p>
             <p className="text-xs text-gray-500">24/7</p>
           </div>
         </div>
       </div>
 
       {/* TCO Preview */}
-      <div className="premium-card p-6">
-        <h4 className="font-semibold text-white mb-4">Projeção TCO</h4>
+      <div className="bg-gray-50 rounded-2xl border border-gray-200 p-6">
+        <h4 className="font-semibold text-gray-900 mb-4">Projeção TCO</h4>
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-sm text-gray-400">12 meses</span>
-            <span className="font-semibold text-white">{formatCurrency(totalComDesconto * 12)}</span>
+            <span className="text-sm text-gray-600">12 meses</span>
+            <span className="font-semibold text-gray-900">{formatCurrency(totalComDesconto * 12)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm text-gray-400">36 meses</span>
-            <span className="font-semibold text-white">{formatCurrency(totalComDesconto * 36)}</span>
+            <span className="text-sm text-gray-600">36 meses</span>
+            <span className="font-semibold text-gray-900">{formatCurrency(totalComDesconto * 36)}</span>
           </div>
-          <div className="flex justify-between pt-2 border-t border-gray-700">
-            <span className="text-sm font-medium text-gray-300">60 meses</span>
-            <span className="font-bold text-gold">{formatCurrency(totalComDesconto * 60)}</span>
+          <div className="flex justify-between pt-2 border-t border-gray-200">
+            <span className="text-sm font-medium text-gray-700">60 meses</span>
+            <span className="font-bold text-blue-600">{formatCurrency(totalComDesconto * 60)}</span>
           </div>
         </div>
       </div>
