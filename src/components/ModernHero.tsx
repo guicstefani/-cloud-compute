@@ -1,43 +1,23 @@
 
 import React from 'react';
-import { Shield, Award, Zap, Check } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 
 const ModernHero = () => {
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600 rounded-full filter blur-3xl opacity-20"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl opacity-20"></div>
-      
-      <div className="relative z-10 container mx-auto px-4 py-16">
+    <div className="bg-white border-b border-gray-200">
+      <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-300">
-            Cloud Computing
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Infraestrutura Enterprise de Alta Performance com Transparência Total de Custos
-          </p>
-          
-          {/* Trust Badges */}
-          <div className="flex flex-wrap gap-4 justify-center">
-            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-white/20">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">99.99% Uptime</span>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-optidata-blue rounded-lg flex items-center justify-center">
+              <Calculator className="w-6 h-6 text-white" />
             </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-white/20">
-              <Shield className="w-4 h-4" />
-              <span className="text-sm font-medium">ISO 27001</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-white/20">
-              <Award className="w-4 h-4" />
-              <span className="text-sm font-medium">Tier III</span>
-            </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-2 border border-white/20">
-              <Zap className="w-4 h-4" />
-              <span className="text-sm font-medium">Deploy em 5min</span>
-            </div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Portal OptiData Cloud
+            </h1>
           </div>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Calculadora de Projetos - Configure e dimensione sua infraestrutura cloud
+          </p>
         </div>
       </div>
     </div>
