@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import ModernHero from '@/components/ModernHero';
+import PremiumHero from '@/components/PremiumHero';
 import ModernVMList from '@/components/ModernVMList';
 import ModernSummaryCard from '@/components/ModernSummaryCard';
 import VMConfigurator from '@/components/VMConfigurator';
@@ -20,7 +20,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <ModernHero />
+      <PremiumHero />
       
       {/* Toggle para escolher o modo */}
       <div className="container mx-auto px-6 py-4">
